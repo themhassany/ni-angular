@@ -4,6 +4,11 @@ Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregori
 # Installation
     npm i ni-datetime-picker
 
+# Demo
+Stackblitz Demo: https://angular-9g15ep.stackblitz.io
+
+Stackblitz play ground: https://stackblitz.com/edit/angular-9g15ep
+
 # Screenshots
 <img src="../../screenshots/datetime-picker1.png" width="200" title="datetime-picker1.png">
 <img src="../../screenshots/datetime-picker12.png" width="200" title="datetime-picker12.png">
