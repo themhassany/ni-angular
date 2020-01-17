@@ -1,0 +1,154 @@
+<div [dir]="calendarLocale.dir"
+    [ngClass]="{'ni-datetime-picker': true, 'ni-datetime-picker-inline': inline}">
+    <div class="ni-form-inputs">
+        <input *ngIf="!inline" [ngModel]="inputFormatted" [placeholder]="placeholder" readonly
+            class="ni-inputtext" (focus)="inputFocused($event)" (blur)="inputBlured($event)">
+        <div class="ni-picker-btn"
+            (click)="openDialog ? dialogOverlayClicked($event) : inputFocused($event)">
+            📅
+        </div>
+        <div *ngIf="__model" class="ni-clear-btn" (click)="clearValue()">
+            ╳
+        </div>
+    </div>
+    <div *ngIf="openDialog" class="ni-dialog-container">
+        <div *ngIf="!inline" class="ni-dialog-overlay" (click)="dialogOverlayClicked($event)"></div>
+        <div class="ni-dialog" [ngStyle]="{width: dialogWidth}">
+            <div class="ni-dialog-header">
+                <div *ngIf="datePicker || monthPicker" class="ni-dialog-navigation-btn backward"
+                    (click)="navigateTo('backward')">
+                    ⌃
+                </div>
+                <div class="ni-dialog-title" (click)="headerClicked($event)">
+                    {{ dialogTitle }}
+                </div>
+                <div *ngIf="datePicker || monthPicker" class="ni-dialog-navigation-btn forward"
+                    (click)="navigateTo('forward')">
+                    ⌃
+                </div>
+            </div>
+            <div class="ni-dialog-content">
+                <div *ngIf="datePicker" class="ni-view-months">
+                    <div *ngFor="let viewMonth of viewMonths" class="ni-view-month"
+                        [ngStyle]="{width: monthWidth}">
+                        <div *ngIf="visibleMonths > 1" class="ni-view-month-title"
+                            (click)="monthDateClicked(viewMonth)">
+                            {{ viewMonth.title }}
+                        </div>
+                        <div *ngIf="!monthPicker" class="ni-view-month-weekdays">
+                            <span class="ni-view-month-weeknums-header">
+                                {{ calendarLocale.wk }}
+                            </span>
+                            <span *ngFor="let weekday of viewMonth.weekdays; let i = index;"
+                                [ngClass]="{
+                                    'ni-view-month-weekday': true,
+                                    'ni-view-month-weekend': weekday.weekend
+                                }">
+                                {{ weekday.title }}
+                            </span>
+                        </div>
+                        <div *ngIf="!monthPicker" class="ni-view-month-body">
+                            <div class="ni-view-month-weeknums">
+                                <span *ngFor="let weeknum of viewMonth.weeknums"
+                                    class="ni-view-month-weeknum">
+                                    {{ weeknum }}
+                                </span>
+                            </div>
+                            <div class="ni-view-month-dates">
+                                <span *ngFor="let date of viewMonth.dates" [ngClass]="{
+                                        'ni-view-month-date': true,
+                                        'ni-view-month-date-prev-month': date.prev,
+                                        'ni-view-month-date-next-month': date.next,
+                                        'ni-view-month-date-selected': date.selected,
+                                        'ni-view-month-date-weekend': date.weekend,
+                                        'ni-view-month-date-today': date.today
+                                    }" (click)="monthDateClicked(date)">
+                                    {{ date.date }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="timePicker && !monthPicker" class="ni-view-timepicker">
+                    <div class="ni-view-timepicker-times">
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-increment"
+                            (click)="updateTime('hour', 1)">
+                            ⌃
+                        </span>
+                        <span class="ni-view-timepicker-time ni-view-timepicker-hour">
+                            {{ pad(nidate.getHours() > 12 ? nidate.getHours() % 12 : nidate.getHours(), 2) }}
+                        </span>
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-decrement"
+                            (click)="updateTime('hour', -1)">
+                            ⌃
+                        </span>
+                    </div>
+                    <div class="ni-view-timepicker-times">
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-increment"
+                            (click)="updateTime('minute', 1)">
+                            ⌃
+                        </span>
+                        <span class="ni-view-timepicker-time ni-view-timepicker-minute">
+                            {{ pad(nidate.getMinutes(), 2) }}
+                        </span>
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-decrement"
+                            (click)="updateTime('minute', -1)">
+                            ⌃
+                        </span>
+                    </div>
+                    <div class="ni-view-timepicker-times">
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-increment"
+                            (click)="updateTime('second', 1)">
+                            ⌃
+                        </span>
+                        <span class="ni-view-timepicker-time ni-view-timepicker-second">
+                            {{ pad(nidate.getSeconds(), 2) }}
+                        </span>
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-decrement"
+                            (click)="updateTime('second', -1)">
+                            ⌃
+                        </span>
+                    </div>
+                    <div class="ni-view-timepicker-times">
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-increment"
+                            (click)="updateTime('ampm', 1 )">
+                            ⌃
+                        </span>
+                        <span class="ni-view-timepicker-time ni-view-timepicker-ampm">
+                            {{ calendarLocale.ampm[nidate.getHours() >= 12 ? 1 : 0] }}
+                        </span>
+                        <span class="ni-view-timepicker-btn ni-view-timepicker-decrement"
+                            (click)="updateTime('ampm', 1)">
+                            ⌃
+                        </span>
+                    </div>
+                </div>
+
+                <div *ngIf="localeSwitch" class="ni-view-locale-switches" dir="ltr">
+                    <div [ngClass]="{ 
+                        'ni-view-locale-switch': true, 
+                        'ni-view-locale-switch-selected': locale === 'en_US', 
+                        'ni-view-locale-switch-to-en_US': true
+                        }" (click)="changeLocale('en_US')">
+                        <span class="ni-view-locale-icon ni-view-en_US"></span>
+                    </div>
+                    <div [ngClass]="{ 
+                        'ni-view-locale-switch': true, 
+                        'ni-view-locale-switch-selected': locale === 'fa_IR', 
+                        'ni-view-locale-switch-to-fa_IR': true
+                        }" (click)="changeLocale('fa_IR')">
+                        <span class="ni-view-locale-icon ni-view-fa_IR"></span>
+                    </div>
+                    <div [ngClass]="{ 
+                        'ni-view-locale-switch': true, 
+                        'ni-view-locale-switch-selected': locale === 'fa_AF', 
+                        'ni-view-locale-switch-to-fa_AF': true
+                        }" (click)="changeLocale('fa_AF')">
+                        <span class="ni-view-locale-icon ni-view-fa_AF"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

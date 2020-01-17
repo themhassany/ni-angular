@@ -123,6 +123,46 @@
           }
         }
       }
+    },
+    "ni-datetime-picker": {
+      "projectType": "library",
+      "root": "projects/ni-datetime-picker",
+      "sourceRoot": "projects/ni-datetime-picker/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ni-datetime-picker/tsconfig.lib.json",
+            "project": "projects/ni-datetime-picker/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ni-datetime-picker/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ni-datetime-picker/src/test.ts",
+            "tsConfig": "projects/ni-datetime-picker/tsconfig.spec.json",
+            "karmaConfig": "projects/ni-datetime-picker/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ni-datetime-picker/tsconfig.lib.json",
+              "projects/ni-datetime-picker/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "ni-angular"
 }
