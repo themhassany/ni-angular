@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NiJalaliDate } from 'projects/ni-datetime-picker/src/public-api';
+import { NiJalaliDatetime } from 'ni-datetime-picker';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ export class AppComponent {
   inputFormatted: string;
   open = true;
   locale = {
-    newInstance: () => new NiJalaliDate(),
+    newInstance: () => new NiJalaliDatetime(),
     wk: 'js',
     dir: 'ltr',
     firstday: 5,

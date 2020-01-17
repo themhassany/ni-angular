@@ -7,7 +7,7 @@
             (click)="openDialog ? dialogOverlayClicked($event) : inputFocused($event)">
             📅
         </div>
-        <div *ngIf="__model" class="ni-clear-btn" (click)="clearValue()">
+        <div *ngIf="$model" class="ni-clear-btn" (click)="clearValue()">
             ╳
         </div>
     </div>

@@ -7,14 +7,14 @@
 {{ open }}
 <hr />
 <div style="text-align: left;">
-    <ni-datetime-picker [(model)]="date" locale="en_US" titleFormat="YYYY" inputFormat="YYYY-MM"
+    <ni-datetime-picker [(model)]="date" locale="en_US" titleFormat="YYYY" inputFormat="WWWW DD MMM YYYY"
         monthHeaderFormat="MMMM" [visibleMonths]="1" [datePicker]="true" [timePicker]="true"
-        [inline]="true" placeholder="date/time" [localeSwitch]="true"
+        [openDialog]="true" [inline]="false" placeholder="date/time" [localeSwitch]="true"
         (onChange)="event($event); inputFormatted = $event.formatted;" (onShow)="event('showed')"
         (onHide)="event('hided')" (onViewUpdate)="event($event)" (onLocaleChange)="event($event)"
         (onFocus)="event($event)" (onBlur)="event($event)" [closeOnSelect]="true">
     </ni-datetime-picker>
-    <br />
+    <!-- <br />
     <ni-datetime-picker [(model)]="date" [viewDefaultDate]="defauld" locale="en_US"
         titleFormat="MMMM YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM YYYY"
         [visibleMonths]="12" [monthPicker]="false" [datePicker]="true" [timePicker]="true"
@@ -31,5 +31,5 @@
         titleFormat="YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM" [visibleMonths]="12"
         [monthPicker]="true" [datePicker]="true" [timePicker]="true" [inline]="true"
         placeholder="date/time" [localeSwitch]="true">
-    </ni-datetime-picker>
+    </ni-datetime-picker> -->
 </div>

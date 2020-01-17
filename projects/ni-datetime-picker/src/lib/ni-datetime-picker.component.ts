@@ -1,52 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { NiJalaliDate } from './ni-jalali-date';
-import { NiDate } from './ni-date-wrapper';
-import { NiGregorianDate } from './ni-gregorian-date';
-import { NCalendarLocale, AVAIL_LOCALES } from './ni-calendar-locales';
-
-export class ViewMonth {
-  title: string;
-  year: number;
-  month: number;
-  date: number;
-  weeknums: number[];
-  weekdays: { title: string, wk: boolean }[];
-  dates: ViewDate[];
-}
-
-export class ViewDate {
-  year: number;
-  month: number;
-  date: number;
-  today?: boolean;
-  weekend?: boolean;
-  prev?: boolean;
-  next?: boolean;
-  selected?: boolean;
-}
-
-export interface ChangeEvent {
-  formatted: string;
-  date: Date;
-}
-
-export interface ViewUpdateEvent {
-  viewMinDate: Date;
-  viewMaxDate: Date;
-}
-
-export interface SelectEvent {
-  ndate: ViewDate;
-  date: Date;
-}
-
-export interface LocaleChangeEvent {
-  previous: 'fa_AF' | 'fa_IR' | 'en_US';
-  locale: 'fa_AF' | 'fa_IR' | 'en_US';
-}
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NiDatetime, NiJalaliDatetime, NiGregorianDatetime, NiDatetimeLocale, Locales } from './ni-datetime';
+import { ChangeEvent, LocaleChangeEvent, SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime-picker';
 
 @Component({
-  // tslint:disable-next-line: component-selector
   selector: 'ni-datetime-picker',
   templateUrl: './ni-datetime-picker.component.html',
   styleUrls: ['./ni-datetime-picker.component.less']
@@ -54,13 +10,13 @@ export interface LocaleChangeEvent {
 export class NiDatetimePickerComponent implements OnInit {
 
   ready = false;
-  __model: Date;
+  $model: Date;
   today: ViewDate;
   selection: ViewDate;
-  get model(): Date { return this.__model; }
+  get model(): Date { return this.$model; }
   @Input() set model(date: Date) {
     if (this.ready) { this.setDate(date, false); }
-    /*------*/ else { this.__model = date; }
+    /*______*/ else { this.$model = date; }
   }
   @Output() modelChange: EventEmitter<Date> = new EventEmitter<Date>();
   @Input() viewDefaultDate: Date;
@@ -75,47 +31,57 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input() localeSwitch = false;
   @Input() locale: 'fa_AF' | 'fa_IR' | 'en_US' = 'fa_AF';
   @Output() localeChange: EventEmitter<string> = new EventEmitter<string>();
-  @Input() calendarLocale: NCalendarLocale;
-  @Input() titleFormat = 'YYYY-MM-DD HH:mm AP';
-  @Input() inputFormat = 'YYYY-MM-DD HH:mm';
-  @Input() monthHeaderFormat = 'YYYY-MM-DD HH:mm';
+  @Input() calendarLocale: NiDatetimeLocale;
+  @Input() titleFormat = 'MMMM YYYY';
+  @Input() inputFormat = 'YYYY-MM-DD HH:mm AP';
+  @Input() monthHeaderFormat = 'MMMM YYYY';
   @Input() placeholder = '';
 
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onChange = new EventEmitter<ChangeEvent>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onSelect = new EventEmitter<SelectEvent>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onShow = new EventEmitter<any>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onFocus = new EventEmitter<any>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onBlur = new EventEmitter<any>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onHide = new EventEmitter<any>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onViewUpdate = new EventEmitter<ViewUpdateEvent>();
+  // tslint:disable-next-line: no-output-on-prefix
   @Output() onLocaleChange = new EventEmitter<LocaleChangeEvent>();
 
   dialogWidth: string;
   monthWidth: string;
-  __visibleMonths = 1;
-  get visibleMonths(): number { return this.__visibleMonths; }
+  $visibleMonths = 1;
+  get visibleMonths(): number { return this.$visibleMonths; }
   @Input() set visibleMonths(visibleMonths: number) {
     // 1-12
-    this.__visibleMonths = Math.max(0, Math.min(12, visibleMonths));
+    this.$visibleMonths = Math.max(0, Math.min(12, visibleMonths));
 
     if (this.monthPicker) {
       this.dialogWidth = '250px';
       this.monthWidth = '33.333333%';
     } else {
-      const columns = this.__visibleMonths < 3 ? this.__visibleMonths : 3;
+      const columns = this.$visibleMonths < 3 ? this.$visibleMonths : 3;
       this.dialogWidth = `${columns * 250}px`;
       this.monthWidth = `${columns < 2 ? 100 : (columns < 3 ? 50 : 33.333333)}%`;
     }
   }
 
-  nidate: NiDate;
+  nidate: NiDatetime;
   inputFormatted = '';
 
-  __openDialog = false;
-  get openDialog(): boolean { return this.__openDialog; }
+  $openDialog = false;
+  get openDialog(): boolean { return this.$openDialog; }
   @Input() set openDialog(open: boolean) {
-    this.__openDialog = open;
-    this.openDialogChange.emit(this.__openDialog);
+    this.$openDialog = open;
+    if (this.ready) {
+      this.openDialogChange.emit(this.$openDialog);
+    }
   }
   @Output() openDialogChange = new EventEmitter<boolean>();
   dialogTitle = '';
@@ -132,9 +98,9 @@ export class NiDatetimePickerComponent implements OnInit {
     this.ready = true;
     // in case value is set before component ready
     // re-set the value to trigger appropriate events
-    this.model = this.__model;
+    this.model = this.$model;
 
-    this.visibleMonths = this.__visibleMonths;
+    this.visibleMonths = this.$visibleMonths;
 
     // open the dialog if inline
     if (this.inline) {
@@ -145,7 +111,7 @@ export class NiDatetimePickerComponent implements OnInit {
   setDate(date: Date, emit: boolean = true) {
     // emit the value
     if (emit) {
-      this.__model = date ? new Date(date) : null;
+      this.$model = date ? new Date(date) : null;
 
       this.modelChange.emit(date);
       this.onChange.emit({
@@ -153,7 +119,7 @@ export class NiDatetimePickerComponent implements OnInit {
           this.nidate.clone().set(date),
           this.inputFormat
         ) : '',
-        date: this.__model
+        date: this.$model
       });
     }
 
@@ -168,7 +134,7 @@ export class NiDatetimePickerComponent implements OnInit {
     // update the view
     this.updateView(date);
 
-    if (!this.inline && this.closeOnSelect) {
+    if (emit && !this.inline && this.closeOnSelect) {
       this.dialogOverlayClicked(null);
     }
   }
@@ -270,7 +236,13 @@ export class NiDatetimePickerComponent implements OnInit {
     const _ = this.nidate.updateTime(field, sign);
     const updated = { year: _.getYear(), month: _.getMonth(), date: _.getDate() };
 
+    // updating time should not close the dialog
+    const oldValue = this.closeOnSelect;
+    this.closeOnSelect = false;
+
     this.setDate(_.date);
+
+    this.closeOnSelect = oldValue;
 
     // update the selection if date has changed
     if (!this.selection || !this.isYmdEqual(this.selection, updated)) {
@@ -282,7 +254,7 @@ export class NiDatetimePickerComponent implements OnInit {
   inputFocused($event: any) {
     const wasHidden = this.openDialog;
     this.openDialog = true;
-    this.updateView(this.__model);
+    this.updateView(this.$model);
 
     this.onFocus.emit(null);
     if (!wasHidden) {
@@ -352,7 +324,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return '0'.repeat(limit - num.toString().length) + num;
   }
 
-  format(_: NiDate, format: string) {
+  format(_: NiDatetime, format: string) {
     const locale = this.calendarLocale;
 
     const formats = {
@@ -397,7 +369,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return format;
   }
 
-  computeMonthDates(_: NiDate): ViewMonth {
+  computeMonthDates(_: NiDatetime): ViewMonth {
     const locale = this.calendarLocale;
     let mdates: ViewDate[] = [];
     const mweekdays = [];
@@ -501,7 +473,7 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  getWeeksCountUntilEndOf(_: NiDate, month: number): number {
+  getWeeksCountUntilEndOf(_: NiDatetime, month: number): number {
     _ = _.clone();
     const year = _.getYear();
     const localeFirstday = this.calendarLocale.firstday;
@@ -535,16 +507,16 @@ export class NiDatetimePickerComponent implements OnInit {
     this.closeOnSelect = false;
 
     if (locale === 'fa_AF' || locale === 'fa_IR') {
-      this.nidate = new NiJalaliDate();
+      this.nidate = new NiJalaliDatetime();
     } else if (locale === 'en_US') {
-      this.nidate = new NiGregorianDate();
+      this.nidate = new NiGregorianDatetime();
     } else {
       throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
     }
 
-    this.calendarLocale = AVAIL_LOCALES[locale];
+    this.calendarLocale = Locales[locale];
 
-    if (this.selection && this.__model) {
+    if (this.selection && this.$model) {
       this.convertSelection(prevNiDate);
     }
 
@@ -552,7 +524,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.viewMonthsMin = null;
     this.viewMonthsMax = null;
 
-    this.setDate(this.__model, false);
+    this.setDate(this.$model, false);
 
     const previousLocale = this.locale;
     this.localeChange.emit(this.locale = locale);
@@ -563,7 +535,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.closeOnSelect = prevCloseOnSelect;
   }
 
-  convertSelection(prevNiDate: NiDate) {
+  convertSelection(prevNiDate: NiDatetime) {
     const oldSelection = prevNiDate.clone().updateDate(
       this.selection.year, this.selection.month, this.selection.date);
     const newSelection = this.nidate.clone().set(oldSelection.date);
