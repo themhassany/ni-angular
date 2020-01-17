@@ -60,11 +60,7 @@ export class NiDatetimePickerComponent implements OnInit {
   __numberOfMonths = 1;
   @Input()
   set numberOfMonths(months: number) {
-    if (this.monthPicker) {
-      this.dialogWidth = '250px';
-      this.monthWidth = '33.333%';
-      this.__numberOfMonths = 12;
-    } else if (this.datePicker) {
+    if (this.datePicker && !this.monthPicker) {
       this.__numberOfMonths = Math.max(1, Math.min(12, months)); // 1-12
       const columns = this.__numberOfMonths < 3 ? this.__numberOfMonths : 3;
       this.dialogWidth = `${columns * 250}px`;
@@ -72,6 +68,12 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
   get numberOfMonths(): number {
+    if (this.monthPicker) {
+      this.dialogWidth = '250px';
+      this.monthWidth = '33.333%';
+      this.__numberOfMonths = 12;
+    }
+
     return this.__numberOfMonths;
   }
 
@@ -99,60 +101,6 @@ export class NiDatetimePickerComponent implements OnInit {
     this.openDialog = this.inline;
   }
 
-  // 1. set locale
-  // 2. create ni-datetime
-  // 3. convert selection
-  // 4. update input field
-  // 5. update view
-  // 6. emit event
-  updateLocale(locale: any, emit = true) {
-    if (!locale) {
-      return;
-    }
-
-    // set the locale
-    const prevLocale = this.__locale;
-    this.__locale = (typeof locale) === "string"
-      ? Locales[locale as string] : locale;
-
-    const prevDate = this.date;
-
-    if (this.__locale.name === 'fa_AF' || this.__locale.name === 'fa_IR') {
-      this.date = new NiJalaliDatetime();
-    } else if (this.__locale.name === 'en_US') {
-      this.date = new NiGregorianDatetime();
-    } else {
-      throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
-    }
-
-    // convert selection to new locale
-    if (this.selection) {
-      const old = prevDate.clone();
-      old.ymd = this.selection;
-      const neo = this.date.clone().use(old.__date);
-
-      this.updateSelection(neo.ymd, neo.__date);
-    }
-
-    this.updateInputfield();
-
-    // force view update
-    this.viewMonthsMin = null;
-    this.viewMonthsMax = null;
-    this.updateView();
-
-    // and emit the event
-    if (emit) {
-      this.localeChange.emit(this.__locale.name);
-      if (prevLocale.name !== this.__locale.name) {
-        this.localeChanged.emit({
-          previous: prevLocale.name,
-          locale: this.__locale.name
-        });
-      }
-    }
-  }
-
   // 1. persiste date
   // 2. update input field
   // 3. emit event
@@ -162,7 +110,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.updateInputfield();
 
     if (emit) {
-      this.ngModelChange.emit(new Date(date));
+      this.ngModelChange.emit(date ? new Date(date) : null);
 
       // close the dialog if not inline and time update
       if (!this.inline && !timeUpdated) {
@@ -179,6 +127,109 @@ export class NiDatetimePickerComponent implements OnInit {
       this.inputFormatted = this.format(
         this.date.clone().use(this.ngModel), this.inputFormat);
     }
+  }
+
+  // 1. open dialog
+  // 2. update view
+  // 3. emit events
+  inputFocused($event: any) {
+    const wasHidden = this.openDialog;
+    this.openDialog = true;
+    this.updateView();
+
+    this.focused.emit(null);
+    if (!wasHidden) {
+      this.showed.emit(null);
+    }
+  }
+
+  inputBlured($event: any) {
+    this.blurred.emit(null);
+  }
+
+  navigateToPreviousView() {
+    const ymd = this.date.clone().ymd;
+    const month = ymd.month;
+
+    ymd.month -= this.numberOfMonths;
+    if (ymd.month < 1) {
+      ymd.month = 12 - (this.numberOfMonths - month);
+      ymd.year -= 1;
+    }
+    this.date.ymd = ymd;
+    this.updateView();
+  }
+
+  navigateToNextView() {
+    const ymd = this.date.clone().ymd;
+    ymd.month += this.numberOfMonths;
+    if (ymd.month > 12) {
+      ymd.month %= 12;
+      ymd.year += 1;
+    }
+    this.date.ymd = ymd;
+    this.updateView();
+  }
+
+  headerClicked($event: any) {
+    this.selectMonthDate(this.today);
+  }
+
+  monthDateClicked(viewDate: ViewDate) {
+    this.selectMonthDate(viewDate);
+  }
+
+  // 1. remember view
+  // 2. persiste date
+  // 3. update selection
+  // 4. update view (if inline)
+  selectMonthDate(viewDate: ViewDate) {
+    this.date.ymd = viewDate;
+    this.updateNgModel(this.date.__date);
+    this.updateSelection(viewDate, this.date.__date);
+    // view will be update in next dialog open
+    if (this.inline) {
+      this.updateView();
+    }
+  }
+
+  // 1. remember selection
+  // 2. emit selection event
+  // 3. update view dates metas
+  updateSelection(vdate: ViewDate, date: Date) {
+    this.selection = vdate;
+
+    this.selected.emit({
+      ndate: vdate ? Object.assign({}, vdate) : null,
+      formatted: date ? this.format(this.date.clone().use(date), this.inputFormat) : '',
+      date: date ? new Date(date) : null
+    });
+
+    this.checkViewDatesTodaySelectionRefs();
+  }
+
+  isYmdEqual(a: ViewDate, b: ViewDate) {
+    // check year, month, and date for equality
+    return a && b && a.year === b.year && a.month === b.month && a.date === b.date;
+  }
+
+  checkViewDatesTodaySelectionRefs() {
+    this.viewMonths.forEach($ => $.dates.forEach(vdate => {
+      if (this.today && this.isYmdEqual(vdate, this.today)) {
+        vdate.today = true;
+        this.today = vdate;
+      } else {
+        vdate.today = undefined;
+      }
+
+      if (this.selection
+        && this.isYmdEqual(this.selection, vdate)
+        && !vdate.prev && !vdate.next) {
+        vdate.selected = true;
+      } else {
+        vdate.selected = undefined;
+      }
+    }));
   }
 
   updateView() {
@@ -249,153 +300,6 @@ export class NiDatetimePickerComponent implements OnInit {
         viewMaxDate: new Date(this.viewMonthsMax)
       });
     }
-  }
-
-  isYmdEqual(a: ViewDate, b: ViewDate) {
-    // check year, month, and date for equality
-    return a && b && a.year === b.year && a.month === b.month && a.date === b.date;
-  }
-
-  checkViewDatesTodaySelectionRefs() {
-    this.viewMonths.forEach($ => $.dates.forEach(vdate => {
-      if (this.today && this.isYmdEqual(vdate, this.today)) {
-        vdate.today = true;
-        this.today = vdate;
-      } else {
-        vdate.today = undefined;
-      }
-
-      if (this.selection
-        && this.isYmdEqual(this.selection, vdate)
-        && !vdate.prev && !vdate.next) {
-        vdate.selected = true;
-      } else {
-        vdate.selected = undefined;
-      }
-    }));
-  }
-
-  // 1. persiste date
-  // 2. update selection (if necessary)
-  updateTime() {
-    this.updateNgModel(this.date.__date, true, true);
-
-    // update the selection if date has changed
-    if (!this.selection || !this.isYmdEqual(this.selection, this.date.ymd)) {
-      this.updateSelection(this.date.ymd, this.date.__date);
-    }
-  }
-
-  // 1. open dialog
-  // 2. update view
-  // 3. emit events
-  inputFocused($event: any) {
-    const wasHidden = this.openDialog;
-    this.openDialog = true;
-    this.updateView();
-
-    this.focused.emit(null);
-    if (!wasHidden) {
-      this.showed.emit(null);
-    }
-  }
-
-  inputBlured($event: any) {
-    this.blurred.emit(null);
-  }
-
-  dialogOverlayClicked($event: any) {
-    this.openDialog = false;
-    this.hidded.emit(null);
-  }
-
-  headerClicked($event: any) {
-    this.selectMonthDate(this.today);
-  }
-
-  navigateToPreviousView() {
-    const ymd = this.date.clone().ymd;
-    const month = ymd.month;
-
-    ymd.month -= this.numberOfMonths;
-    if (ymd.month < 1) {
-      ymd.month = 12 - (this.numberOfMonths - month);
-      ymd.year -= 1;
-    }
-    this.date.ymd = ymd;
-    this.updateView();
-  }
-
-  navigateToNextView() {
-    const ymd = this.date.clone().ymd;
-    ymd.month += this.numberOfMonths;
-    if (ymd.month > 12) {
-      ymd.month %= 12;
-      ymd.year += 1;
-    }
-    this.date.ymd = ymd;
-    this.updateView();
-  }
-
-  monthDateClicked(viewDate: ViewDate) {
-    this.selectMonthDate(viewDate);
-  }
-
-  // 1. remember view
-  // 2. persiste date
-  // 3. update selection
-  selectMonthDate(viewDate: ViewDate) {
-    this.date.ymd = viewDate;
-    this.updateNgModel(this.date.__date);
-    this.updateSelection(viewDate, this.date.__date);
-    // view will be update in next dialog open
-  }
-
-  pad(num: any, limit: number): string {
-    return '0'.repeat(limit - num.toString().length) + num;
-  }
-
-  format(ndate: NiDatetime, format: string) {
-    const formats = {
-      YYYY: () => this.pad(ndate.year, 4),
-      YY: () => this.pad(ndate.year, 4).substring(2),
-      MMMM: () => this.locale.monthsName[ndate.month - 1],
-      MMM: () => this.locale.monthsNameShort[ndate.month - 1],
-      MM: () => this.pad(ndate.month, 2),
-      M: () => ndate.month,
-      DD: () => this.pad(ndate.date, 2),
-      D: () => ndate.date,
-      WWWW: () => this.locale.daysName[ndate.weekDay],
-      WWW: () => this.locale.daysNameShort[ndate.weekDay],
-      WW: () => this.locale.daysNameMini[ndate.weekDay],
-      HH: () => this.pad(ndate.hours, 2),
-      hh: () => this.pad(ndate.hours12, 2),
-      H: () => ndate.hours,
-      h: () => ndate.hours12,
-      mm: () => this.pad(ndate.minutes, 2),
-      m: () => ndate.minutes,
-      ss: () => this.pad(ndate.seconds, 2),
-      s: () => ndate.seconds,
-      A: () => this.locale.AMPM[ndate.hours > 12 ? 1 : 0],
-      a: () => this.locale.ampm[ndate.hours > 12 ? 1 : 0],
-      z: () => ndate.__date.toString().substring(25, 33),
-      iso: () => `${formats.YYYY()}-${formats.MM()}-${formats.DD()}${ndate.__date.toISOString().substring(10)}`
-    };
-
-    const pholders = {};
-    let counter = 0;
-
-    Object.keys(formats).sort((a, b) => b.length - a.length).forEach(key => {
-      for (let index = format.indexOf(key); index >= 0; index = format.indexOf(key)) {
-        const placeholder = `$[[${counter++}]]`;
-        pholders[placeholder] = formats[key]();
-        format = format.replace(key, placeholder);
-      }
-    });
-
-    Object.keys(pholders).forEach(pholder => format = format.replace(pholder, pholders[pholder]));
-
-    return format;
   }
 
   computeMonthDates(ndate: NiDatetime): ViewMonth {
@@ -518,6 +422,22 @@ export class NiDatetimePickerComponent implements OnInit {
     return Math.ceil((dayscount + this.getFirstdayDifference(this.locale.firstday, firstday)) / 7);
   }
 
+  // 1. persiste date
+  // 2. update selection (if necessary)
+  updateTime() {
+    this.updateNgModel(this.date.__date, true, true);
+
+    // update the selection if date has changed
+    if (!this.selection || !this.isYmdEqual(this.selection, this.date.ymd)) {
+      this.updateSelection(this.date.ymd, this.date.__date);
+    }
+  }
+
+  dialogOverlayClicked($event: any) {
+    this.openDialog = false;
+    this.hidded.emit(null);
+  }
+
   // 1. clear selection
   // 2. clear date
   clearValue() {
@@ -528,19 +448,105 @@ export class NiDatetimePickerComponent implements OnInit {
     this.updateNgModel(null);
   }
 
-  // 1. remember selection
-  // 2. emit selection event
-  // 3. update view dates metas
-  updateSelection(vdate: ViewDate, date: Date) {
-    this.selection = vdate;
+  // 1. set locale
+  // 2. create ni-datetime
+  // 3. convert selection
+  // 4. update input field
+  // 5. update view
+  // 6. emit event
+  updateLocale(locale: any, emit = true) {
+    if (!locale) {
+      return;
+    }
 
-    this.selected.emit({
-      ndate: vdate ? Object.assign({}, vdate) : null,
-      formatted: this.format(this.date.clone().use(date), this.inputFormat),
-      date: date ? new Date(date) : null
+    // set the locale
+    const prevLocale = this.__locale;
+    this.__locale = (typeof locale) === "string"
+      ? Locales[locale as string] : locale;
+
+    const prevDate = this.date;
+
+    if (this.__locale.name === 'fa_AF' || this.__locale.name === 'fa_IR') {
+      this.date = new NiJalaliDatetime();
+    } else if (this.__locale.name === 'en_US') {
+      this.date = new NiGregorianDatetime();
+    } else {
+      throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
+    }
+
+    // convert selection to new locale
+    if (this.selection) {
+      const old = prevDate.clone();
+      old.ymd = this.selection;
+      const neo = this.date.clone().use(old.__date);
+
+      this.updateSelection(neo.ymd, neo.__date);
+    }
+
+    this.updateInputfield();
+
+    // force view update
+    this.viewMonthsMin = null;
+    this.viewMonthsMax = null;
+    this.updateView();
+
+    // and emit the event
+    if (emit) {
+      this.localeChange.emit(this.__locale.name);
+      if (prevLocale.name !== this.__locale.name) {
+        this.localeChanged.emit({
+          previous: prevLocale.name,
+          locale: this.__locale.name
+        });
+      }
+    }
+  }
+
+  format(ndate: NiDatetime, format: string) {
+    const formats = {
+      YYYY: () => this.pad(ndate.year, 4),
+      YY: () => this.pad(ndate.year, 4).substring(2),
+      MMMM: () => this.locale.monthsName[ndate.month - 1],
+      MMM: () => this.locale.monthsNameShort[ndate.month - 1],
+      MM: () => this.pad(ndate.month, 2),
+      M: () => ndate.month,
+      DD: () => this.pad(ndate.date, 2),
+      D: () => ndate.date,
+      WWWW: () => this.locale.daysName[ndate.weekDay],
+      WWW: () => this.locale.daysNameShort[ndate.weekDay],
+      WW: () => this.locale.daysNameMini[ndate.weekDay],
+      HH: () => this.pad(ndate.hours, 2),
+      hh: () => this.pad(ndate.hours12, 2),
+      H: () => ndate.hours,
+      h: () => ndate.hours12,
+      mm: () => this.pad(ndate.minutes, 2),
+      m: () => ndate.minutes,
+      ss: () => this.pad(ndate.seconds, 2),
+      s: () => ndate.seconds,
+      A: () => this.locale.AMPM[ndate.hours > 12 ? 1 : 0],
+      a: () => this.locale.ampm[ndate.hours > 12 ? 1 : 0],
+      z: () => ndate.__date.toString().substring(25, 33),
+      iso: () => `${formats.YYYY()}-${formats.MM()}-${formats.DD()}${ndate.__date.toISOString().substring(10)}`
+    };
+
+    const pholders = {};
+    let counter = 0;
+
+    Object.keys(formats).sort((a, b) => b.length - a.length).forEach(key => {
+      for (let index = format.indexOf(key); index >= 0; index = format.indexOf(key)) {
+        const placeholder = `$[[${counter++}]]`;
+        pholders[placeholder] = formats[key]();
+        format = format.replace(key, placeholder);
+      }
     });
 
-    this.checkViewDatesTodaySelectionRefs();
+    Object.keys(pholders).forEach(pholder => format = format.replace(pholder, pholders[pholder]));
+
+    return format;
+  }
+
+  pad(num: any, limit: number): string {
+    return '0'.repeat(limit - num.toString().length) + num;
   }
 }
 

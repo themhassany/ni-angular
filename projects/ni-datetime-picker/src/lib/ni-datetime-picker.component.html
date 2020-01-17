@@ -29,8 +29,10 @@
             </div>
             <div class="ni-dialog-content">
                 <div *ngIf="datePicker" class="ni-view-months">
-                    <div *ngFor="let viewMonth of viewMonths" class="ni-view-month"
-                        [ngStyle]="{width: monthWidth}">
+                    <div *ngFor="let viewMonth of viewMonths" [ngClass]="{
+                            'ni-view-month': true,
+                            'ni-view-month-picker': monthPicker
+                        }" [ngStyle]="{ width: monthWidth }">
                         <div *ngIf="numberOfMonths > 1" class="ni-view-month-title"
                             (click)="monthDateClicked(viewMonth)">
                             {{ viewMonth.title }}

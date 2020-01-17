@@ -8,11 +8,8 @@
 <hr />
 <div style="text-align: left;">
     <ni-datetime-picker [(ngModel)]="date" locale="en_US" titleFormat="YYYY"
-        inputFormat="WWWW DD MMM YYYY" monthHeaderFormat="MMMM" [numberOfMonths]="12"
-        [datePicker]="true" [timePicker]="true" [inline]="false" placeholder="date/time"
-        [localePickable]="true" (onChange)="event($event); inputFormatted = $event.formatted;"
-        (showed)="event('showed')" (hidded)="event('hided')" (viewUpdated)="event($event)"
-        (localeChanged)="event($event)" (focused)="event($event)" (blurred)="event($event)">
+        inputFormat="WWWW DD MMM YYYY" monthHeaderFormat="MMMM" [numberOfMonths]="3"
+        [monthPicker]="false" [inline]="true" placeholder="date/time" [localePickable]="false">
     </ni-datetime-picker>
     <!-- <br />
     <ni-datetime-picker [(model)]="date" [defaultDate]="defauld" locale="en_US"
