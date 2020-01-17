@@ -5,17 +5,11 @@ Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregori
     npm i ni-datetime-picker
 
 # Screenshots
-
-<img src="https://raw.githubusercontent.com/jone30rw/ni-angular/master/screenshots/datetime-picker1.png" width="100">
-<!-- ![datetime-picker1.png]() -->
-<img src="https://raw.githubusercontent.com/jone30rw/ni-angular/master/screenshots/datetime-picker12.png" width="100">
-<!-- ![datetime-picker12.png]() -->
-<img src="https://raw.githubusercontent.com/jone30rw/ni-angular/master/screenshots/datetime-picker3.png" width="100">
-<!-- ![datetime-picker3.png]() -->
-<img src="https://raw.githubusercontent.com/jone30rw/ni-angular/master/screenshots/month-picker.png" width="100">
-<!-- ![month-picker.png]() -->
-<img src="https://raw.githubusercontent.com/jone30rw/ni-angular/master/screenshots/time-picker.png" width="100">
-<!-- ![time-picker.png]() -->
+<img src="../../screenshots/datetime-picker1.png" width="200" title="datetime-picker1.png">
+<img src="../../screenshots/datetime-picker12.png" width="200" title="datetime-picker12.png">
+<img src="../../screenshots/datetime-picker3.png" width="200" title="datetime-picker3.png">
+<img src="../../screenshots/month-picker.png" width="200" title="month-picker.png">
+<img src="../../screenshots/time-picker.png" width="200" title="time-picker.png">
 
 # Import the NiDatetimePickerModule
 
