@@ -12,6 +12,10 @@
       "element",
       "",
       "kebab-case"
-    ]
+    ],
+    "variable-name": false,
+    "member-ordering": false,
+    "no-output-on-prefix": false,
+    "quotemark": false
   }
 }

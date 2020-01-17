@@ -7,29 +7,29 @@
 {{ open }}
 <hr />
 <div style="text-align: left;">
-    <ni-datetime-picker [(model)]="date" locale="en_US" titleFormat="YYYY" inputFormat="WWWW DD MMM YYYY"
-        monthHeaderFormat="MMMM" [visibleMonths]="1" [datePicker]="true" [timePicker]="true"
-        [openDialog]="true" [inline]="false" placeholder="date/time" [localeSwitch]="true"
-        (onChange)="event($event); inputFormatted = $event.formatted;" (onShow)="event('showed')"
-        (onHide)="event('hided')" (onViewUpdate)="event($event)" (onLocaleChange)="event($event)"
-        (onFocus)="event($event)" (onBlur)="event($event)" [closeOnSelect]="true">
+    <ni-datetime-picker [(ngModel)]="date" locale="en_US" titleFormat="YYYY"
+        inputFormat="WWWW DD MMM YYYY" monthHeaderFormat="MMMM" [numberOfMonths]="12"
+        [datePicker]="true" [timePicker]="true" [inline]="false" placeholder="date/time"
+        [localePickable]="true" (onChange)="event($event); inputFormatted = $event.formatted;"
+        (showed)="event('showed')" (hidded)="event('hided')" (viewUpdated)="event($event)"
+        (localeChanged)="event($event)" (focused)="event($event)" (blurred)="event($event)">
     </ni-datetime-picker>
     <!-- <br />
-    <ni-datetime-picker [(model)]="date" [viewDefaultDate]="defauld" locale="en_US"
+    <ni-datetime-picker [(model)]="date" [defaultDate]="defauld" locale="en_US"
         titleFormat="MMMM YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM YYYY"
-        [visibleMonths]="12" [monthPicker]="false" [datePicker]="true" [timePicker]="true"
-        [inline]="true" placeholder="date/time" [localeSwitch]="true">
+        [numberOfMonths]="12" [monthPicker]="false" [datePicker]="true" [timePicker]="true"
+        [inline]="true" placeholder="date/time" [localePickable]="true">
     </ni-datetime-picker>
     <br />
-    <ni-datetime-picker [(model)]="date" [viewDefaultDate]="defauld" locale="fa_AF"
+    <ni-datetime-picker [(model)]="date" [defaultDate]="defauld" locale="fa_AF"
         titleFormat="MMMM YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM YYYY"
-        [visibleMonths]="2" [monthPicker]="false" [datePicker]="true" [timePicker]="true"
-        [inline]="true" placeholder="date/time" [localeSwitch]="true">
+        [numberOfMonths]="2" [monthPicker]="false" [datePicker]="true" [timePicker]="true"
+        [inline]="true" placeholder="date/time" [localePickable]="true">
     </ni-datetime-picker>
     <br />
-    <ni-datetime-picker [(model)]="date" [viewDefaultDate]="defauld" locale="fa_AF"
-        titleFormat="YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM" [visibleMonths]="12"
+    <ni-datetime-picker [(model)]="date" [defaultDate]="defauld" locale="fa_AF"
+        titleFormat="YYYY" inputFormat="YYYY-MM" monthHeaderFormat="MMMM" [numberOfMonths]="12"
         [monthPicker]="true" [datePicker]="true" [timePicker]="true" [inline]="true"
-        placeholder="date/time" [localeSwitch]="true">
+        placeholder="date/time" [localePickable]="true">
     </ni-datetime-picker> -->
 </div>

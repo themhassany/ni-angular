@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NiDatetime, NiJalaliDatetime, NiGregorianDatetime, NiDatetimeLocale, Locales } from './ni-datetime';
-import { ChangeEvent, LocaleChangeEvent, SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime-picker';
+import {
+  NiDatetime, NiJalaliDatetime, NiGregorianDatetime,
+  NiDatetimeLocale, NiLocale, LocaleChangeEvent, Locales
+} from './ni-datetime';
+import { SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime-picker';
 
 @Component({
   selector: 'ni-datetime-picker',
@@ -9,81 +12,75 @@ import { ChangeEvent, LocaleChangeEvent, SelectEvent, ViewDate, ViewMonth, ViewU
 })
 export class NiDatetimePickerComponent implements OnInit {
 
-  ready = false;
-  $model: Date;
-  today: ViewDate;
-  selection: ViewDate;
-  get model(): Date { return this.$model; }
-  @Input() set model(date: Date) {
-    if (this.ready) { this.setDate(date, false); }
-    /*______*/ else { this.$model = date; }
+  __ngModel: Date;
+  @Input()
+  set ngModel(date: Date) {
+    this.updateNgModel(date, false);
   }
-  @Output() modelChange: EventEmitter<Date> = new EventEmitter<Date>();
-  @Input() viewDefaultDate: Date;
+  get ngModel(): Date {
+    return this.__ngModel;
+  }
+  @Output() ngModelChange = new EventEmitter<Date>();
+
+  // use for the view if ngModel is null
+  @Input() defaultDate: Date;
 
   @Input() monthPicker = false;
   @Input() datePicker = true;
   @Input() timePicker = false;
   @Input() inline = false;
 
-  @Input() closeOnSelect = false;
+  @Input() localePickable = false;
+  __locale: NiDatetimeLocale = Locales.fa_AF;
+  @Output() localeChange = new EventEmitter<string>();
+  @Input()
+  set locale(locale: any) {
+    this.updateLocale(locale, false);
+  }
+  get locale(): any {
+    return this.__locale;
+  }
 
-  @Input() localeSwitch = false;
-  @Input() locale: 'fa_AF' | 'fa_IR' | 'en_US' = 'fa_AF';
-  @Output() localeChange: EventEmitter<string> = new EventEmitter<string>();
-  @Input() calendarLocale: NiDatetimeLocale;
-  @Input() titleFormat = 'MMMM YYYY';
   @Input() inputFormat = 'YYYY-MM-DD HH:mm AP';
-  @Input() monthHeaderFormat = 'MMMM YYYY';
   @Input() placeholder = '';
+  @Input() titleFormat = 'MMMM YYYY';
+  @Input() monthHeaderFormat = 'MMMM YYYY';
 
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onChange = new EventEmitter<ChangeEvent>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onSelect = new EventEmitter<SelectEvent>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onShow = new EventEmitter<any>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onFocus = new EventEmitter<any>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onBlur = new EventEmitter<any>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onHide = new EventEmitter<any>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onViewUpdate = new EventEmitter<ViewUpdateEvent>();
-  // tslint:disable-next-line: no-output-on-prefix
-  @Output() onLocaleChange = new EventEmitter<LocaleChangeEvent>();
+  @Output() showed = new EventEmitter<any>();
+  @Output() hidded = new EventEmitter<any>();
+  @Output() selected = new EventEmitter<SelectEvent>();
+  @Output() focused = new EventEmitter<any>();
+  @Output() blurred = new EventEmitter<any>();
+  @Output() viewUpdated = new EventEmitter<ViewUpdateEvent>();
+  @Output() localeChanged = new EventEmitter<LocaleChangeEvent>();
 
   dialogWidth: string;
   monthWidth: string;
-  $visibleMonths = 1;
-  get visibleMonths(): number { return this.$visibleMonths; }
-  @Input() set visibleMonths(visibleMonths: number) {
-    // 1-12
-    this.$visibleMonths = Math.max(0, Math.min(12, visibleMonths));
 
+  __numberOfMonths = 1;
+  @Input()
+  set numberOfMonths(months: number) {
     if (this.monthPicker) {
       this.dialogWidth = '250px';
-      this.monthWidth = '33.333333%';
-    } else {
-      const columns = this.$visibleMonths < 3 ? this.$visibleMonths : 3;
+      this.monthWidth = '33.333%';
+      this.__numberOfMonths = 12;
+    } else if (this.datePicker) {
+      this.__numberOfMonths = Math.max(1, Math.min(12, months)); // 1-12
+      const columns = this.__numberOfMonths < 3 ? this.__numberOfMonths : 3;
       this.dialogWidth = `${columns * 250}px`;
-      this.monthWidth = `${columns < 2 ? 100 : (columns < 3 ? 50 : 33.333333)}%`;
+      this.monthWidth = `${columns < 2 ? 100 : (columns < 3 ? 50 : 33.333)}%`;
     }
   }
+  get numberOfMonths(): number {
+    return this.__numberOfMonths;
+  }
 
-  nidate: NiDatetime;
+  date: NiDatetime;
+  today: ViewDate;
+  selection: ViewDate;
+
   inputFormatted = '';
-
-  $openDialog = false;
-  get openDialog(): boolean { return this.$openDialog; }
-  @Input() set openDialog(open: boolean) {
-    this.$openDialog = open;
-    if (this.ready) {
-      this.openDialogChange.emit(this.$openDialog);
-    }
-  }
-  @Output() openDialogChange = new EventEmitter<boolean>();
+  openDialog = false;
   dialogTitle = '';
   viewMonthsMin: Date;
   viewMonthsMax: Date;
@@ -92,116 +89,162 @@ export class NiDatetimePickerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // set locale and date wrapper
-    this.changeLocale(this.locale, false);
-
-    this.ready = true;
     // in case value is set before component ready
     // re-set the value to trigger appropriate events
-    this.model = this.$model;
-
-    this.visibleMonths = this.$visibleMonths;
+    this.updateLocale(this.locale, false);
+    this.ngModel = this.ngModel;
+    this.numberOfMonths = this.numberOfMonths;
 
     // open the dialog if inline
-    if (this.inline) {
-      this.openDialog = true;
-    }
+    this.openDialog = this.inline;
   }
 
-  setDate(date: Date, emit: boolean = true) {
-    // emit the value
-    if (emit) {
-      this.$model = date ? new Date(date) : null;
-
-      this.modelChange.emit(date);
-      this.onChange.emit({
-        formatted: date ? this.format(
-          this.nidate.clone().set(date),
-          this.inputFormat
-        ) : '',
-        date: this.$model
-      });
+  // 1. set locale
+  // 2. create ni-datetime
+  // 3. convert selection
+  // 4. update input field
+  // 5. update view
+  // 6. emit event
+  updateLocale(locale: any, emit = true) {
+    if (!locale) {
+      return;
     }
 
-    if (date) {
-      this.nidate.set(date);
-      // set formatted date into <input/>
-      this.inputFormatted = this.format(this.nidate, this.inputFormat);
+    // set the locale
+    const prevLocale = this.__locale;
+    this.__locale = (typeof locale) === "string"
+      ? Locales[locale as string] : locale;
+
+    const prevDate = this.date;
+
+    if (this.__locale.name === 'fa_AF' || this.__locale.name === 'fa_IR') {
+      this.date = new NiJalaliDatetime();
+    } else if (this.__locale.name === 'en_US') {
+      this.date = new NiGregorianDatetime();
     } else {
-      this.inputFormatted = '';
+      throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
     }
 
-    // update the view
-    this.updateView(date);
+    // convert selection to new locale
+    if (this.selection) {
+      const old = prevDate.clone();
+      old.ymd = this.selection;
+      const neo = this.date.clone().use(old.__date);
 
-    if (emit && !this.inline && this.closeOnSelect) {
-      this.dialogOverlayClicked(null);
+      this.updateSelection(neo.ymd, neo.__date);
+    }
+
+    this.updateInputfield();
+
+    // force view update
+    this.viewMonthsMin = null;
+    this.viewMonthsMax = null;
+    this.updateView();
+
+    // and emit the event
+    if (emit) {
+      this.localeChange.emit(this.__locale.name);
+      if (prevLocale.name !== this.__locale.name) {
+        this.localeChanged.emit({
+          previous: prevLocale.name,
+          locale: this.__locale.name
+        });
+      }
     }
   }
 
-  updateView(date: Date) {
+  // 1. persiste date
+  // 2. update input field
+  // 3. emit event
+  // 4. close dialog (if not inline and not time update)
+  updateNgModel(date: Date, emit: boolean = true, timeUpdated = false) {
+    this.__ngModel = date;
+    this.updateInputfield();
+
+    if (emit) {
+      this.ngModelChange.emit(new Date(date));
+
+      // close the dialog if not inline and time update
+      if (!this.inline && !timeUpdated) {
+        this.dialogOverlayClicked(null);
+      }
+    }
+  }
+
+  updateInputfield() {
+    this.inputFormatted = '';
+
+    // set formatted date into <input/>
+    if (this.ngModel && this.date) {
+      this.inputFormatted = this.format(
+        this.date.clone().use(this.ngModel), this.inputFormat);
+    }
+  }
+
+  updateView() {
+    let date = this.ngModel;
     if (!date) {
-      // then use now
-      date = this.viewDefaultDate ? new Date(this.viewDefaultDate) : new Date();
+      date = this.defaultDate ? new Date(this.defaultDate) : new Date();
     }
 
     // update the 'today' reference
-    let _ = this.nidate.clone().set(new Date());
-    this.today = { year: _.getYear(), month: _.getMonth(), date: _.getDate() };
+    let ndate = this.date.clone().use(new Date());
+    this.today = ndate.ymd;
 
     // persist the date and clone it
-    _ = this.nidate.set(date).clone();
+    ndate = this.date.use(date).clone();
 
     // update dialog title
-    this.dialogTitle = this.format(_, this.titleFormat);
+    this.dialogTitle = this.format(ndate, this.titleFormat);
 
     // only if given date is out or current view's range
     if (!this.viewMonthsMin || this.viewMonthsMin.getTime() > date.getTime()
       || !this.viewMonthsMax || this.viewMonthsMax.getTime() < date.getTime()) {
-      const count = this.visibleMonths;
+      const count = this.numberOfMonths;
 
       if (count % 3 === 0) {
         // in case of 3,6,9,12
         // start from 1,4,7,10
-        let month = _.getMonth();
+        const ymd = ndate.ymd;
         for (let i = 1; i < 12; i += count) {
-          if (month < i + count) {
-            month = i;
+          if (ymd.month < i + count) {
+            ymd.month = i;
             break;
           }
         }
-
-        _.updateDate(_.getYear(), month, 1);
+        ymd.date = 1;
+        ndate.ymd = ymd;
       }
 
       // store view lower bound
-      this.viewMonthsMin = new Date(_.date);
+      this.viewMonthsMin = new Date(ndate.__date);
 
       const viewMonths = [];
       // generate view dates
       for (let is = 0, ie = count; is < ie; is++) {
-        viewMonths.push(this.computeMonthDates(_));
+        viewMonths.push(this.computeMonthDates(ndate));
 
         // move to next month
-        let year = _.getYear();
-        let month = _.getMonth() + 1;
-        if (month > 12) {
-          year += 1;
-          month = 1;
+        const ymd = ndate.ymd;
+        ymd.month += 1;
+        if (ymd.month > 12) {
+          ymd.year += 1;
+          ymd.month = 1;
         }
-        _.updateDate(year, month, 1);
+        ymd.date = 1;
+        ndate.ymd = ymd;
       }
 
       // store view upper bound
       // _.date is the 1st of next month
       // so deduct 24 hours from it
-      this.viewMonthsMax = new Date(_.date.getTime() - (24 * 60 * 60_000));
+      this.viewMonthsMax = new Date(ndate.__date.getTime() - (24 * 60 * 60_000));
 
       this.viewMonths = viewMonths;
 
       this.checkViewDatesTodaySelectionRefs();
 
-      this.onViewUpdate.emit({
+      this.viewUpdated.emit({
         viewMinDate: new Date(this.viewMonthsMin),
         viewMaxDate: new Date(this.viewMonthsMax)
       });
@@ -232,125 +275,111 @@ export class NiDatetimePickerComponent implements OnInit {
     }));
   }
 
-  updateTime(field: 'hour' | 'minute' | 'second' | 'ampm', sign: number) {
-    const _ = this.nidate.updateTime(field, sign);
-    const updated = { year: _.getYear(), month: _.getMonth(), date: _.getDate() };
-
-    // updating time should not close the dialog
-    const oldValue = this.closeOnSelect;
-    this.closeOnSelect = false;
-
-    this.setDate(_.date);
-
-    this.closeOnSelect = oldValue;
+  // 1. persiste date
+  // 2. update selection (if necessary)
+  updateTime() {
+    this.updateNgModel(this.date.__date, true, true);
 
     // update the selection if date has changed
-    if (!this.selection || !this.isYmdEqual(this.selection, updated)) {
-      this.setSelection(updated, _.date);
-      this.checkViewDatesTodaySelectionRefs();
+    if (!this.selection || !this.isYmdEqual(this.selection, this.date.ymd)) {
+      this.updateSelection(this.date.ymd, this.date.__date);
     }
   }
 
+  // 1. open dialog
+  // 2. update view
+  // 3. emit events
   inputFocused($event: any) {
     const wasHidden = this.openDialog;
     this.openDialog = true;
-    this.updateView(this.$model);
+    this.updateView();
 
-    this.onFocus.emit(null);
+    this.focused.emit(null);
     if (!wasHidden) {
-      this.onShow.emit(null);
+      this.showed.emit(null);
     }
   }
 
   inputBlured($event: any) {
-    this.onBlur.emit(null);
+    this.blurred.emit(null);
   }
 
   dialogOverlayClicked($event: any) {
     this.openDialog = false;
-    this.onHide.emit(null);
+    this.hidded.emit(null);
   }
 
   headerClicked($event: any) {
     this.selectMonthDate(this.today);
   }
 
-  navigateTo(direction: 'backward' | 'forward') {
-    if (direction === 'backward') {
-      this.navigateToPreviousView();
-    } else {
-      this.navigateToNextView();
-    }
-  }
-
   navigateToPreviousView() {
-    const _ = this.nidate.clone();
-    let year = _.getYear();
-    let month = _.getMonth() - this.visibleMonths;
-    if (month < 1) {
-      month = 12 - (this.visibleMonths - _.getMonth());
-      year -= 1;
+    const ymd = this.date.clone().ymd;
+    const month = ymd.month;
+
+    ymd.month -= this.numberOfMonths;
+    if (ymd.month < 1) {
+      ymd.month = 12 - (this.numberOfMonths - month);
+      ymd.year -= 1;
     }
-    _.updateDate(year, month, _.getDate());
-    this.updateView(_.date);
+    this.date.ymd = ymd;
+    this.updateView();
   }
 
   navigateToNextView() {
-    const _ = this.nidate.clone();
-    let year = _.getYear();
-    let month = _.getMonth() + this.visibleMonths;
-    if (month > 12) {
-      month %= 12;
-      year += 1;
+    const ymd = this.date.clone().ymd;
+    ymd.month += this.numberOfMonths;
+    if (ymd.month > 12) {
+      ymd.month %= 12;
+      ymd.year += 1;
     }
-    _.updateDate(year, month, _.getDate());
-    this.updateView(_.date);
+    this.date.ymd = ymd;
+    this.updateView();
   }
 
   monthDateClicked(viewDate: ViewDate) {
     this.selectMonthDate(viewDate);
   }
 
+  // 1. remember view
+  // 2. persiste date
+  // 3. update selection
   selectMonthDate(viewDate: ViewDate) {
-    const _ = this.nidate.updateDate(viewDate.year, viewDate.month, viewDate.date);
-
-    this.setSelection(viewDate, _.date);
-    this.checkViewDatesTodaySelectionRefs();
-
-    this.setDate(_.date);
+    this.date.ymd = viewDate;
+    this.updateNgModel(this.date.__date);
+    this.updateSelection(viewDate, this.date.__date);
+    // view will be update in next dialog open
   }
 
   pad(num: any, limit: number): string {
     return '0'.repeat(limit - num.toString().length) + num;
   }
 
-  format(_: NiDatetime, format: string) {
-    const locale = this.calendarLocale;
-
+  format(ndate: NiDatetime, format: string) {
     const formats = {
-      YYYY: () => this.pad(_.getYear(), 4),
-      YY: () => this.pad(_.getYear(), 4).substring(2),
-      MMMM: () => locale.monthsName[_.getMonth() - 1],
-      MMM: () => locale.monthsShortName[_.getMonth() - 1],
-      MM: () => this.pad(_.getMonth(), 2),
-      M: () => _.getMonth(),
-      DD: () => this.pad(_.getDate(), 2),
-      D: () => _.getDate(),
-      WWWW: () => locale.daysName[_.getDayOfWeek()],
-      WWW: () => locale.daysShortName[_.getDayOfWeek()],
-      WW: () => locale.daysMiniName[_.getDayOfWeek()],
-      HH: () => this.pad(_.getHours(), 2),
-      hh: () => this.pad(_.getHours() % 12 || 12, 2),
-      H: () => _.getHours(),
-      h: () => _.getHours() % 12 || 12,
-      mm: () => this.pad(_.getMinutes(), 2),
-      m: () => _.getMinutes(),
-      ss: () => this.pad(_.getSeconds(), 2),
-      s: () => _.getSeconds(),
-      A: () => locale.ampm[_.getHours() > 12 ? 1 : 0].toUpperCase(),
-      a: () => locale.ampm[_.getHours() > 12 ? 1 : 0].toLowerCase(),
-      z: () => _.date.toString().substring(25, 33),
-      iso: () => `${formats.YYYY()}-${formats.MM()}-${formats.DD()}${_.date.toISOString().substring(10)}`
+      YYYY: () => this.pad(ndate.year, 4),
+      YY: () => this.pad(ndate.year, 4).substring(2),
+      MMMM: () => this.locale.monthsName[ndate.month - 1],
+      MMM: () => this.locale.monthsNameShort[ndate.month - 1],
+      MM: () => this.pad(ndate.month, 2),
+      M: () => ndate.month,
+      DD: () => this.pad(ndate.date, 2),
+      D: () => ndate.date,
+      WWWW: () => this.locale.daysName[ndate.weekDay],
+      WWW: () => this.locale.daysNameShort[ndate.weekDay],
+      WW: () => this.locale.daysNameMini[ndate.weekDay],
+      HH: () => this.pad(ndate.hours, 2),
+      hh: () => this.pad(ndate.hours12, 2),
+      H: () => ndate.hours,
+      h: () => ndate.hours12,
+      mm: () => this.pad(ndate.minutes, 2),
+      m: () => ndate.minutes,
+      ss: () => this.pad(ndate.seconds, 2),
+      s: () => ndate.seconds,
+      A: () => this.locale.AMPM[ndate.hours > 12 ? 1 : 0],
+      a: () => this.locale.ampm[ndate.hours > 12 ? 1 : 0],
+      z: () => ndate.__date.toString().substring(25, 33),
+      iso: () => `${formats.YYYY()}-${formats.MM()}-${formats.DD()}${ndate.__date.toISOString().substring(10)}`
     };
 
     const pholders = {};
@@ -369,14 +398,13 @@ export class NiDatetimePickerComponent implements OnInit {
     return format;
   }
 
-  computeMonthDates(_: NiDatetime): ViewMonth {
-    const locale = this.calendarLocale;
+  computeMonthDates(ndate: NiDatetime): ViewMonth {
     let mdates: ViewDate[] = [];
     const mweekdays = [];
     const weekNumbers = [];
 
-    const curYear = _.getYear();
-    const curMonth = _.getMonth();
+    const curYear = ndate.year;
+    const curMonth = ndate.month;
 
     let localeFirstday = 0;
     let includeFrom = 0;
@@ -384,38 +412,39 @@ export class NiDatetimePickerComponent implements OnInit {
 
     if (this.datePicker && !this.monthPicker) {
       // prev month
-      const prev = _.clone();
-      let prevYear = prev.getYear();
-      let prevMonth = prev.getMonth() - 1;
-      if (prevMonth < 1) {
-        prevMonth = 12;
-        prevYear -= 1;
+      const prev = ndate.clone();
+      const prevYmd = prev.ymd;
+      prevYmd.month -= 1;
+      if (prevYmd.month < 1) {
+        prevYmd.month = 12;
+        prevYmd.year -= 1;
       }
-      prev.updateDate(prevYear, prevMonth, 15);
-      const prevMonthDaysCount = prev.getMonthDaysCount();
+      prevYmd.date = 15;
+      prev.ymd = prevYmd;
+      const prevMonthDaysCount = prev.daysInMonth;
       for (let day = prevMonthDaysCount - 6; day <= prevMonthDaysCount; day++) {
-        mdates.push({ year: prevYear, month: prevMonth, date: day, prev: true });
+        mdates.push({ year: prevYmd.year, month: prevYmd.month, date: day, prev: true });
       }
 
       // current month
-      localeFirstday = locale.firstday;
-      const weekFirstday = _.getMonthFirstDayOfWeek();
-      const monthDaysCount = _.getMonthDaysCount();
+      localeFirstday = this.locale.firstday;
+      const weekFirstday = ndate.weeksFirstday;
+      const monthDaysCount = ndate.daysInMonth;
       const monthFirstday = mdates.length;
       for (let day = 1; day <= monthDaysCount; day++) {
         mdates.push({ year: curYear, month: curMonth, date: day });
       }
 
       // next month
-      const next = _.clone();
-      let nextYear = next.getYear();
-      let nextMonth = next.getMonth() + 1;
-      if (nextMonth > 12) {
-        nextMonth = 1;
-        nextYear += 1;
+      const next = ndate.clone();
+      const nextYmd = next.ymd;
+      nextYmd.month += 1;
+      if (nextYmd.month > 12) {
+        nextYmd.month = 1;
+        nextYmd.year += 1;
       }
       for (let day = 1; day < 7; day++) {
-        mdates.push({ year: nextYear, month: nextMonth, date: day, next: true });
+        mdates.push({ year: nextYmd.year, month: nextYmd.month, date: day, next: true });
       }
 
       // trim month dates
@@ -425,7 +454,7 @@ export class NiDatetimePickerComponent implements OnInit {
       includeUntil = includeFrom + (includedWeeksCount * 7);
 
       mdates = mdates.slice(includeFrom, includeUntil);
-      const localeWeekends = this.calendarLocale.weekends;
+      const localeWeekends = this.locale.weekends;
       let lfirstday = localeFirstday;
       mdates.forEach(date => {
         date.weekend = localeWeekends.indexOf(lfirstday) >= 0;
@@ -433,27 +462,27 @@ export class NiDatetimePickerComponent implements OnInit {
       });
 
       // add week nums
-      const weeksCount = this.getWeeksCountUntilEndOf(_, curMonth);
+      const weeksCount = this.getWeeksCountUntilEndOf(ndate, curMonth);
       const monthFirstWeekNum = weeksCount - includedWeeksCount + 1;
       for (let week = monthFirstWeekNum; week <= weeksCount; week++) {
         weekNumbers.push(week);
       }
 
       // add weekday/ends
-      const daysNames = locale.daysMiniName;
+      const daysNames = this.locale.daysNameMini;
       const daysIndices = [0, 1, 2, 3, 4, 5, 6];
       const weekdays = [...daysNames.slice(localeFirstday), ...daysNames.slice(0, localeFirstday)];
       const weekdayIndices = [...daysIndices.slice(localeFirstday), ...daysIndices.slice(0, localeFirstday)];
       for (let i = 0; i < weekdays.length; i++) {
-        mweekdays.push({ title: weekdays[i], weekend: this.calendarLocale.weekends.indexOf(weekdayIndices[i]) >= 0 });
+        mweekdays.push({ title: weekdays[i], weekend: this.locale.weekends.indexOf(weekdayIndices[i]) >= 0 });
       }
     }
 
+    const title = ndate.clone();
+    title.ymd = { year: curYear, month: curMonth, date: 1 };
+
     return {
-      title: this.format(
-        _.clone().updateDate(curYear, curMonth, 1),
-        this.monthHeaderFormat
-      ),
+      title: this.format(title, this.monthHeaderFormat),
       year: curYear,
       month: curMonth,
       date: 1,
@@ -473,95 +502,45 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  getWeeksCountUntilEndOf(_: NiDatetime, month: number): number {
-    _ = _.clone();
-    const year = _.getYear();
-    const localeFirstday = this.calendarLocale.firstday;
+  getWeeksCountUntilEndOf(ndate: NiDatetime, month: number): number {
+    ndate = ndate.clone();
     let firstday: number;
     let dayscount = 0;
 
-    for (let m = 1; m <= month; m++) {
-      _.updateDate(year, m, 1);
-      if (m === 1) {
-        firstday = _.getMonthFirstDayOfWeek();
+    for (let monthI = 1; monthI <= month; monthI++) {
+      ndate.ymd = { year: ndate.year, month: monthI, date: 1 };
+      if (monthI === 1) {
+        firstday = ndate.weeksFirstday;
       }
-      dayscount += _.getMonthDaysCount();
+      dayscount += ndate.daysInMonth;
     }
 
-    return Math.ceil((dayscount + this.getFirstdayDifference(localeFirstday, firstday)) / 7);
+    return Math.ceil((dayscount + this.getFirstdayDifference(this.locale.firstday, firstday)) / 7);
   }
 
+  // 1. clear selection
+  // 2. clear date
   clearValue() {
     if (this.selection) {
       this.selection.selected = undefined;
-      this.setSelection(null, null);
+      this.updateSelection(null, null);
     }
-    this.setDate(null);
+    this.updateNgModel(null);
   }
 
-  changeLocale(locale: 'fa_AF' | 'fa_IR' | 'en_US', update = true) {
-    const prevNiDate = this.nidate;
-    const prevCloseOnSelect = this.closeOnSelect;
+  // 1. remember selection
+  // 2. emit selection event
+  // 3. update view dates metas
+  updateSelection(vdate: ViewDate, date: Date) {
+    this.selection = vdate;
 
-    // don't close when locale is changing
-    this.closeOnSelect = false;
-
-    if (locale === 'fa_AF' || locale === 'fa_IR') {
-      this.nidate = new NiJalaliDatetime();
-    } else if (locale === 'en_US') {
-      this.nidate = new NiGregorianDatetime();
-    } else {
-      throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
-    }
-
-    this.calendarLocale = Locales[locale];
-
-    if (this.selection && this.$model) {
-      this.convertSelection(prevNiDate);
-    }
-
-    // force view update
-    this.viewMonthsMin = null;
-    this.viewMonthsMax = null;
-
-    this.setDate(this.$model, false);
-
-    const previousLocale = this.locale;
-    this.localeChange.emit(this.locale = locale);
-    if (previousLocale !== this.locale) {
-      this.onLocaleChange.emit({ previous: previousLocale, locale: this.locale });
-    }
-
-    this.closeOnSelect = prevCloseOnSelect;
-  }
-
-  convertSelection(prevNiDate: NiDatetime) {
-    const oldSelection = prevNiDate.clone().updateDate(
-      this.selection.year, this.selection.month, this.selection.date);
-    const newSelection = this.nidate.clone().set(oldSelection.date);
-
-    this.setSelection({
-      year: newSelection.getYear(),
-      month: newSelection.getMonth(),
-      date: newSelection.getDate()
-    }, newSelection.date);
-  }
-
-  setSelection(ndate: ViewDate, date: Date) {
-    this.selection = ndate;
-    this.onSelect.emit({
-      ndate: ndate ? {
-        year: ndate.year,
-        month: ndate.month,
-        date: ndate.date,
-        today: ndate.today,
-        weekend: ndate.weekend,
-        prev: ndate.prev,
-        next: ndate.next,
-        selected: ndate.selected
-      } : null,
+    this.selected.emit({
+      ndate: vdate ? Object.assign({}, vdate) : null,
+      formatted: this.format(this.date.clone().use(date), this.inputFormat),
       date: date ? new Date(date) : null
     });
+
+    this.checkViewDatesTodaySelectionRefs();
   }
 }
 

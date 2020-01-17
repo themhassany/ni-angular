@@ -19,11 +19,6 @@ export class ViewDate {
   selected?: boolean;
 }
 
-export interface ChangeEvent {
-  formatted: string;
-  date: Date;
-}
-
 export interface ViewUpdateEvent {
   viewMinDate: Date;
   viewMaxDate: Date;
@@ -31,10 +26,6 @@ export interface ViewUpdateEvent {
 
 export interface SelectEvent {
   ndate: ViewDate;
+  formatted: string;
   date: Date;
-}
-
-export interface LocaleChangeEvent {
-  previous: 'fa_AF' | 'fa_IR' | 'en_US';
-  locale: 'fa_AF' | 'fa_IR' | 'en_US';
 }

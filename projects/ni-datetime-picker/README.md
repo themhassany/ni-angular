@@ -43,56 +43,42 @@ Following example shows all the options avaiable in the component:
 
     <ni-datetime-picker
         // attribute="defaultValue"
-        [(model)]="null"
-        [viewDefaultDate]="new Date()"
-        
-        [(openDialog)]="false"
-        [closeOnSelect]="false"
+        [(ngModel)]="null"
+        [defaultDate]="new Date()"
 
-        [(locale)]="fa_AF"
-        [calendarLocale]="fa_AF_NiDatetimeLocaleObject"
-        [localeSwitch]="false"
-        
+        [(locale)]="fa_AF" // or a NiDatetimeLocale object
+        [localePickable]="false"
+
         inputFormat="YYYY-MM-DD HH:mm AP"
         placeholder=""
         titleFormat="MMMM YYYY"
         monthHeaderFormat="MMMM YYYY"
 
-        [visibleMonths]="1"
+        [numberOfMonths]="1"
         [monthPicker]="false"
         [datePicker]="true"
         [timePicker]="false"
         [inline]="false"
         
-        (onChange)=""
-        (onSelect)=""
-        (onShow)=""
-        (onHide)=""
-        (onViewUpdate)=""
-        (onLocaleChange)=""
-        (onFocus)=""
-        (onBlur)="">
+        (selected)=""
+        (showed)=""
+        (hidded)=""
+        (viewUpdated)=""
+        (localeChanged)=""
+        (focused)=""
+        (blurred)="">
     </ni-datetime-picker>
 
 ### [(model)]
 - a date object which read to changed by datepicker.
 
-### [viewDefaultDate]
+### [defaultDate]
 - when 'model' is null, the datepicker will use this value to prepare the view.
-
-### [(openDialog)]
-- bind a boolean value to datepicker dialog open attribute.
-
-### [closeOnSelect]
-- close the datepicker when a date is selected.
 
 ### [(locale)]
 - the locale to use for using month, and day names. availables are: fa_AF, fa_IR, en_US.
 
-### [calendarLocale]
-- provide your custom locale texts by passing a NiDatetimeLocale object.
-
-### [localeSwitch]
+### [localePickable]
 - show/hide the locale switcher. note: your custom calendarLocale will be ignored during switching.
 
 ### inputFormat
@@ -104,11 +90,11 @@ Following example shows all the options avaiable in the component:
 ### titleFormat
 - datepicker dialog title format. check the formatting for more information.
 
-### [visibleMonths]
+### [numberOfMonths]
 - ranging from 1 to 12 (included) specifies the number of visible month in datepicker view
 
 ### monthHeaderFormat
-- if visibleMonths > 1, this specifies the each month header format. check the formatting for more information.
+- if numberOfMonths > 1, this specifies the each month header format. check the formatting for more information.
 
 ### [monthPicker]
 - is a month picker
@@ -122,15 +108,7 @@ Following example shows all the options avaiable in the component:
 ### [inline]
 - is inline
 
-### (onChange)
-- trigger when a change event is happened.
-
-        interface ChangeEvent {
-            formatted: string;
-            date: Date;
-        }
-
-### (onSelect)
+### (selected)
 - trigger when a select event is happened.
 
         interface SelectEvent {
@@ -138,13 +116,13 @@ Following example shows all the options avaiable in the component:
             date: Date;
         }
 
-### (onShow)
+### (showed)
 - trigger when a show event is happened. null is passed as the value.
 
-### (onHide)
+### (hidded)
 - trigger when a hide event is happened. null is passed as the value.
 
-### (onViewUpdate)
+### (viewUpdated)
 - trigger when a view update event is happened.
 
         interface ViewUpdateEvent {
@@ -152,7 +130,7 @@ Following example shows all the options avaiable in the component:
             viewMaxDate: Date;
         }
 
-### (onLocaleChange)
+### (localeChanged)
 - trigger when a locale change event is happened.
 
         interface LocaleChangeEvent {
@@ -160,10 +138,10 @@ Following example shows all the options avaiable in the component:
             locale: 'fa_AF' | 'fa_IR' | 'en_US';
         }
 
-### (onFocus)
+### (focused)
 - trigger when a Focus event is happened. null is passed as the value.
 
-### (onBlur)
+### (blurred)
 - trigger when a Blur event is happened. null is passed as the value.
 
 
