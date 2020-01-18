@@ -95,6 +95,24 @@
                 <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
             </div>
         </div>
+
+        <div class="field">
+            <div class="title">disableWeekends</div>
+            <div class="value">
+                <button (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">disabledDates</div>
+            <div class="value">
+                <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
+                    [(ngModel)]="disabledDatesStr">
+                </textarea>
+                <br />
+                <button (click)="updateDisabledDates()">update</button>
+            </div>
+        </div>
     </div>
 
     <div style="flex-grow: 1">
@@ -130,7 +148,8 @@
 <hr />
 
 <div style="text-align: center;">
-    <ni-datetime-picker [(value)]="ngModel" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
+    <ni-datetime-picker [(value)]="ngModel" [disabledDates]="disabledDates"
+        [disableWeekends]="disableWeekends" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
         [datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
         [enableLocaleSwitch]="enableLocaleSwitch" [locale]="locale" [inputFormat]="inputFormat"
         [placeholder]="placeholder" [titleFormat]="titleFormat"

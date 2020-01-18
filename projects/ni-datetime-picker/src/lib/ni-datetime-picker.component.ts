@@ -166,12 +166,50 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
+  __disabledDates: Date[] = [];
+  @Input()
+  set disabledDates(value: Date[]) {
+    this.__disabledDates = value;
+    this.checkViewDatesTodaySelectionRefs();
+  }
+  get disabledDates() {
+    return this.__disabledDates;
+  }
+
+  __disableWeekends = true;
+  @Input()
+  set disableWeekends(value: boolean) {
+    this.__disableWeekends = value;
+    this.checkViewDatesTodaySelectionRefs();
+  }
+  get disableWeekends() {
+    return this.__disableWeekends;
+  }
+
   calendar: NiDatetime;
   today: ViewDate;
   selection: ViewDate;
 
   inputFormatted = '';
-  openDialog = false;
+
+  __openDialog = false;
+  set openDialog(value: boolean) {
+    this.__openDialog = value;
+
+    if (value) {
+      this.updateView();
+    }
+
+    if (value) {
+      this.showed.emit(null);
+    } else {
+      this.hidded.emit(null);
+    }
+  }
+  get openDialog() {
+    return this.__openDialog;
+  }
+
   dialogTitle = '';
   viewMonthsMin: Date;
   viewMonthsMax: Date;
@@ -222,14 +260,8 @@ export class NiDatetimePickerComponent implements OnInit {
   // 2. update view
   // 3. emit events
   inputFocused($event: any) {
-    const wasHidden = this.openDialog;
     this.openDialog = true;
-    this.updateView();
-
     this.focused.emit(null);
-    if (!wasHidden) {
-      this.showed.emit(null);
-    }
   }
 
   inputBlured($event: any) {
@@ -285,6 +317,10 @@ export class NiDatetimePickerComponent implements OnInit {
   // 3. update selection
   // 4. update view (if inline)
   selectMonthDate(viewDate: ViewDate) {
+    if (viewDate.disabled) {
+      return;
+    }
+
     this.calendar.ymd = viewDate;
     this.updateNgModel(this.calendar.__date);
     this.updateSelection(viewDate, this.calendar.__date);
@@ -315,21 +351,39 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   checkViewDatesTodaySelectionRefs() {
-    this.viewMonths.forEach($ => $.dates.forEach(vdate => {
-      if (this.today && this.isYmdEqual(vdate, this.today)) {
-        vdate.today = true;
-        this.today = vdate;
-      } else {
-        vdate.today = undefined;
+    if (!this.calendar) {
+      return;
+    }
+
+    let dummy = this.calendar;
+    if (dummy) { dummy = dummy.clone(); }
+
+    this.viewMonths.forEach($ => $.dates.forEach(viewDate => {
+      // const inCurrentMonth = !viewDate.prev && !viewDate.next;
+
+      viewDate.today = this.today && this.isYmdEqual(viewDate, this.today);
+      if (viewDate.today) {
+        this.today = viewDate;
       }
 
-      if (this.selection
-        && this.isYmdEqual(this.selection, vdate)
-        && !vdate.prev && !vdate.next) {
-        vdate.selected = true;
-      } else {
-        vdate.selected = undefined;
+      // by default disabled
+      viewDate.disabled = false;
+
+      // is weekend? and is weekend disabled
+      if (this.disableWeekends && viewDate.weekend) {
+        viewDate.disabled = true;
+      } else if (dummy) {
+        // look in disabled dates
+        for (const disabledDate of this.disabledDates) {
+          dummy.use(disabledDate);
+          if (this.isYmdEqual(dummy.ymd, viewDate)) {
+            viewDate.disabled = true;
+            break;
+          }
+        }
       }
+
+      viewDate.selected = this.selection && this.isYmdEqual(this.selection, viewDate);
     }));
   }
 
@@ -415,13 +469,13 @@ export class NiDatetimePickerComponent implements OnInit {
 
       this.viewMonths = viewMonths;
 
-      this.checkViewDatesTodaySelectionRefs();
-
       this.viewUpdated.emit({
         viewMinDate: new Date(this.viewMonthsMin),
         viewMaxDate: new Date(this.viewMonthsMax)
       });
     }
+
+    this.checkViewDatesTodaySelectionRefs();
   }
 
   computeMonthDates(ndate: NiDatetime): ViewMonth {
@@ -558,7 +612,6 @@ export class NiDatetimePickerComponent implements OnInit {
 
   dialogOverlayClicked($event: any) {
     this.openDialog = false;
-    this.hidded.emit(null);
   }
 
   // 1. clear selection

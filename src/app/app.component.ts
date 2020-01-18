@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NiDatetimeLocale, NiJalaliDatetime } from 'projects/ni-datetime-picker/src/public-api';
 
 @Component({
@@ -6,20 +6,25 @@ import { NiDatetimeLocale, NiJalaliDatetime } from 'projects/ni-datetime-picker/
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less']
 })
-export class AppComponent {
-  ngModel = null;
+export class AppComponent implements OnInit {
+
+  ngModel = new Date();
   defaultDate = new Date();
   monthPicker = false;
   datePicker = true;
-  timePicker = true;
+  timePicker = false;
   inline = true;
-  enableLocaleSwitch = true;
-  locale = 'fa_AF';
+  enableLocaleSwitch = false;
+  locale = 'en_US';
   inputFormat = 'YYYY-MM-DD';
   placeholder = 'date/time';
   titleFormat = 'YYYY';
-  monthHeaderFormat = 'MM';
-  numberOfMonths = 2;
+  monthHeaderFormat = 'MMMM';
+  numberOfMonths = 1;
+  disabledDates = [];
+  disabledDatesStr = '2020-01-01 00:00:00,2020-01-02 00:00:00,2020-01-03 00:00:00';
+
+  disableWeekends = true;
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',
@@ -38,11 +43,19 @@ export class AppComponent {
     AMPM: ['AM', 'PM']
   };
 
+  ngOnInit() {
+    this.updateDisabledDates();
+  }
+
   newDate() {
     return new Date();
   }
 
   event(type: string, $event: any) {
     console.log(`Event '${type}': ${$event}`);
+  }
+
+  updateDisabledDates() {
+    this.disabledDates = this.disabledDatesStr.split(',').map(date => new Date(date.trim()));
   }
 }

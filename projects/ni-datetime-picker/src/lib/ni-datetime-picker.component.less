@@ -181,7 +181,7 @@
 
   .ni-month-date-prev-month,
   .ni-month-date-next-month {
-    color: lightgray;
+    color: rgba(211, 211, 211, 0.5);
   }
 
   .ni-month-date-selected.ni-month-date-today {
@@ -192,19 +192,30 @@
     background: lightblue;
   }
 
+  .ni-month-date-disabled:hover {
+    background: rgba(211, 211, 211, 0.25);
+  }
+  .ni-month-date-disabled {
+    color: lightgray;
+  }
+
   .ni-month-weekend,
   .ni-month-date-weekend {
     color: red;
   }
 
+  .ni-month-date-weekend.ni-month-date-disabled {
+    color: rgba(255, 0, 0, 0.5);
+  }
+
   .ni-month-date.ni-month-date-weekend.ni-month-date-prev-month,
   .ni-month-date.ni-month-date-weekend.ni-month-date-next-month {
-    color: rgba(255, 0, 0, 0.5);
+    color: rgba(255, 0, 0, 0.25);
   }
 
   .ni-month-date.ni-month-date-weekend.ni-month-date-prev-month:hover,
   .ni-month-date.ni-month-date-weekend.ni-month-date-next-month:hover {
-    color: rgba(255, 0, 0, 0.75) !important;
+    color: rgba(255, 0, 0, 0.5) !important;
   }
 
   .ni-month-weeknums {

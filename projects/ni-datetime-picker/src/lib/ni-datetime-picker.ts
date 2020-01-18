@@ -18,6 +18,7 @@ export class ViewDate {
   prev?: boolean;
   next?: boolean;
   selected?: boolean;
+  disabled?: boolean;
 }
 
 export interface ViewUpdateEvent {
