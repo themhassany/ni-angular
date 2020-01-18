@@ -47,7 +47,7 @@ Following example shows all the options avaiable in the component:
         [defaultDate]="new Date()"
 
         [(locale)]="fa_AF" // or a NiDatetimeLocale object
-        [localePickable]="false"
+        [enableLocaleSwitch]="false"
 
         inputFormat="YYYY-MM-DD HH:mm AP"
         placeholder=""
@@ -78,7 +78,7 @@ Following example shows all the options avaiable in the component:
 ### [(locale)]
 - the locale to use for using month, and day names. availables are: fa_AF, fa_IR, en_US.
 
-### [localePickable]
+### [enableLocaleSwitch]
 - show/hide the locale switcher. note: your custom calendarLocale will be ignored during switching.
 
 ### inputFormat

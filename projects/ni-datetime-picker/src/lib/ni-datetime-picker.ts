@@ -1,4 +1,5 @@
 export class ViewMonth {
+  value: Date;
   title: string;
   year: number;
   month: number;

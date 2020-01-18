@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
 import {
   NiDatetime, NiJalaliDatetime, NiGregorianDatetime,
   NiDatetimeLocale, NiLocale, LocaleChangeEvent, Locales
@@ -12,39 +12,121 @@ import { SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime
 })
 export class NiDatetimePickerComponent implements OnInit {
 
-  __ngModel: Date;
+  __value: Date;
   @Input()
-  set ngModel(date: Date) {
-    this.updateNgModel(date, false);
+  set value(value: Date) {
+    this.updateNgModel(value, false);
   }
-  get ngModel(): Date {
-    return this.__ngModel;
+  get value(): Date {
+    return this.__value;
   }
-  @Output() ngModelChange = new EventEmitter<Date>();
+  @Output() valueChange = new EventEmitter<Date>();
 
-  // use for the view if ngModel is null
+  // use for the view if value is null
   @Input() defaultDate: Date;
 
-  @Input() monthPicker = false;
-  @Input() datePicker = true;
-  @Input() timePicker = false;
-  @Input() inline = false;
+  __monthPicker = false;
+  __prevNumberOfMonths = null;
+  @Input()
+  set monthPicker(value: boolean) {
+    this.__monthPicker = value;
 
-  @Input() localePickable = false;
+    // remember and switch back to previous numberOfMonths
+    if (this.__monthPicker) {
+      this.__prevNumberOfMonths = this.__numberOfMonths;
+    } else {
+      this.__numberOfMonths = this.__prevNumberOfMonths;
+    }
+
+    this.computeUiElmentsWidth();
+    this.updateView(true);
+  }
+  get monthPicker() {
+    return this.__monthPicker;
+  }
+
+  __datePicker = true;
+  @Input()
+  set datePicker(value: boolean) {
+    this.__datePicker = value;
+    this.computeUiElmentsWidth();
+  }
+  get datePicker() {
+    return this.__datePicker;
+  }
+
+  __timePicker = true;
+  @Input()
+  set timePicker(value: boolean) {
+    this.__timePicker = value;
+    this.computeUiElmentsWidth();
+  }
+  get timePicker() {
+    return this.__timePicker;
+  }
+
+  __inline = true;
+  @Input()
+  set inline(value: boolean) {
+    this.__inline = value;
+    if (this.__inline) {
+      this.openDialog = true;
+    }
+    this.computeUiElmentsWidth();
+  }
+  get inline() {
+    return this.__inline;
+  }
+
+  @Input() enableLocaleSwitch = false;
   __locale: NiDatetimeLocale = Locales.fa_AF;
   @Output() localeChange = new EventEmitter<string>();
   @Input()
-  set locale(locale: any) {
-    this.updateLocale(locale, false);
+  set locale(value: any) {
+    this.updateLocale(value, false);
   }
   get locale(): any {
     return this.__locale;
   }
 
-  @Input() inputFormat = 'YYYY-MM-DD HH:mm AP';
+  getFormatted(format: string, value: Date) {
+    if (this.date && value) {
+      return format ? this.format(this.date.clone().use(value), format) : '';
+    }
+  }
+
+  __inputFormat = 'YYYY-MM-DD HH:mm AP';
+  @Input()
+  set inputFormat(value: string) {
+    this.__inputFormat = value;
+    this.inputFormatted = this.getFormatted(this.__inputFormat, this.value);
+  }
+  get inputFormat() {
+    return this.__inputFormat;
+  }
+
   @Input() placeholder = '';
-  @Input() titleFormat = 'MMMM YYYY';
-  @Input() monthHeaderFormat = 'MMMM YYYY';
+
+  __titleFormat = 'MMMM YYYY';
+  @Input()
+  set titleFormat(value: string) {
+    this.__titleFormat = value;
+    this.dialogTitle = this.getFormatted(this.__titleFormat, this.value);
+  }
+  get titleFormat() {
+    return this.__titleFormat;
+  }
+
+  __monthHeaderFormat = 'MMMM YYYY';
+  @Input()
+  set monthHeaderFormat(value: string) {
+    this.__monthHeaderFormat = value;
+    this.viewMonths.forEach(viewMonth =>
+      viewMonth.title = this.getFormatted(this.__monthHeaderFormat, viewMonth.value));
+  }
+  get monthHeaderFormat() {
+    return this.__monthHeaderFormat;
+  }
 
   @Output() showed = new EventEmitter<any>();
   @Output() hidded = new EventEmitter<any>();
@@ -59,22 +141,29 @@ export class NiDatetimePickerComponent implements OnInit {
 
   __numberOfMonths = 1;
   @Input()
-  set numberOfMonths(months: number) {
-    if (this.datePicker && !this.monthPicker) {
-      this.__numberOfMonths = Math.max(1, Math.min(12, months)); // 1-12
-      const columns = this.__numberOfMonths < 3 ? this.__numberOfMonths : 3;
-      this.dialogWidth = `${columns * 250}px`;
-      this.monthWidth = `${columns < 2 ? 100 : (columns < 3 ? 50 : 33.333)}%`;
-    }
+  set numberOfMonths(value: number) {
+    this.__numberOfMonths = value;
+    this.computeUiElmentsWidth();
+    this.updateView(true);
   }
   get numberOfMonths(): number {
+    this.computeUiElmentsWidth();
+    return this.__numberOfMonths;
+  }
+
+  computeUiElmentsWidth() {
     if (this.monthPicker) {
       this.dialogWidth = '250px';
       this.monthWidth = '33.333%';
       this.__numberOfMonths = 12;
+    } else if (this.datePicker) {
+      this.__numberOfMonths = Math.max(1, Math.min(12, this.__numberOfMonths)); // 1-12
+      const columns = this.__numberOfMonths < 3 ? this.__numberOfMonths : 3;
+      this.dialogWidth = `${columns * 250}px`;
+      this.monthWidth = `${columns < 2 ? 100 : (columns < 3 ? 50 : 33.333)}%`;
+    } else if (this.timePicker) {
+      this.dialogWidth = '250px';
     }
-
-    return this.__numberOfMonths;
   }
 
   date: NiDatetime;
@@ -94,7 +183,7 @@ export class NiDatetimePickerComponent implements OnInit {
     // in case value is set before component ready
     // re-set the value to trigger appropriate events
     this.updateLocale(this.locale, false);
-    this.ngModel = this.ngModel;
+    this.value = this.value;
     this.numberOfMonths = this.numberOfMonths;
 
     // open the dialog if inline
@@ -106,11 +195,11 @@ export class NiDatetimePickerComponent implements OnInit {
   // 3. emit event
   // 4. close dialog (if not inline and not time update)
   updateNgModel(date: Date, emit: boolean = true, timeUpdated = false) {
-    this.__ngModel = date;
+    this.__value = date;
     this.updateInputfield();
 
     if (emit) {
-      this.ngModelChange.emit(date ? new Date(date) : null);
+      this.valueChange.emit(date ? new Date(date) : null);
 
       // close the dialog if not inline and time update
       if (!this.inline && !timeUpdated) {
@@ -123,9 +212,9 @@ export class NiDatetimePickerComponent implements OnInit {
     this.inputFormatted = '';
 
     // set formatted date into <input/>
-    if (this.ngModel && this.date) {
+    if (this.value && this.date) {
       this.inputFormatted = this.format(
-        this.date.clone().use(this.ngModel), this.inputFormat);
+        this.date.clone().use(this.value), this.inputFormat);
     }
   }
 
@@ -147,7 +236,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.blurred.emit(null);
   }
 
-  navigateToPreviousView() {
+  navToPreviousView() {
     const ymd = this.date.clone().ymd;
     const month = ymd.month;
 
@@ -160,7 +249,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.updateView();
   }
 
-  navigateToNextView() {
+  navToNextView() {
     const ymd = this.date.clone().ymd;
     ymd.month += this.numberOfMonths;
     if (ymd.month > 12) {
@@ -232,8 +321,19 @@ export class NiDatetimePickerComponent implements OnInit {
     }));
   }
 
-  updateView() {
-    let date = this.ngModel;
+  updateView(force: boolean = false) {
+    if (!this.date) {
+      // we don't have NiDatetime
+      // we can't proceed
+      return;
+    }
+
+    if (force) {
+      this.viewMonthsMin = null;
+      this.viewMonthsMax = null;
+    }
+
+    let date = this.value;
     if (!date) {
       date = this.defaultDate ? new Date(this.defaultDate) : new Date();
     }
@@ -386,6 +486,7 @@ export class NiDatetimePickerComponent implements OnInit {
     title.ymd = { year: curYear, month: curMonth, date: 1 };
 
     return {
+      value: new Date(ndate.__date),
       title: this.format(title, this.monthHeaderFormat),
       year: curYear,
       month: curMonth,
@@ -459,36 +560,27 @@ export class NiDatetimePickerComponent implements OnInit {
       return;
     }
 
+    let previous = this.date;
+
     // set the locale
     const prevLocale = this.__locale;
     this.__locale = (typeof locale) === "string"
       ? Locales[locale as string] : locale;
 
-    const prevDate = this.date;
-
-    if (this.__locale.name === 'fa_AF' || this.__locale.name === 'fa_IR') {
-      this.date = new NiJalaliDatetime();
-    } else if (this.__locale.name === 'en_US') {
-      this.date = new NiGregorianDatetime();
-    } else {
-      throw new Error('Invalid locale, Possible values (fa_AF, fa_IR, en_US)');
-    }
+    // and initiated the date
+    this.date = this.__locale.new();
 
     // convert selection to new locale
-    if (this.selection) {
-      const old = prevDate.clone();
-      old.ymd = this.selection;
-      const neo = this.date.clone().use(old.__date);
-
-      this.updateSelection(neo.ymd, neo.__date);
+    if (previous && this.selection) {
+      previous = previous.clone();
+      previous.ymd = this.selection;
+      const converted = this.date.clone().use(previous.__date);
+      this.updateSelection(converted.ymd, converted.__date);
     }
 
     this.updateInputfield();
 
-    // force view update
-    this.viewMonthsMin = null;
-    this.viewMonthsMax = null;
-    this.updateView();
+    this.updateView(true);
 
     // and emit the event
     if (emit) {
@@ -548,5 +640,12 @@ export class NiDatetimePickerComponent implements OnInit {
   pad(num: any, limit: number): string {
     return '0'.repeat(limit - num.toString().length) + num;
   }
-}
 
+  // @HostListener('mousewheel', ['$event'])
+  // scrollNavigation($event) {
+  // }
+
+  event($event) {
+    console.log($event);
+  }
+}
