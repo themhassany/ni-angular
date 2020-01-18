@@ -1,9 +1,9 @@
 <div style="display: flex;">
     <div style="flex-grow: 1">
         <div class="field">
-            <div class="title">ngModel</div>
+            <div class="title">value</div>
             <div class="value">
-                <button (click)="ngModel = newDate()">{{ ngModel }}</button>
+                <button (click)="value = newDate()">{{ value }}</button>
             </div>
         </div>
 
@@ -155,7 +155,7 @@
 <hr />
 
 <div style="text-align: center;">
-    <ni-datetime-picker [(value)]="ngModel" [disabledDates]="disabledDates"
+    <ni-datetime-picker [(value)]="value" [disabledDates]="disabledDates"
         [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
         [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
         [timePicker]="timePicker" [inline]="inline" [enableLocaleSwitch]="enableLocaleSwitch"

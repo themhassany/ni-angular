@@ -46,7 +46,7 @@ Following example shows all the options avaiable in the component:
         [(value)]="null"
         [defaultDate]="new Date()"
 
-        [(locale)]="fa_AF" // or a NiDatetimeLocale object
+        [(locale)]="fa_AF"
         [enableLocaleSwitch]="false"
 
         inputFormat="YYYY-MM-DD HH:mm AP"
@@ -59,6 +59,10 @@ Following example shows all the options avaiable in the component:
         [datePicker]="true"
         [timePicker]="false"
         [inline]="false"
+
+        [disableWeekends]="[]" 
+        [disabledDates]="false"
+        [showWeekNums]="false"
         
         (selected)=""
         (showed)=""
@@ -107,6 +111,15 @@ Following example shows all the options avaiable in the component:
 
 ### [inline]
 - is inline
+
+### [disableWeekends]
+- weekends should be disabled
+
+### [disabledDates]
+- an array of Date object specifies the disabled dates
+
+### [showWeekNums]
+- show the week nums 
 
 ### (selected)
 - trigger when a select event is happened.

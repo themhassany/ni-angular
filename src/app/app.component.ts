@@ -8,7 +8,7 @@ import { NiDatetimeLocale, NiJalaliDatetime } from 'projects/ni-datetime-picker/
 })
 export class AppComponent implements OnInit {
 
-  ngModel = new Date();
+  value = new Date();
   defaultDate = new Date();
   monthPicker = false;
   datePicker = true;
