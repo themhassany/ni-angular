@@ -77,57 +77,57 @@
                 <div *ngIf="timePicker" class="ni-timepicker">
                     <div class="ni-timepicker-times">
                         <span class="ni-timepicker-btn ni-increment-btn"
-                            (click)="date.hours = date.hours + 1; updateTime();">
+                            (click)="calendar.hours = calendar.hours + 1; updateTime();">
                             ⌃
                         </span>
                         <span class="ni-timepicker-time ni-timepicker-hour"
-                            (wheel)="date.hours = date.hours + scrollIncrement($event); updateTime()">
-                            {{ pad(date.hours12, 2) }}
+                            (wheel)="calendar.hours = calendar.hours + scrollIncrement($event); updateTime()">
+                            {{ pad(calendar.hours12, 2) }}
                         </span>
                         <span class="ni-timepicker-btn ni-decrement-btn"
-                            (click)="date.hours = date.hours - 1; updateTime();">
+                            (click)="calendar.hours = calendar.hours - 1; updateTime();">
                             ⌃
                         </span>
                     </div>
                     <div class="ni-timepicker-times">
                         <span class="ni-timepicker-btn ni-increment-btn"
-                            (click)="date.minutes = date.minutes + 1; updateTime();">
+                            (click)="calendar.minutes = calendar.minutes + 1; updateTime();">
                             ⌃
                         </span>
                         <span class="ni-timepicker-time ni-timepicker-minute"
-                            (wheel)="date.minutes = date.minutes + scrollIncrement($event); updateTime()">
-                            {{ pad(date.minutes, 2) }}
+                            (wheel)="calendar.minutes = calendar.minutes + scrollIncrement($event); updateTime()">
+                            {{ pad(calendar.minutes, 2) }}
                         </span>
                         <span class="ni-timepicker-btn ni-decrement-btn"
-                            (click)="date.minutes  =date.minutes - 1; updateTime();">
+                            (click)="calendar.minutes  =calendar.minutes - 1; updateTime();">
                             ⌃
                         </span>
                     </div>
                     <div class="ni-timepicker-times">
                         <span class="ni-timepicker-btn ni-increment-btn"
-                            (click)="date.seconds = date.seconds + 1; updateTime();">
+                            (click)="calendar.seconds = calendar.seconds + 1; updateTime();">
                             ⌃
                         </span>
                         <span class="ni-timepicker-time ni-timepicker-second"
-                            (wheel)="date.seconds = date.seconds + scrollIncrement($event); updateTime()">
-                            {{ pad(date.seconds, 2) }}
+                            (wheel)="calendar.seconds = calendar.seconds + scrollIncrement($event); updateTime()">
+                            {{ pad(calendar.seconds, 2) }}
                         </span>
                         <span class="ni-timepicker-btn ni-decrement-btn"
-                            (click)="date.seconds = date.seconds - 1; updateTime();">
+                            (click)="calendar.seconds = calendar.seconds - 1; updateTime();">
                             ⌃
                         </span>
                     </div>
                     <div class="ni-timepicker-times">
                         <span class="ni-timepicker-btn ni-increment-btn"
-                            (click)="date.am = !date.am; updateTime();">
+                            (click)="calendar.am = !calendar.am; updateTime();">
                             ⌃
                         </span>
                         <span class="ni-timepicker-time ni-timepicker-ampm"
-                            (wheel)="date.am = !date.am; updateTime(); $event.preventDefault();">
-                            {{ locale.ampm[date.am ? 0 : 1] }}
+                            (wheel)="calendar.am = !calendar.am; updateTime(); $event.preventDefault();">
+                            {{ locale.ampm[calendar.am ? 0 : 1] }}
                         </span>
                         <span class="ni-timepicker-btn ni-decrement-btn"
-                            (click)="date.am = !date.am; updateTime();">
+                            (click)="calendar.am = !calendar.am; updateTime();">
                             ⌃
                         </span>
                     </div>

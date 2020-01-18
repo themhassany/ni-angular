@@ -1,98 +1,129 @@
-<div>
-    <div class="field">
-        <div class="title">ngModel</div>
-        <div class="value">
-            <button (click)="ngModel = newDate()">{{ ngModel }}</button>
+<div style="display: flex;">
+    <div style="flex-grow: 1">
+        <div class="field">
+            <div class="title">ngModel</div>
+            <div class="value">
+                <button (click)="ngModel = newDate()">{{ ngModel }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">defaultDate</div>
+            <div class="value">{{ defaultDate }}</div>
+        </div>
+
+        <div class="field">
+            <div class="title">monthPicker</div>
+            <div class="value">
+                <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">datePicker</div>
+            <div class="value">
+                <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">timePicker</div>
+            <div class="value">
+                <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">inline</div>
+            <div class="value">
+                <button (click)="inline = !inline">{{ inline }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">enableLocaleSwitch</div>
+            <div class="value">
+                <button
+                    (click)="enableLocaleSwitch = !enableLocaleSwitch">{{ enableLocaleSwitch }}</button>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">locale</div>
+            <div class="value">
+                <select name="locale" ngDefaultControl [(ngModel)]="locale">
+                    <option [ngValue]="'fa_AF'">fa_AF</option>
+                    <option [ngValue]="'fa_IR'">fa_IR</option>
+                    <option [ngValue]="'en_US'">en_US</option>
+                    <option [ngValue]="customLocale">MyCustomOne</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">inputFormat</div>
+            <div class="value">
+                <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">placeholder</div>
+            <div class="value">
+                <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
+                    [disabled]="inline">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">titleFormat</div>
+            <div class="value">
+                <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">monthHeaderFormat</div>
+            <div class="value">
+                <input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
+            </div>
+        </div>
+
+        <div class="field">
+            <div class="title">numberOfMonths</div>
+            <div class="value">
+                <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
+            </div>
         </div>
     </div>
 
-    <div class="field">
-        <div class="title">defaultDate</div>
-        <div class="value">{{ defaultDate }}</div>
-    </div>
-
-    <div class="field">
-        <div class="title">monthPicker</div>
-        <div class="value">
-            <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">datePicker</div>
-        <div class="value">
-            <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">timePicker</div>
-        <div class="value">
-            <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">inline</div>
-        <div class="value">
-            <button (click)="inline = !inline">{{ inline }}</button>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">enableLocaleSwitch</div>
-        <div class="value">
-            <button
-                (click)="enableLocaleSwitch = !enableLocaleSwitch">{{ enableLocaleSwitch }}</button>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">locale</div>
-        <div class="value">
-            <select name="locale" ngDefaultControl [(ngModel)]="locale">
-                <option [ngValue]="'fa_AF'">fa_AF</option>
-                <option [ngValue]="'fa_IR'">fa_IR</option>
-                <option [ngValue]="'en_US'">en_US</option>
-                <option [ngValue]="customLocale">MyCustomOne</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">inputFormat</div>
-        <div class="value">
-            <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">placeholder</div>
-        <div class="value">
-            <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
-                [disabled]="inline">
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">titleFormat</div>
-        <div class="value">
-            <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">monthHeaderFormat</div>
-        <div class="value">
-            <input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="title">numberOfMonths</div>
-        <div class="value">
-            <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
-        </div>
+    <div style="flex-grow: 1">
+        <pre>
+            # Formats
+            - 'YYYY', 4 digit year
+            - 'YY', 2 digit year
+            - 'MMMM', long name of month 
+            - 'MMM', short name of month 
+            - 'MM', 2 digit month number
+            - 'M', month number
+            - 'DD', 2 digit date number
+            - 'D', date number
+            - 'WWWW', long name of week's day
+            - 'WWW', short name of week's day
+            - 'WW', mini name of week's day
+            - 'HH', 2 digit hour (24h format)
+            - 'hh', 2 digit hour (12h format)
+            - 'H', hour (24h format)
+            - 'h', hour (12h format)
+            - 'mm', 2 digit minute
+            - 'm', minute
+            - 'ss', 2 digit second
+            - 's', second
+            - 'A', upper case AM/PM
+            - 'a', lower case am/pm
+            - 'z', time zone (eg: GMT-0500)
+            - 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+        </pre>
     </div>
 </div>
 

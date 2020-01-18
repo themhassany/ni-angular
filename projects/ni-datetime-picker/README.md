@@ -42,8 +42,8 @@ Stackblitz play ground: https://stackblitz.com/edit/angular-9g15ep
 Following example shows all the options avaiable in the component: 
 
     <ni-datetime-picker
-        // attribute="defaultValue"
-        [(ngModel)]="null"
+        // attributes and their default values
+        [(value)]="null"
         [defaultDate]="new Date()"
 
         [(locale)]="fa_AF" // or a NiDatetimeLocale object
@@ -69,14 +69,14 @@ Following example shows all the options avaiable in the component:
         (blurred)="">
     </ni-datetime-picker>
 
-### [(model)]
+### [(value)]
 - a date object which read to changed by datepicker.
 
 ### [defaultDate]
-- when 'model' is null, the datepicker will use this value to prepare the view.
+- when 'value' is null, the datepicker will use this value to prepare the view.
 
 ### [(locale)]
-- the locale to use for using month, and day names. availables are: fa_AF, fa_IR, en_US.
+- the locale to use for using month, and day names. availables are: fa_AF, fa_IR, en_US. provide a NiDatetimeLocale object if you want to customize.
 
 ### [enableLocaleSwitch]
 - show/hide the locale switcher. note: your custom calendarLocale will be ignored during switching.
@@ -113,6 +113,7 @@ Following example shows all the options avaiable in the component:
 
         interface SelectEvent {
             ndate: ViewDate;
+            formatted: string;
             date: Date;
         }
 

@@ -29,8 +29,9 @@ export abstract class NiDatetime {
     abstract get weeksFirstday(): number;
     abstract get weekDay(): number;
 
-    set ymd(ymd: Ymd) { }
-    get ymd() { return { year: this.year, month: this.month, date: this.date }; }
+    public set ymd(ymd: Ymd) { }
+    public get ymd() { return this.__ymd(); }
+    __ymd() { return { year: this.year, month: this.month, date: this.date }; }
 
     get hours12(): number { return this.hours > 12 ? this.hours % 12 : this.hours; }
     get hours(): number { return this.__date ? this.__date.getHours() : null; }
@@ -115,7 +116,7 @@ export class NiJalaliDatetime extends NiDatetime {
     }
     get weekDay(): number { return this.__date ? this.__date.getDay() : null; }
 
-    get ymd() { return super.ymd; }
+    get ymd() { return this.__ymd(); }
     set ymd(ymd: Ymd) {
         const greg = toGregorian(ymd.year, ymd.month, ymd.date);
         this.__date.setFullYear(greg.gy);
@@ -153,7 +154,7 @@ export class NiGregorianDatetime extends NiDatetime {
     get weeksFirstday(): number { return new Date(this.year, this.__date.getMonth(), 1).getDay(); }
     get weekDay(): number { return this.__date.getDay(); }
 
-    get ymd() { return super.ymd; }
+    get ymd() { return this.__ymd(); }
     set ymd(ymd: Ymd) {
         this.__date.setFullYear(ymd.year);
         this.__date.setMonth(ymd.month - 1);
