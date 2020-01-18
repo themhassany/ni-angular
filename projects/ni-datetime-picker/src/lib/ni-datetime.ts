@@ -142,15 +142,7 @@ export class NiGregorianDatetime extends NiDatetime {
     get year(): number { return this.__date.getFullYear(); }
     get month(): number { return this.__date.getMonth() + 1; }
     get date(): number { return this.__date.getDate(); }
-    get daysInMonth(): number {
-        let year = this.year;
-        let month = this.month;
-        if (++month > 11) {
-            month = 0;
-            year += 1;
-        }
-        return new Date(year, month, 0).getDate();
-    }
+    get daysInMonth(): number { return new Date(this.year, this.month, 0).getDate(); }
     get weeksFirstday(): number { return new Date(this.year, this.__date.getMonth(), 1).getDay(); }
     get weekDay(): number { return this.__date.getDay(); }
 

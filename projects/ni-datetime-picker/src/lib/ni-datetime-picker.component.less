@@ -184,7 +184,7 @@
     padding: 0.25rem 0.5rem;
   }
 
-  .ni-month-date-selected {
+  .ni-month-date-selected:not(.ni-month-date-prev-month):not(.ni-month-date-next-month) {
     background-color: lightgray;
   }
 
@@ -194,11 +194,11 @@
   }
 
   .ni-month-date-selected.ni-month-date-today {
-    font-weight: bold;
+    color: #2980b9;
   }
 
   .ni-month-date-today:not(.ni-month-date-prev-month):not(.ni-month-date-next-month) {
-    background: lightblue;
+    background: #ecf0f1;
   }
 
   .ni-month-date-disabled:hover {

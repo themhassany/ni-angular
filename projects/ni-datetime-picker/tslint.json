@@ -16,6 +16,7 @@
     "variable-name": false,
     "member-ordering": false,
     "no-output-on-prefix": false,
-    "quotemark": false
+    "quotemark": false,
+    "one-variable-per-declaration": false
   }
 }

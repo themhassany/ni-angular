@@ -1,9 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import {
-  NiDatetime, NiJalaliDatetime, NiGregorianDatetime,
-  NiDatetimeLocale, NiLocale, LocaleChangeEvent, Locales
-} from './ni-datetime';
-import { SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime-picker';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NiDatetime, NiDatetimeLocale, LocaleChangeEvent, Locales } from './ni-datetime';
+import { SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent, SelectionMode } from './ni-datetime-picker';
 
 @Component({
   selector: 'ni-datetime-picker',
@@ -12,15 +9,15 @@ import { SelectEvent, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime
 })
 export class NiDatetimePickerComponent implements OnInit {
 
-  __value: Date;
+  __value: Date | Date[];
   @Input()
-  set value(value: Date) {
+  set value(value: Date | Date[]) {
     this.updateNgModel(value, false);
   }
-  get value(): Date {
+  get value(): Date | Date[] {
     return this.__value;
   }
-  @Output() valueChange = new EventEmitter<Date>();
+  @Output() valueChange = new EventEmitter<Date | Date[]>();
 
   // use for the view if value is null
   @Input() defaultDate: Date;
@@ -89,9 +86,22 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__locale;
   }
 
-  getFormatted(format: string, value: Date) {
-    if (this.calendar && value) {
-      return format ? this.format(this.calendar.clone().use(value), format) : '';
+  getFormatted(format: string, value: Date | Date[]) {
+    if (this.calendar && value && format) {
+      const formatted = [],
+        clone = this.calendar.clone(),
+        execute = (date: Date) =>
+          formatted.push(this.format(clone.use(date), format));
+
+      if (Array.isArray(value)) {
+        value.forEach(execute);
+      } else {
+        execute(value);
+      }
+
+      return formatted.join(this.selectionModel === SelectionMode.multiple ? ", " : " - ");
+    } else {
+      return '';
     }
   }
 
@@ -99,10 +109,13 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set inputFormat(value: string) {
     this.__inputFormat = value;
-    this.inputFormatted = this.getFormatted(this.__inputFormat, this.value);
+    this.updateInputfield();
   }
   get inputFormat() {
     return this.__inputFormat;
+  }
+  updateInputfield() {
+    this.inputFormatted = this.getFormatted(this.__inputFormat, this.value);
   }
 
   @Input() placeholder = '';
@@ -111,10 +124,13 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set titleFormat(value: string) {
     this.__titleFormat = value;
-    this.dialogTitle = this.getFormatted(this.__titleFormat, this.value);
+    this.updateTitle();
   }
   get titleFormat() {
     return this.__titleFormat;
+  }
+  updateTitle() {
+    this.dialogTitle = this.getFormatted(this.__titleFormat, this.calendar.__date);
   }
 
   __monthHeaderFormat = 'MMMM YYYY';
@@ -190,7 +206,16 @@ export class NiDatetimePickerComponent implements OnInit {
 
   calendar: NiDatetime;
   today: ViewDate;
+
   selection: ViewDate;
+  __selectionModel: SelectionMode = SelectionMode.single;
+  @Input()
+  set selectionModel(value: SelectionMode) {
+    this.__selectionModel = value;
+  }
+  get selectionModel() {
+    return this.__selectionModel;
+  }
 
   inputFormatted = '';
 
@@ -230,31 +255,31 @@ export class NiDatetimePickerComponent implements OnInit {
     this.openDialog = this.inline;
   }
 
+  copy(dates: Date | Date[]): Date | Date[] {
+    const clone = (date: Date) => new Date(date);
+
+    if (Array.isArray(dates)) {
+      return dates.map(clone);
+    } else {
+      return clone(dates);
+    }
+  }
+
   // 1. persiste date
   // 2. update input field
   // 3. emit event
   // 4. close dialog (if not inline and not time update)
-  updateNgModel(date: Date, emit: boolean = true, timeUpdated = false) {
+  updateNgModel(date: Date | Date[], emit: boolean = true, timeUpdated = false) {
     this.__value = date;
     this.updateInputfield();
 
     if (emit) {
-      this.valueChange.emit(date ? new Date(date) : null);
+      this.valueChange.emit(this.copy(date));
 
       // close the dialog if not inline and time update
       if (!this.inline && !timeUpdated) {
         this.dialogOverlayClicked(null);
       }
-    }
-  }
-
-  updateInputfield() {
-    this.inputFormatted = '';
-
-    // set formatted date into <input/>
-    if (this.value && this.calendar) {
-      this.inputFormatted = this.format(
-        this.calendar.clone().use(this.value), this.inputFormat);
     }
   }
 
@@ -402,39 +427,42 @@ export class NiDatetimePickerComponent implements OnInit {
     }
 
     // use the selected value
-    let date = this.value;
-    if (!date) {
+    let value = this.value;
+    if (!value) {
       if (this.calendar.__date) {
         // or view value
-        date = this.calendar.__date;
+        value = this.calendar.__date;
       } else if (this.defaultDate) {
         // or the given default value
-        date = new Date(this.defaultDate);
+        value = new Date(this.defaultDate);
       } else {
         // or now
-        date = new Date();
+        value = new Date();
       }
     }
 
+    if (!Array.isArray(value)) {
+      value = [value];
+    }
+
     // update the 'today' reference
-    let ndate = this.calendar.clone().use(new Date());
-    this.today = ndate.ymd;
+    this.today = this.calendar.clone().use(new Date()).ymd;
 
     // persist the date and clone it
-    ndate = this.calendar.use(date).clone();
+    const calendar = this.calendar.use(value[0]).clone();
 
     // update dialog title
-    this.dialogTitle = this.format(ndate, this.titleFormat);
+    this.updateTitle();
 
     // only if given date is out or current view's range
-    if (!this.viewMonthsMin || this.viewMonthsMin.getTime() > date.getTime()
-      || !this.viewMonthsMax || this.viewMonthsMax.getTime() < date.getTime()) {
+    if (!this.viewMonthsMin || this.viewMonthsMin.getTime() > value[0].getTime()
+      || !this.viewMonthsMax || this.viewMonthsMax.getTime() < value[0].getTime()) {
       const count = this.numberOfMonths;
 
       if (count % 3 === 0) {
         // in case of 3,6,9,12
         // start from 1,4,7,10
-        const ymd = ndate.ymd;
+        const ymd = calendar.ymd;
         for (let i = 1; i < 12; i += count) {
           if (ymd.month < i + count) {
             ymd.month = i;
@@ -442,32 +470,32 @@ export class NiDatetimePickerComponent implements OnInit {
           }
         }
         ymd.date = 1;
-        ndate.ymd = ymd;
+        calendar.ymd = ymd;
       }
 
       // store view lower bound
-      this.viewMonthsMin = new Date(ndate.__date);
+      this.viewMonthsMin = new Date(calendar.__date);
 
       const viewMonths = [];
       // generate view dates
       for (let is = 0, ie = count; is < ie; is++) {
-        viewMonths.push(this.computeMonthDates(ndate));
+        viewMonths.push(this.computeMonthDates(calendar));
 
         // move to next month
-        const ymd = ndate.ymd;
+        const ymd = calendar.ymd;
         ymd.month += 1;
         if (ymd.month > 12) {
           ymd.year += 1;
           ymd.month = 1;
         }
         ymd.date = 1;
-        ndate.ymd = ymd;
+        calendar.ymd = ymd;
       }
 
       // store view upper bound
       // _.date is the 1st of next month
       // so deduct 24 hours from it
-      this.viewMonthsMax = new Date(ndate.__date.getTime() - (24 * 60 * 60_000));
+      this.viewMonthsMax = new Date(calendar.__date.getTime() - (24 * 60 * 60_000));
 
       this.viewMonths = viewMonths;
 
@@ -503,6 +531,7 @@ export class NiDatetimePickerComponent implements OnInit {
       }
       prevYmd.date = 15;
       prev.ymd = prevYmd;
+
       const prevMonthDaysCount = prev.daysInMonth;
       for (let day = prevMonthDaysCount - 6; day <= prevMonthDaysCount; day++) {
         mdates.push({ year: prevYmd.year, month: prevYmd.month, date: day, prev: true });

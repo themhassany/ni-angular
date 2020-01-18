@@ -20,10 +20,10 @@ export class AppComponent implements OnInit {
   placeholder = 'date/time';
   titleFormat = 'YYYY';
   monthHeaderFormat = 'MMMM';
-  numberOfMonths = 1;
+  numberOfMonths = 3;
   disabledDates = [];
   disabledDatesStr = '2020-01-01 00:00:00,2020-01-02 00:00:00,2020-01-03 00:00:00';
-  disableWeekends = true;
+  disableWeekends = false;
   showWeekNums = false;
 
   customLocale: NiDatetimeLocale = {

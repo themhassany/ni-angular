@@ -31,3 +31,7 @@ export interface SelectEvent {
   formatted: string;
   date: Date;
 }
+
+export enum SelectionMode {
+  single, multiple, range
+}
