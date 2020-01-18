@@ -238,11 +238,9 @@ export class NiDatetimePickerComponent implements OnInit {
 
   navToPreviousView() {
     const ymd = this.date.clone().ymd;
-    const month = ymd.month;
-
     ymd.month -= this.numberOfMonths;
     if (ymd.month < 1) {
-      ymd.month = 12 - (this.numberOfMonths - month);
+      ymd.month = 12 - Math.abs(ymd.month);
       ymd.year -= 1;
     }
     this.date.ymd = ymd;
@@ -258,6 +256,20 @@ export class NiDatetimePickerComponent implements OnInit {
     }
     this.date.ymd = ymd;
     this.updateView();
+  }
+
+  scrollIncrement($event: any) {
+    $event.preventDefault();
+    return ($event.deltaY < 0 ? -1 : 1) * // +/-
+      Math.max(1, Math.min(12, Math.round($event.deltaY / 100))); // 1-12
+  }
+
+  navByScroll(increment: number) {
+    if (increment > 0) {
+      this.navToNextView();
+    } else {
+      this.navToPreviousView();
+    }
   }
 
   headerClicked($event: any) {
@@ -333,9 +345,21 @@ export class NiDatetimePickerComponent implements OnInit {
       this.viewMonthsMax = null;
     }
 
+    // use the selected value
     let date = this.value;
     if (!date) {
-      date = this.defaultDate ? new Date(this.defaultDate) : new Date();
+      // or view value
+      if (this.date.__date) {
+        date = this.date.__date;
+      } else
+      // or the given default value
+      if (this.defaultDate) {
+        date = new Date(this.defaultDate);
+      }
+      // or now
+      else {
+        date = new Date();
+      }
     }
 
     // update the 'today' reference
@@ -639,13 +663,5 @@ export class NiDatetimePickerComponent implements OnInit {
 
   pad(num: any, limit: number): string {
     return '0'.repeat(limit - num.toString().length) + num;
-  }
-
-  // @HostListener('mousewheel', ['$event'])
-  // scrollNavigation($event) {
-  // }
-
-  event($event) {
-    console.log($event);
   }
 }
