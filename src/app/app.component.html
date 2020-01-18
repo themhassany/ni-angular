@@ -113,6 +113,13 @@
                 <button (click)="updateDisabledDates()">update</button>
             </div>
         </div>
+
+        <div class="field">
+            <div class="title">showWeekNums</div>
+            <div class="value">
+                <button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
+            </div>
+        </div>
     </div>
 
     <div style="flex-grow: 1">
@@ -149,10 +156,11 @@
 
 <div style="text-align: center;">
     <ni-datetime-picker [(value)]="ngModel" [disabledDates]="disabledDates"
-        [disableWeekends]="disableWeekends" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
-        [datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
-        [enableLocaleSwitch]="enableLocaleSwitch" [locale]="locale" [inputFormat]="inputFormat"
-        [placeholder]="placeholder" [titleFormat]="titleFormat"
-        [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths">
+        [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
+        [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
+        [timePicker]="timePicker" [inline]="inline" [enableLocaleSwitch]="enableLocaleSwitch"
+        [locale]="locale" [inputFormat]="inputFormat" [placeholder]="placeholder"
+        [titleFormat]="titleFormat" [monthHeaderFormat]="monthHeaderFormat"
+        [numberOfMonths]="numberOfMonths">
     </ni-datetime-picker>
 </div>

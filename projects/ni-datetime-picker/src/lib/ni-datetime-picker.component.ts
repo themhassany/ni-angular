@@ -176,6 +176,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__disabledDates;
   }
 
+  @Input() showWeekNums = true;
   __disableWeekends = true;
   @Input()
   set disableWeekends(value: boolean) {

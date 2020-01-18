@@ -33,7 +33,8 @@
                     (wheel)="navByScroll(scrollIncrement($event))">
                     <div *ngFor="let viewMonth of viewMonths" [ngClass]="{
                             'ni-month': true,
-                            'ni-month-picker': monthPicker
+                            'ni-month-picker': monthPicker,
+                            'ni-month-with-weeknums': showWeekNums
                         }" [ngStyle]="{ width: monthWidth }">
                         <div *ngIf="numberOfMonths > 1" class="ni-month-title"
                             (click)="monthDateClicked(viewMonth)">

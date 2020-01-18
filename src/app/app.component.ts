@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   numberOfMonths = 1;
   disabledDates = [];
   disabledDatesStr = '2020-01-01 00:00:00,2020-01-02 00:00:00,2020-01-03 00:00:00';
-
   disableWeekends = true;
+  showWeekNums = false;
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',

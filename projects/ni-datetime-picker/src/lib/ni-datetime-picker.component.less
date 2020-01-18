@@ -132,6 +132,7 @@
 
   .ni-month-weekday,
   .ni-month-weeknums-header {
+    flex-grow: 1;
     width: 12.5%;
     text-align: center;
     font-size: 11px;
@@ -146,12 +147,20 @@
     font-weight: bold;
   }
 
+  .ni-month:not(.ni-month-with-weeknums) {
+    .ni-month-weeknums-header,
+    .ni-month-weeknums {
+      display: none !important;
+    }
+  }
+
   .ni-month-body {
     display: flex;
   }
 
   .ni-month-dates {
     display: flex;
+    flex-grow: 1;
     flex-wrap: wrap;
     width: 87.5%;
   }
