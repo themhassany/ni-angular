@@ -165,16 +165,6 @@
     width: 87.5%;
   }
 
-  .ni-month-date:hover {
-    background-color: rgba(211, 211, 211, 0.5);
-    border-radius: 0.125rem;
-  }
-
-  .ni-month-date-prev-month:hover,
-  .ni-month-date-next-month:hover {
-    color: white !important;
-  }
-
   .ni-month-date {
     width: 14.2857142857%;
     text-align: center;
@@ -184,47 +174,61 @@
     padding: 0.25rem 0.5rem;
   }
 
-  .ni-month-date-selected:not(.ni-month-date-prev-month):not(.ni-month-date-next-month) {
-    background-color: lightgray;
+  .ni-month-date {
+    color: rgba(0, 0, 0, 1);
+    cursor: pointer;
+  }
+  .ni-month-date.ni-month-date-disabled {
+    color: rgba(0, 0, 0, 0.5);
+    background-color: transparent !important;
+    cursor: not-allowed !important;
+  }
+  .ni-month-date:hover {
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+  .ni-month-date.ni-month-date-selected {
+    background-color: rgba(0, 0, 0, 0.125);
+  }
+
+  .ni-month-date-weekend {
+    color: rgba(255, 0, 0, 1);
+  }
+  .ni-month-date-weekend.ni-month-date-disabled {
+    color: rgba(255, 0, 0, 0.5);
+  }
+  .ni-month-date-weekend:hover {
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+  .ni-month-date-weekend.ni-month-date-selected {
+    background-color: rgba(0, 0, 0, 0.125);
   }
 
   .ni-month-date-prev-month,
   .ni-month-date-next-month {
-    color: rgba(211, 211, 211, 0.5);
+    background-color: transparent !important;
+    color: rgba(0, 0, 0, 0.25) !important;
+    cursor: auto !important;
+  }
+  .ni-month-date-prev-month.ni-month-date-disabled,
+  .ni-month-date-next-month.ni-month-date-disabled {
+    color: rgba(0, 0, 0, 0.125) !important;
   }
 
-  .ni-month-date-selected.ni-month-date-today {
+  .ni-month-date-weekend.ni-month-date-prev-month,
+  .ni-month-date-weekend.ni-month-date-next-month {
+    color: rgba(255, 0, 0, 0.25);
+  }
+  .ni-month-date-weekend.ni-month-date-prev-month.ni-month-date-disabled,
+  .ni-month-date-weekend.ni-month-date-next-month.ni-month-date-disabled {
+    color: rgba(255, 0, 0, 0.125);
+  }
+
+  .ni-month-date-today {
     color: #2980b9;
   }
 
-  .ni-month-date-today:not(.ni-month-date-prev-month):not(.ni-month-date-next-month) {
-    background: #ecf0f1;
-  }
-
-  .ni-month-date-disabled:hover {
-    background: rgba(211, 211, 211, 0.25);
-  }
-  .ni-month-date-disabled {
-    color: lightgray;
-  }
-
-  .ni-month-weekend,
-  .ni-month-date-weekend {
+  .ni-month-weekend {
     color: red;
-  }
-
-  .ni-month-date-weekend.ni-month-date-disabled {
-    color: rgba(255, 0, 0, 0.5);
-  }
-
-  .ni-month-date.ni-month-date-weekend.ni-month-date-prev-month,
-  .ni-month-date.ni-month-date-weekend.ni-month-date-next-month {
-    color: rgba(255, 0, 0, 0.25);
-  }
-
-  .ni-month-date.ni-month-date-weekend.ni-month-date-prev-month:hover,
-  .ni-month-date.ni-month-date-weekend.ni-month-date-next-month:hover {
-    color: rgba(255, 0, 0, 0.5) !important;
   }
 
   .ni-month-weeknums {

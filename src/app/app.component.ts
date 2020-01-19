@@ -13,9 +13,9 @@ export class AppComponent implements OnInit {
   monthPicker = false;
   datePicker = true;
   timePicker = false;
-  inline = false;
+  inline = true;
   enableLocaleSwitch = false;
-  locale = 'en_US';
+  locale = 'fa_AF';
   inputFormat = 'YYYY-MM-DD';
   placeholder = 'date/time';
   titleFormat = 'YYYY';

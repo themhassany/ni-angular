@@ -427,7 +427,11 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   _selectMonthDate(viewDate: ViewDate) {
-    if (viewDate.disabled) { return; }
+    if (viewDate.disabled
+      || viewDate.prev
+      || viewDate.next) {
+      return;
+    }
 
     if (this.isSingleSelection) {
       this.calendar.ymd = viewDate;
