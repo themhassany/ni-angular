@@ -738,7 +738,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.openDialog = !this.openDialog;
   }
 
-  _clearClicked() {
+  _clearClicked($event: any) {
     this._setValue(null);
 
     if (this.inline) {

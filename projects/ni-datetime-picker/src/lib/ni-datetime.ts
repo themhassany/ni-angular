@@ -59,10 +59,6 @@ export abstract class NiDatetime {
     abstract clone(): NiDatetime;
 }
 
-export enum NiLocale {
-    fa_AF, fa_IR, en_US
-}
-
 export interface LocaleChangeEvent {
     previous: string;
     locale: string;
