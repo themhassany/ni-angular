@@ -22,9 +22,10 @@ export class AppComponent implements OnInit {
   monthHeaderFormat = 'MMMM';
   numberOfMonths = 3;
   disabledDates = [];
-  disabledDatesStr = '2020-01-01 00:00:00,2020-01-02 00:00:00,2020-01-03 00:00:00';
+  disabledDatesStr = ''; // 2020-01-02 00:00:00,2020-01-03 00:00:00';
   disableWeekends = false;
   showWeekNums = false;
+  selectionMode = 'range';
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',
@@ -51,11 +52,13 @@ export class AppComponent implements OnInit {
     return new Date();
   }
 
-  event(type: string, $event: any) {
-    console.log(`Event '${type}': ${$event}`);
+  event($event: any, type: string) {
+    console.log(`Event '${type}'`, $event);
   }
 
   updateDisabledDates() {
-    this.disabledDates = this.disabledDatesStr.split(',').map(date => new Date(date.trim()));
+    this.disabledDates = this.disabledDatesStr.split(',')
+      .filter(date => date.length)
+      .map(date => new Date(date.trim()));
   }
 }

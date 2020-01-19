@@ -1,12 +1,12 @@
 import { toJalaali, toGregorian, jalaaliMonthLength } from './jalali';
 
-class Ymd {
+export class Ymd {
     year: number;
     month: number;
     date: number;
 }
 
-class Hms {
+export class Hms {
     hours: number;
     minutes: number;
     seconds: number;
@@ -20,7 +20,7 @@ export abstract class NiDatetime {
 
     __date: Date;
 
-    use(date: Date): NiDatetime { this.__date = date; return this; }
+    use(date: Date): NiDatetime { this.__date = new Date(date); return this; }
 
     abstract get year(): number;
     abstract get month(): number;
@@ -29,8 +29,8 @@ export abstract class NiDatetime {
     abstract get weeksFirstday(): number;
     abstract get weekDay(): number;
 
-    public set ymd(ymd: Ymd) { }
-    public get ymd() { return this.__ymd(); }
+    set ymd(ymd: Ymd) { }
+    get ymd() { return this.__ymd(); }
     __ymd() { return { year: this.year, month: this.month, date: this.date }; }
 
     get hours12(): number { return this.hours > 12 ? this.hours % 12 : this.hours; }

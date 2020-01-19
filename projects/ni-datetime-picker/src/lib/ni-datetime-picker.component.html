@@ -5,15 +5,14 @@
     <div class="ni-inputs">
         <input *ngIf="!inline" [value]="inputFormatted" [placeholder]="placeholder" readonly
             class="ni-input" (focus)="inputFocused($event)" (blur)="inputBlured($event)">
-        <div class="ni-picker-btn"
-            (click)="openDialog ? dialogOverlayClicked($event) : inputFocused($event)">
+        <div class="ni-picker-btn" (click)="pickerClicked($event)">
         </div>
-        <div *ngIf="value" class="ni-clear-btn" (click)="clearValue()">
+        <div *ngIf="value" class="ni-clear-btn" (click)="clearClicked($event)">
             ╳
         </div>
     </div>
     <div *ngIf="openDialog" class="ni-dialog-container">
-        <div *ngIf="!inline" class="ni-dialog-overlay" (click)="dialogOverlayClicked($event)"></div>
+        <div *ngIf="!inline" class="ni-dialog-overlay" (click)="overlayClicked($event)"></div>
         <div class="ni-dialog" [ngStyle]="{width: dialogWidth}">
             <div class="ni-dialog-header">
                 <div *ngIf="datePicker || monthPicker" class="ni-dialog-nav-btn ni-backward"
@@ -21,7 +20,7 @@
                     ⌃
                 </div>
                 <div class="ni-dialog-title" (click)="headerClicked($event)">
-                    {{ dialogTitle }}
+                    {{ title }}
                 </div>
                 <div *ngIf="datePicker || monthPicker" class="ni-dialog-nav-btn ni-forward"
                     (click)="navToNextView()">
@@ -101,7 +100,7 @@
                             {{ pad(calendar.minutes, 2) }}
                         </span>
                         <span class="ni-timepicker-btn ni-decrement-btn"
-                            (click)="calendar.minutes  =calendar.minutes - 1; updateTime();">
+                            (click)="calendar.minutes = calendar.minutes - 1; updateTime();">
                             ⌃
                         </span>
                     </div>

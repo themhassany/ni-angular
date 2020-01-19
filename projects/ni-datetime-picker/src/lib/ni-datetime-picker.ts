@@ -26,12 +26,7 @@ export interface ViewUpdateEvent {
   viewMaxDate: Date;
 }
 
-export interface SelectEvent {
-  ndate: ViewDate;
-  formatted: string;
+export interface ValueChange {
   date: Date;
-}
-
-export enum SelectionMode {
-  single, multiple, range
+  viewDate: ViewDate;
 }
