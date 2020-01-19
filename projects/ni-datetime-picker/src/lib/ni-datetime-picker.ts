@@ -27,6 +27,7 @@ export interface ViewUpdateEvent {
 }
 
 export interface ValueChange {
-  date: Date;
-  viewDate: ViewDate;
+  date?: Date;
+  viewDate?: ViewDate;
+  viewDateFormatted?: string;
 }

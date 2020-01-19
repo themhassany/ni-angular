@@ -9,49 +9,71 @@ import { ValueChange, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime
 })
 export class NiDatetimePickerComponent implements OnInit {
 
-  MULTI_SELECTION_SEPARATOR = ", ";
-  RANGE_SELECTION_SEPARATOR = " - ";
+  /*
+   * attributes prefix notation
+   *------------------------------
+   * __ => only in component, eg: __value
+   * _  => in component and view, eg: _dateOrarray(...)
+   *    => public, eg: value
+   */
 
-  __value: Date | Date[];
+  __value: any; // Date|Date[]
   @Input()
-  set value(value: Date | Date[]) {
-    this.__value = value;
+  set value(value: any) {
+    this._setValue(value, false);
 
     if (this.calendar) {
-      this.updateInputfield();
-      this.updateViewDatesStates();
+      this.__updateViewDatesStates();
     }
   }
-  get value(): Date | Date[] {
+  get value(): any {
     return this.__value;
   }
-  @Output() valueChange = new EventEmitter<Date | Date[]>();
+  _dateORarray(value: any) {
+    if (this.isSingleSelection) {
+      return Array.isArray(value) && value.length ? value[0] : value;
+    } else if (Array.isArray(value)) {
+      return value;
+    } else if (value) {
+      return [value];
+    } else {
+      return value; // null
+    }
+  }
+  @Output() valueChange = new EventEmitter<any>();
   @Output() valueChanged = new EventEmitter<ValueChange | ValueChange[]>();
-  set emittingValue(value: Date | Date[]) {
-    this.__value = value;
+  _setValue(value: any, emit = true) {
+    this.__value = this._dateORarray(value);
+    this._updateInputfield();
 
-    if (this.calendar) {
-      this.updateInputfield();
-
-      this.valueChange.emit(this.copy(value));
+    if (emit && this.calendar) {
+      this.valueChange.emit(this.__copy(value));
 
       const helpers = this.__viewDateStateHelper();
 
-      if (this.isSingleSelection) {
-        const single = this.__value as Date,
-          viewDate = helpers.calendar.use(single).ymd;
-        this.__updateViewDateState(viewDate, helpers);
+      if (!this.value) {
+        this.valueChanged.emit({});
+      } else if (this.isSingleSelection) {
+        const vdate = helpers.calendar.use(this.value).ymd;
+        this.__updateViewDateState(vdate, helpers);
 
-        this.valueChanged.emit({ date: new Date(single), viewDate: (viewDate) });
-      } else {
-        const multiple = this.__value as Date[],
-          viewDates = [];
-        multiple.forEach(date => {
-          const viewDate = helpers.calendar.use(date).ymd;
-          this.__updateViewDateState(viewDate, helpers);
-          viewDates.push({ date: new Date(date), viewDate: (viewDate) });
+        this.valueChanged.emit({
+          date: new Date(this.value),
+          viewDate: vdate,
+          viewDateFormatted: this._getFormatted(this.inputFormat, this.value)
         });
-        this.valueChanged.emit(viewDates);
+      } else {
+        const vdates = [];
+        this.value.forEach((date: Date) => {
+          const vdate = helpers.calendar.use(date).ymd;
+          this.__updateViewDateState(vdate, helpers);
+          vdates.push({
+            date: new Date(date),
+            viewDate: vdate,
+            viewDateFormatted: this._getFormatted(this.inputFormat, date)
+          });
+        });
+        this.valueChanged.emit(vdates);
       }
     }
   }
@@ -72,8 +94,8 @@ export class NiDatetimePickerComponent implements OnInit {
       this.__numberOfMonths = this.__prevNumberOfMonths;
     }
 
-    this.computeUiElementsWidth();
-    this.updateView(true, false);
+    this.__computeUiElementsWidth();
+    this.__updateView(true, false);
   }
   get monthPicker() {
     return this.__monthPicker;
@@ -83,8 +105,8 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set datePicker(value: boolean) {
     this.__datePicker = value;
-    this.computeUiElementsWidth();
-    this.updateView(true, false);
+    this.__computeUiElementsWidth();
+    this.__updateView(true, false);
   }
   get datePicker() {
     return this.__datePicker;
@@ -94,8 +116,8 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set timePicker(value: boolean) {
     this.__timePicker = value;
-    this.computeUiElementsWidth();
-    this.updateView(true, false);
+    this.__computeUiElementsWidth();
+    this.__updateView(true, false);
   }
   get timePicker() {
     return this.__timePicker;
@@ -108,7 +130,7 @@ export class NiDatetimePickerComponent implements OnInit {
     if (this.__inline) {
       this.openDialog = true;
     }
-    this.computeUiElementsWidth();
+    this.__computeUiElementsWidth();
   }
   get inline() {
     return this.__inline;
@@ -119,29 +141,26 @@ export class NiDatetimePickerComponent implements OnInit {
   @Output() localeChange = new EventEmitter<string>();
   @Input()
   set locale(value: any) {
-    this.updateLocale(value, false);
+    this._updateLocale(value, false);
   }
   get locale(): any {
     return this.__locale;
   }
 
-  getFormatted(format: string, value: Date | Date[]) {
-    if (this.calendar && value && format) {
+  _getFormatted(format: string, value: any) {
+    if (format && value && this.calendar) {
       const formatted = [],
         calendar = this.calendar.clone(),
-        execute = (date: Date) =>
-          formatted.push(this.format(calendar.use(date), format));
+        perform = (date: Date) =>
+          formatted.push(this._format(calendar.use(date), format));
 
       if (Array.isArray(value)) {
-        value.forEach(execute);
+        value.forEach(perform);
       } else {
-        execute(value);
+        perform(value);
       }
 
-      return formatted.join(
-        this.isMultipleSelection
-          ? this.MULTI_SELECTION_SEPARATOR
-          : this.RANGE_SELECTION_SEPARATOR);
+      return formatted.join(this.selectedSeparator);
     } else {
       return '';
     }
@@ -151,13 +170,13 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set inputFormat(value: string) {
     this.__inputFormat = value;
-    this.updateInputfield();
+    this._updateInputfield();
   }
   get inputFormat() {
     return this.__inputFormat;
   }
-  updateInputfield() {
-    this.inputFormatted = this.getFormatted(this.__inputFormat, this.value);
+  _updateInputfield() {
+    this._inputFormatted = this._getFormatted(this.__inputFormat, this.value);
   }
 
   @Input() placeholder = '';
@@ -166,21 +185,21 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set titleFormat(value: string) {
     this.__titleFormat = value;
-    this.updateTitle();
+    this._updateTitle();
   }
   get titleFormat() {
     return this.__titleFormat;
   }
-  updateTitle() {
-    this.title = this.getFormatted(this.__titleFormat, this.calendar.__date);
+  _updateTitle() {
+    this._title = this._getFormatted(this.__titleFormat, this.calendar.__date);
   }
 
   __monthHeaderFormat = 'MMMM YYYY';
   @Input()
   set monthHeaderFormat(value: string) {
     this.__monthHeaderFormat = value;
-    this.viewMonths.forEach(viewMonth => viewMonth.title
-      = this.getFormatted(this.__monthHeaderFormat, viewMonth.value));
+    this._viewMonths.forEach(viewMonth => viewMonth.title
+      = this._getFormatted(this.__monthHeaderFormat, viewMonth.value));
   }
   get monthHeaderFormat() {
     return this.__monthHeaderFormat;
@@ -200,15 +219,15 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set numberOfMonths(value: number) {
     this.__numberOfMonths = value;
-    this.computeUiElementsWidth();
-    this.updateView(true);
+    this.__computeUiElementsWidth();
+    this.__updateView(true);
   }
   get numberOfMonths(): number {
-    this.computeUiElementsWidth();
+    this.__computeUiElementsWidth();
     return this.__numberOfMonths;
   }
 
-  computeUiElementsWidth() {
+  __computeUiElementsWidth() {
     if (this.monthPicker) {
       this.dialogWidth = '250px';
       this.monthWidth = '33.333%';
@@ -227,7 +246,7 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set disabledDates(value: Date[]) {
     this.__disabledDates = value;
-    this.updateViewDatesStates();
+    this.__updateViewDatesStates();
   }
   get disabledDates() {
     return this.__disabledDates;
@@ -239,15 +258,36 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set disableWeekends(value: boolean) {
     this.__disableWeekends = value;
-    this.updateViewDatesStates();
+    this.__updateViewDatesStates();
   }
   get disableWeekends() {
     return this.__disableWeekends;
   }
 
   calendar: NiDatetime;
-  get today(): Ymd {
+  get _today(): Ymd {
     return this.calendar ? this.calendar.clone().use(new Date()).ymd : null;
+  }
+
+  __selectedSeparator = ', '; // ', ' for multiple | ' - ' for range
+  @Input()
+  set selectedSeparator(value: string) {
+    this.__selectedSeparator = value;
+    this.__checkSelectedSeparator();
+    this._updateInputfield();
+  }
+  get selectedSeparator(): string {
+    return this.__selectedSeparator;
+  }
+
+  __checkSelectedSeparator() {
+    if (this.selectedSeparator) {
+      // it already has one
+    } else if (this.isMultipleSelection) {
+      this.__selectedSeparator = ', ';
+    } else if (this.isRangeSelection) {
+      this.__selectedSeparator = ' - ';
+    }
   }
 
   __selectionMode = 'single';
@@ -260,21 +300,20 @@ export class NiDatetimePickerComponent implements OnInit {
 
     this.__selectionMode = value;
 
-    if (this.isSingleSelection && this.value) {
-      // convert [value] => value
-      this.__value = this.value[0];
-    } else if (!Array.isArray(this.value)) {
-      // convert value => [value]
-      this.__value = [this.value];
-    } else if (this.isRangeSelection && this.value.length > 2) {
-      // for range, truncate to min and max
+    this.__checkSelectedSeparator();
+
+    this._setValue(this.value, false);
+
+    // for range, truncate to min and max
+    if (this.isRangeSelection && this.value.length > 2) {
       this.__value = [
         Math.min.apply(null, this.value),
         Math.max.apply(null, this.value)
       ];
     }
 
-    this.updateViewDatesStates();
+    this._updateInputfield();
+    this.__updateViewDatesStates();
   }
   get selectionMode() {
     return this.__selectionMode;
@@ -283,30 +322,30 @@ export class NiDatetimePickerComponent implements OnInit {
   get isMultipleSelection() { return this.selectionMode === 'multiple'; }
   get isRangeSelection() { return this.selectionMode === 'range'; }
 
-  inputFormatted = '';
+  _inputFormatted = '';
 
   __openDialog = false;
   set openDialog(value: boolean) {
     this.__openDialog = value;
 
     if (value) {
-      this.updateView();
+      this.__updateView();
     }
 
     if (value) {
-      this.showed.emit(null);
+      this.showed.emit({});
     } else {
-      this.hidded.emit(null);
+      this.hidded.emit({});
     }
   }
   get openDialog() {
     return this.__openDialog;
   }
 
-  title = '';
-  viewMonthsMin: Date;
-  viewMonthsMax: Date;
-  viewMonths: ViewMonth[] = [];
+  _title = '';
+  __viewMonthsMin: Date;
+  __viewMonthsMax: Date;
+  _viewMonths: ViewMonth[] = [];
 
   constructor() { }
 
@@ -321,7 +360,8 @@ export class NiDatetimePickerComponent implements OnInit {
     // this.openDialog = this.inline;
   }
 
-  copy(dates: Date | Date[]): Date | Date[] {
+  __copy(dates: any): any {
+    if (!dates) { return dates; }
     const clone = (date: Date) => new Date(date);
 
     if (Array.isArray(dates)) {
@@ -331,16 +371,16 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  inputFocused($event: any) {
+  _inputFocused($event: any) {
     this.openDialog = true;
-    this.focused.emit(null);
+    this.focused.emit({});
   }
 
-  inputBlured($event: any) {
-    this.blurred.emit(null);
+  _inputBlured($event: any) {
+    this.blurred.emit({});
   }
 
-  navToPreviousView() {
+  _navToPreviousView() {
     const ymd = this.calendar.clone().ymd;
     ymd.month -= this.numberOfMonths;
     if (ymd.month < 1) {
@@ -348,10 +388,10 @@ export class NiDatetimePickerComponent implements OnInit {
       ymd.year -= 1;
     }
     this.calendar.ymd = ymd;
-    this.updateView();
+    this.__updateView();
   }
 
-  navToNextView() {
+  _navToNextView() {
     const ymd = this.calendar.clone().ymd;
     ymd.month += this.numberOfMonths;
     if (ymd.month > 12) {
@@ -359,43 +399,44 @@ export class NiDatetimePickerComponent implements OnInit {
       ymd.year += 1;
     }
     this.calendar.ymd = ymd;
-    this.updateView();
+    this.__updateView();
   }
 
-  scrollIncrement($event: any) {
+  _scrollIncrement($event: any) {
     $event.preventDefault();
     // +/-[1-12]
     return ($event.deltaY < 0 ? -1 : 1) *
       Math.max(1, Math.min(12, Math.round($event.deltaY / 100)));
   }
 
-  navByScroll(increment: number) {
+  _navByScroll(increment: number) {
     if (increment > 0) {
-      this.navToNextView();
+      this._navToNextView();
     } else {
-      this.navToPreviousView();
+      this._navToPreviousView();
     }
   }
 
-  headerClicked($event: any) {
-    this.calendar.ymd = this.today;
-    this.updateView();
+  _headerClicked($event: any) {
+    this.calendar.ymd = this._today;
+    this.__updateView();
   }
 
-  monthDateClicked(viewDate: ViewDate) {
-    this.selectMonthDate(viewDate);
+  _monthDateClicked(viewDate: ViewDate) {
+    this._selectMonthDate(viewDate);
   }
 
-  selectMonthDate(viewDate: ViewDate) {
+  _selectMonthDate(viewDate: ViewDate) {
     if (viewDate.disabled) { return; }
 
     if (this.isSingleSelection) {
       this.calendar.ymd = viewDate;
-      this.emittingValue = this.calendar.__date;
+      this._setValue(this.calendar.__date);
     } else {
-      const value = this.value as Date[],
+      const value = this.value ? this.value : [],
         helper = this.calendar.clone(),
-        matched = value.filter(date => this.isYmdInRange(viewDate, helper.use(date).ymd));
+        matched = value.filter((date: Date) =>
+          this.__isYmdInRange(viewDate, helper.use(date).ymd));
 
       if (matched.length) {
         value.splice(value.indexOf(matched[0]), 1);
@@ -407,11 +448,11 @@ export class NiDatetimePickerComponent implements OnInit {
         value.push(helper.__date);
       }
 
-      this.emittingValue = value;
+      this._setValue(value);
     }
 
-    if (this.inline) {
-      this.updateView();
+    if (this.inline || !this.isSingleSelection) {
+      this.__updateView();
     } else {
       this.openDialog = false;
     }
@@ -421,7 +462,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return (ymd.year * 10_000) + (ymd.month * 100) + ymd.date;
   }
 
-  isYmdInRange(value: ViewDate, first: ViewDate, last?: ViewDate) {
+  __isYmdInRange(value: ViewDate, first: ViewDate, last?: ViewDate) {
     if (!value || !first) {
       return false;
     } else if (!last) {
@@ -433,33 +474,26 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   __viewDateStateHelper() {
-    const calendar = this.calendar.clone();
-    let isSelected = null;
-
-    const values = [];
-    ((this.isSingleSelection ? [this.value] : this.value) as Date[])
-      .forEach(date => values.push(calendar.use(date).ymd));
-    values.sort((a, b) => a.year - b.year || a.month - b.month || a.date - b.date);
-    if (this.isRangeSelection && (this.value as Date[]).length === 2) {
-      isSelected = (viewDate: ViewDate) => this.isYmdInRange(viewDate, values[0], values[1]);
-    } else {
-      isSelected = (viewDate: ViewDate) =>
-        values.filter(value => this.isYmdInRange(viewDate, value)).length > 0;
-    }
+    const calendar = this.calendar.clone(),
+      value = Array.isArray(this.value) ? this.value : [this.value],
+      values = value.map(date => calendar.use(date).ymd)
+        .sort((a, b) => a.year - b.year || a.month - b.month || a.date - b.date);
 
     return {
-      today: this.today,
+      today: this._today,
       calendar: (calendar),
-      selected: isSelected
+      selected: this.isRangeSelection && value.length === 2
+        ? (vdate: ViewDate) => this.__isYmdInRange(vdate, values[0], values[1])
+        : (vdate: ViewDate) => values.filter(each => this.__isYmdInRange(vdate, each)).length > 0
     };
   }
 
-  updateViewDatesStates() {
+  __updateViewDatesStates() {
     if (!this.calendar) { return; }
 
     const helpers = this.__viewDateStateHelper();
 
-    this.viewMonths.forEach(viewMonth => {
+    this._viewMonths.forEach(viewMonth => {
       viewMonth.dates.forEach(viewDate => {
         this.__updateViewDateState(viewDate, helpers);
       });
@@ -467,7 +501,7 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   __updateViewDateState(date: ViewDate, helpers: any) {
-    date.today = this.isYmdInRange(date, helpers.today);
+    date.today = this.__isYmdInRange(date, helpers.today);
 
     // by default disabled
     date.disabled = false;
@@ -479,7 +513,7 @@ export class NiDatetimePickerComponent implements OnInit {
       // look in disabled dates
       for (const disabledDate of this.disabledDates) {
         helpers.calendar.use(disabledDate);
-        if (this.isYmdInRange(helpers.calendar.ymd, date)) {
+        if (this.__isYmdInRange(helpers.calendar.ymd, date)) {
           date.disabled = true;
           break;
         }
@@ -489,7 +523,7 @@ export class NiDatetimePickerComponent implements OnInit {
     date.selected = helpers.selected(date);
   }
 
-  updateView(force: boolean = false, emit = true) {
+  __updateView(force: boolean = false, emit = true) {
     let calendar = this.calendar;
 
     if (!calendar) {
@@ -502,15 +536,15 @@ export class NiDatetimePickerComponent implements OnInit {
     calendar = calendar.clone();
 
     if (force) {
-      this.viewMonthsMin = null;
-      this.viewMonthsMax = null;
+      this.__viewMonthsMin = null;
+      this.__viewMonthsMax = null;
     }
 
     // update dialog title
-    this.updateTitle();
+    this._updateTitle();
 
-    const vmin = this.viewMonthsMin,
-      vmax = this.viewMonthsMax,
+    const vmin = this.__viewMonthsMin,
+      vmax = this.__viewMonthsMax,
       date = calendar.__date.getTime();
 
     // only if given date is out or current view's range
@@ -531,12 +565,12 @@ export class NiDatetimePickerComponent implements OnInit {
       }
 
       // store view lower bound
-      this.viewMonthsMin = new Date(calendar.__date);
+      this.__viewMonthsMin = new Date(calendar.__date);
 
       const viewMonths = [];
       // generate view dates
       for (let is = 0, ie = months; is < ie; is++) {
-        viewMonths.push(this.computeMonthDates(calendar));
+        viewMonths.push(this.__computeMonthDates(calendar));
 
         // move to next month
         const ymd = calendar.ymd;
@@ -552,22 +586,22 @@ export class NiDatetimePickerComponent implements OnInit {
       // store view upper bound
       // _.date is the 1st of next month
       // so deduct 24 hours from it
-      this.viewMonthsMax = new Date(calendar.__date.getTime() - (24 * 60 * 60_000));
+      this.__viewMonthsMax = new Date(calendar.__date.getTime() - (24 * 60 * 60_000));
 
-      this.viewMonths = viewMonths;
+      this._viewMonths = viewMonths;
 
       if (emit) {
         this.viewUpdated.emit({
-          viewMinDate: new Date(this.viewMonthsMin),
-          viewMaxDate: new Date(this.viewMonthsMax)
+          viewMinDate: new Date(this.__viewMonthsMin),
+          viewMaxDate: new Date(this.__viewMonthsMax)
         });
       }
     }
 
-    this.updateViewDatesStates();
+    this.__updateViewDatesStates();
   }
 
-  computeMonthDates(ndate: NiDatetime): ViewMonth {
+  __computeMonthDates(ndate: NiDatetime): ViewMonth {
     const mweekdays = [],
       mweeknums = [],
       cyear = ndate.year,
@@ -616,7 +650,7 @@ export class NiDatetimePickerComponent implements OnInit {
       }
 
       // trim month dates
-      const diff = this.getFirstdaysDiff(locale1stday, week1stday),
+      const diff = this.__getFirstdaysDiff(locale1stday, week1stday),
         includedWeeks = (diff + daysInMonth) <= 35 ? 5 : 6;
       datesFrom = month1stday - diff;
       datesUntil = datesFrom + (includedWeeks * 7);
@@ -630,7 +664,7 @@ export class NiDatetimePickerComponent implements OnInit {
       });
 
       // add week nums
-      const weeks = this.getNumberOfWeeksUntil(ndate, cmonth);
+      const weeks = this.__getNumberOfWeeksUntil(ndate, cmonth);
       for (let week = weeks - includedWeeks + 1; week <= weeks; week++) {
         mweeknums.push(week);
       }
@@ -653,7 +687,7 @@ export class NiDatetimePickerComponent implements OnInit {
 
     return {
       value: new Date(ndate.__date),
-      title: this.format(title, this.monthHeaderFormat),
+      title: this._format(title, this.monthHeaderFormat),
       year: cyear,
       month: cmonth,
       date: 1,
@@ -663,7 +697,7 @@ export class NiDatetimePickerComponent implements OnInit {
     };
   }
 
-  getNumberOfWeeksUntil(calendar: NiDatetime, month: number): number {
+  __getNumberOfWeeksUntil(calendar: NiDatetime, month: number): number {
     calendar = calendar.clone();
     let firstday: number,
       dayscount = 0;
@@ -676,10 +710,10 @@ export class NiDatetimePickerComponent implements OnInit {
       dayscount += calendar.daysInMonth;
     }
 
-    return Math.ceil((dayscount + this.getFirstdaysDiff(this.locale.firstday, firstday)) / 7);
+    return Math.ceil((dayscount + this.__getFirstdaysDiff(this.locale.firstday, firstday)) / 7);
   }
 
-  getFirstdaysDiff(locale1stday: number, week1stday: number) {
+  __getFirstdaysDiff(locale1stday: number, week1stday: number) {
     if (locale1stday < week1stday) {
       return week1stday - locale1stday;
     } else if (locale1stday > week1stday) {
@@ -689,32 +723,32 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  updateTime() {
+  _updateTime() {
     // this.calendar.xxx is already updated in the view
-    this.emittingValue = this.calendar.__date;
-    this.updateView();
+    this._setValue(this.calendar.__date);
+    this.__updateView();
   }
 
-  overlayClicked($event: any) {
+  _overlayClicked($event: any) {
     this.openDialog = false;
   }
 
-  pickerClicked($event: any) {
+  _pickerClicked($event: any) {
     // toggle open dialog
     this.openDialog = !this.openDialog;
   }
 
-  clearClicked() {
-    this.emittingValue = null;
+  _clearClicked() {
+    this._setValue(null);
 
     if (this.inline) {
-      this.updateViewDatesStates();
+      this.__updateViewDatesStates();
     } else {
       this.openDialog = false;
     }
   }
 
-  updateLocale(locale: any, emit = true) {
+  _updateLocale(locale: any, emit = true) {
     if (!locale) { return; }
 
     const prevLocale = this.__locale;
@@ -730,9 +764,9 @@ export class NiDatetimePickerComponent implements OnInit {
       prevCalendar.use(this.calendar.__date);
     }
 
-    this.updateInputfield();
+    this._updateInputfield();
 
-    this.updateView(true);
+    this.__updateView(true);
 
     if (emit) {
       // emit locale changed value
@@ -745,26 +779,26 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  format(calendar: NiDatetime, format: string) {
+  _format(calendar: NiDatetime, format: string) {
     const formats = {
-      YYYY: () => this.pad(calendar.year, 4),
-      YY: () => this.pad(calendar.year, 4).substring(2),
+      YYYY: () => this._pad(calendar.year, 4),
+      YY: () => this._pad(calendar.year, 4).substring(2),
       MMMM: () => this.locale.monthsName[calendar.month - 1],
       MMM: () => this.locale.monthsNameShort[calendar.month - 1],
-      MM: () => this.pad(calendar.month, 2),
+      MM: () => this._pad(calendar.month, 2),
       M: () => calendar.month,
-      DD: () => this.pad(calendar.date, 2),
+      DD: () => this._pad(calendar.date, 2),
       D: () => calendar.date,
       WWWW: () => this.locale.daysName[calendar.weekDay],
       WWW: () => this.locale.daysNameShort[calendar.weekDay],
       WW: () => this.locale.daysNameMini[calendar.weekDay],
-      HH: () => this.pad(calendar.hours, 2),
-      hh: () => this.pad(calendar.hours12, 2),
+      HH: () => this._pad(calendar.hours, 2),
+      hh: () => this._pad(calendar.hours12, 2),
       H: () => calendar.hours,
       h: () => calendar.hours12,
-      mm: () => this.pad(calendar.minutes, 2),
+      mm: () => this._pad(calendar.minutes, 2),
       m: () => calendar.minutes,
-      ss: () => this.pad(calendar.seconds, 2),
+      ss: () => this._pad(calendar.seconds, 2),
       s: () => calendar.seconds,
       A: () => this.locale.AMPM[calendar.hours > 12 ? 1 : 0],
       a: () => this.locale.ampm[calendar.hours > 12 ? 1 : 0],
@@ -789,7 +823,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return format;
   }
 
-  pad(num: any, limit: number): string {
+  _pad(num: any, limit: number): string {
     return '0'.repeat(limit - num.toString().length) + num;
   }
 }

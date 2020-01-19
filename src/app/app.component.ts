@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   monthPicker = false;
   datePicker = true;
   timePicker = false;
-  inline = true;
+  inline = false;
   enableLocaleSwitch = false;
   locale = 'en_US';
   inputFormat = 'YYYY-MM-DD';
@@ -22,10 +22,11 @@ export class AppComponent implements OnInit {
   monthHeaderFormat = 'MMMM';
   numberOfMonths = 3;
   disabledDates = [];
-  disabledDatesStr = ''; // 2020-01-02 00:00:00,2020-01-03 00:00:00';
+  disabledDatesStr = '2020-01-02 00:00:00,2020-01-03 00:00:00';
   disableWeekends = false;
   showWeekNums = false;
   selectionMode = 'range';
+  selectedSeparator = ', ';
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',
@@ -34,7 +35,7 @@ export class AppComponent implements OnInit {
     dir: 'ltr',
     firstday: 5,
     weekends: [0, 3, 5],
-    daysName: ['Sunxxx', 'Monxxx', 'Tuesxxx', 'Wedsxxx', 'Thursxxx', 'Frixxx', 'Saturxxx'],
+    daysName: ['Sun__', 'Mon__', 'Tues__', 'Weds__', 'Thurs__', 'Fri__', 'Satur__'],
     daysNameShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
     daysNameMini: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
     monthsName: ['January', 'February', 'March', 'April', 'May', 'June',

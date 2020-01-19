@@ -131,6 +131,13 @@
                 </select>
             </div>
         </div>
+
+        <div class="field">
+            <div class="title">selectedSeparator</div>
+            <div class="value">
+                <input name="selectedSeparator" ngDefaultControl [(ngModel)]="selectedSeparator">
+            </div>
+        </div>
     </div>
 
     <div style="flex-grow: 1">
@@ -166,16 +173,32 @@
 <hr />
 
 <div style="text-align: center;">
-    <ni-datetime-picker [(value)]="value" [selectionMode]="selectionMode"
-        [disabledDates]="disabledDates" [disableWeekends]="disableWeekends"
-        [showWeekNums]="showWeekNums" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
-        [datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
-        [enableLocaleSwitch]="enableLocaleSwitch" [locale]="locale" [inputFormat]="inputFormat"
-        [placeholder]="placeholder" [titleFormat]="titleFormat"
-        [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
-        (showed)="event($event, 'showed')" (hidded)="event($event, 'hidded')"
-        (focused)="event($event, 'focused')" (blurred)="event($event, 'blurred')"
-        (valueChanged)="event($event, 'valueChanged')" (viewUpdated)="event($event, 'viewUpdated')"
+    <ni-datetime-picker 
+        [(value)]="value" 
+        [selectionMode]="selectionMode"
+        [selectedSeparator]="selectedSeparator" 
+        [disabledDates]="disabledDates"
+        [disableWeekends]="disableWeekends" 
+        [showWeekNums]="showWeekNums"
+        [defaultDate]="defaultDate" 
+        [monthPicker]="monthPicker" 
+        [datePicker]="datePicker"
+        [timePicker]="timePicker" 
+        [inline]="inline" 
+        [enableLocaleSwitch]="enableLocaleSwitch"
+        [locale]="locale" 
+        [inputFormat]="inputFormat" 
+        [placeholder]="placeholder"
+        [titleFormat]="titleFormat" 
+        [monthHeaderFormat]="monthHeaderFormat"
+        [numberOfMonths]="numberOfMonths" 
+        
+        (showed)="event($event, 'showed')"
+        (hidded)="event($event, 'hidded')" 
+        (focused)="event($event, 'focused')"
+        (blurred)="event($event, 'blurred')" 
+        (valueChanged)="event($event, 'valueChanged')"
+        (viewUpdated)="event($event, 'viewUpdated')"
         (localeChanged)="event($event, 'localeChanged')">
     </ni-datetime-picker>
 </div>

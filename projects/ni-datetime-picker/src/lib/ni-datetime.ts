@@ -64,8 +64,8 @@ export enum NiLocale {
 }
 
 export interface LocaleChangeEvent {
-    previous: string | NiLocale;
-    locale: string | NiLocale;
+    previous: string;
+    locale: string;
 }
 
 export interface NiDatetimeLocale {

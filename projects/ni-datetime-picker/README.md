@@ -1,166 +1,172 @@
 # ni-datetime-picker
 Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.
 
-# Installation
+## Installation
     npm i ni-datetime-picker
 
-# Demo
-Stackblitz Demo: https://angular-9g15ep.stackblitz.io
+## Demo
+Stackblitz Demo: https://angular-ni-datetime-picker.stackblitz.io
 
-Stackblitz play ground: https://stackblitz.com/edit/angular-9g15ep
+Stackblitz play ground: https://stackblitz.com/edit/angular-ni-datetime-picker
 
-# Screenshots
+## Screenshots
 <img src="../../screenshots/datetime-picker1.png" width="200" title="datetime-picker1.png">
 <img src="../../screenshots/datetime-picker12.png" width="200" title="datetime-picker12.png">
 <img src="../../screenshots/datetime-picker3.png" width="200" title="datetime-picker3.png">
 <img src="../../screenshots/month-picker.png" width="200" title="month-picker.png">
 <img src="../../screenshots/time-picker.png" width="200" title="time-picker.png">
 
-# Import the NiDatetimePickerModule
+## Import the NiDatetimePickerModule
 
-    // import the module
-    import { NiDatetimePickerModule } from 'ni-datetime-picker';
+```typescript
+// import module
+import { NiDatetimePickerModule } from 'ni-datetime-picker';
 
-    ...
+@NgModule({
+    declarations: [
+        AppComponent
+    ],
+    imports: [
+        BrowserModule,
+        // register module
+        NiDatetimePickerModule,
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
 
-    @NgModule({
-        declarations: [
-            AppComponent
-        ],
-        imports: [
-            BrowserModule,
-            // register it
-            NiDatetimePickerModule,
-        ],
-        providers: [],
-        bootstrap: [AppComponent]
-    })
-    export class AppModule { }
-
-# In a Glance
+## Example
 
 Following example shows all the options avaiable in the component: 
 
-    <ni-datetime-picker
-        // attributes and their default values
-        [(value)]="null"
-        [defaultDate]="new Date()"
+- your.component.ts
+```typescript
+export class YourComponent implements OnInit {
 
-        [(locale)]="fa_AF"
-        [enableLocaleSwitch]="false"
+    value = new Date();
+    defaultDate = new Date();
+    monthPicker = false;
+    datePicker = true;
+    timePicker = false;
+    inline = false;
+    enableLocaleSwitch = false;
+    locale = 'en_US';
+    inputFormat = 'YYYY-MM-DD';
+    placeholder = 'date/time';
+    titleFormat = 'YYYY';
+    monthHeaderFormat = 'MMMM';
+    numberOfMonths = 3;
+    disabledDates = [];
+    disabledDatesStr = '2020-01-02 00:00:00,2020-01-03 00:00:00';
+    disableWeekends = false;
+    showWeekNums = false;
+    selectionMode = 'range';
+    selectedSeparator = ', ';
 
-        inputFormat="YYYY-MM-DD HH:mm AP"
-        placeholder=""
-        titleFormat="MMMM YYYY"
-        monthHeaderFormat="MMMM YYYY"
+    customLocale: NiDatetimeLocale = {
+        name: 'Custom',
+        new: () => new NiJalaliDatetime(),
+        week: 'js',
+        dir: 'ltr',
+        firstday: 5,
+        weekends: [0, 3, 5],
+        daysName: ['Sun__', 'Mon__', 'Tues__', 'Weds__', 'Thurs__', 'Fri__', 'Satur__'],
+        daysNameShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysNameMini: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        monthsName: ['January', 'February', 'March', 'April', 'May', 'June',
+            'd', 'August', 'September', 'October', 'November', 'December'],
+        monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        ampm: ['am', 'pm'],
+        AMPM: ['AM', 'PM']
+    };
 
-        [numberOfMonths]="1"
-        [monthPicker]="false"
-        [datePicker]="true"
-        [timePicker]="false"
-        [inline]="false"
+    // ...
+}
+```
 
-        [disableWeekends]="[]" 
-        [disabledDates]="false"
-        [showWeekNums]="false"
-        
-        (selected)=""
-        (showed)=""
-        (hidded)=""
-        (viewUpdated)=""
-        (localeChanged)=""
-        (focused)=""
-        (blurred)="">
-    </ni-datetime-picker>
+- your.component.html
+```html
+<ni-datetime-picker 
+    [(value)]="value" 
+    [selectionMode]="selectionMode"
+    [selectedSeparator]="selectedSeparator" 
+    [disabledDates]="disabledDates"
+    [disableWeekends]="disableWeekends" 
+    [showWeekNums]="showWeekNums"
+    [defaultDate]="defaultDate" 
+    [monthPicker]="monthPicker" 
+    [datePicker]="datePicker"
+    [timePicker]="timePicker" 
+    [inline]="inline" 
+    [enableLocaleSwitch]="enableLocaleSwitch"
+    [locale]="locale" 
+    [inputFormat]="inputFormat" 
+    [placeholder]="placeholder"
+    [titleFormat]="titleFormat" 
+    [monthHeaderFormat]="monthHeaderFormat"
+    [numberOfMonths]="numberOfMonths" 
+    
+    (showed)="event($event, 'showed')"
+    (hidded)="event($event, 'hidded')" 
+    (focused)="event($event, 'focused')"
+    (blurred)="event($event, 'blurred')" 
+    (valueChanged)="event($event, 'valueChanged')"
+    (viewUpdated)="event($event, 'viewUpdated')"
+    (localeChanged)="event($event, 'localeChanged')">
+</ni-datetime-picker>
+```
 
-### [(value)]
-- a date object which read to changed by datepicker.
+## Options:
 
-### [defaultDate]
-- when 'value' is null, the datepicker will use this value to prepare the view.
+- **[(value)]**: a date|date[] specifies the selected value(s). the value will be a single date if selectionMode is 'single', an array if selectionModel is 'multiple', and an array of 1 (start) or 2 (start and end) dates will be emitted for 'range' selectionMode.
+- **[defaultDate]**: value to be used when 'value' is null to prepare the datepicker view. current time will be used by default.
+- **[(locale)]**: by default 'fa_AF'. availables are: fa_AF, fa_IR, en_US. provide a NiDatetimeLocale for custom locale.
+- **[enableLocaleSwitch]**: show/hide the locale switcher. note: your custom calendarLocale will be ignored during in switching.
+- **inputFormat**: datepicker input format. check the formatting for more information.
+- **placeholder**: datepicker input placeholder. 
+- **titleFormat**: datepicker dialog title format. check the formatting for more information. 
+- **[numberOfMonths]**: ranging from [1-12] specifies the number of visible month in datepicker view
+- **monthHeaderFormat**: if numberOfMonths > 1, this specifies the format for each month header. check the formatting for m re information.
+- **[monthPicker]**: is a month picker 
+- **[datePicker]**: is a date picker. it is overrided if monthPicker is true. 
+- **[timePicker]**: is a time picker.
+- **[inline]**: is inline 
+- **[disableWeekends]**: weekends should be disabled 
+- **[disabledDates]**: an array of Date object specifying the disabled dates 
+- **[showWeekNums]**: show the week nums  
+- **[selectionMode]**: a string specifying the selection mode. 'single' by default. one of 'single', 'multiple', 'range'.
+- **[selectedSeparator]**: a string specifying selected values separator. by default ', ' is used for 'multiple' and ' - ' is used for range selection.
 
-### [(locale)]
-- the locale to use for using month, and day names. availables are: fa_AF, fa_IR, en_US. provide a NiDatetimeLocale object if you want to customize.
+- **(showed)**: trigger when a show event is happened. {} is passed as the emit value. 
+- **(hidded)**: trigger when a hide event is happened. {} is passed as the emit value. 
+- **(focused)**: trigger when a Focus event is happened. {} is passed as the emit value. 
+- **(blurred)**: trigger when a Blur event is happened. {} is passed as the emit value. 
+- **(valueChanged)**: trigger when value is change. ValueChange|ValueChange[] will be emitted.
+    ```typescript 
+    export interface ValueChange {
+        date?: Date;
+        viewDate?: ViewDate; // locale specific values
+        viewDateFormatted?: string; // formatted as inputFormat
+    }
+    ```
+- **(viewUpdated)**: trigger when a view update event is happened. 
+    ```typescript 
+    interface ViewUpdateEvent {
+        viewMinDate: Date; // smallest visible (except previous month's date) date in the view
+        viewMaxDate: Date; // biggest visible (except next month's date) date in the view
+    }
+    ```
+- **(localeChanged)**: trigger when a locale change event is happened. 
+    ```typescript 
+    interface LocaleChangeEvent {
+        previous: string; // fa_AF|fa_IR|en_US;
+        locale: string; // fa_AF|fa_IR|en_US;
+    }
+    ```
 
-### [enableLocaleSwitch]
-- show/hide the locale switcher. note: your custom calendarLocale will be ignored during switching.
-
-### inputFormat
-- locale dependent date formatter for the datepicker input (selected date is formatted and set as the text to datepicker input). check the formatting for more information.
-
-### placeholder
-- datepicker input placeholder.
-
-### titleFormat
-- datepicker dialog title format. check the formatting for more information.
-
-### [numberOfMonths]
-- ranging from 1 to 12 (included) specifies the number of visible month in datepicker view
-
-### monthHeaderFormat
-- if numberOfMonths > 1, this specifies the each month header format. check the formatting for more information.
-
-### [monthPicker]
-- is a month picker
-
-### [datePicker]
-- is a date picker. it is overrided if monthPicker is true.
-
-### [timePicker]
-- is a time picker. it is overrided if monthPicker is true.
-
-### [inline]
-- is inline
-
-### [disableWeekends]
-- weekends should be disabled
-
-### [disabledDates]
-- an array of Date object specifies the disabled dates
-
-### [showWeekNums]
-- show the week nums 
-
-### (selected)
-- trigger when a select event is happened.
-
-        interface SelectEvent {
-            ndate: ViewDate;
-            formatted: string;
-            date: Date;
-        }
-
-### (showed)
-- trigger when a show event is happened. null is passed as the value.
-
-### (hidded)
-- trigger when a hide event is happened. null is passed as the value.
-
-### (viewUpdated)
-- trigger when a view update event is happened.
-
-        interface ViewUpdateEvent {
-            viewMinDate: Date;
-            viewMaxDate: Date;
-        }
-
-### (localeChanged)
-- trigger when a locale change event is happened.
-
-        interface LocaleChangeEvent {
-            previous: 'fa_AF' | 'fa_IR' | 'en_US';
-            locale: 'fa_AF' | 'fa_IR' | 'en_US';
-        }
-
-### (focused)
-- trigger when a Focus event is happened. null is passed as the value.
-
-### (blurred)
-- trigger when a Blur event is happened. null is passed as the value.
-
-
-# Formats
-
+## Formats
 - 'YYYY', 4 digit year
 - 'YY', 2 digit year
 - 'MMMM', long name of month 
