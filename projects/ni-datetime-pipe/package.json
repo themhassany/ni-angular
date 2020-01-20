@@ -1,7 +1,7 @@
 {
-  "name": "ni-datetime-picker",
-  "description": "Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.",
-  "version": "0.0.21",
+  "name": "ni-datetime-pipe",
+  "description": "",
+  "version": "0.0.11",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
@@ -10,23 +10,16 @@
   "bugs": {
     "url": "https://github.com/jone30rw/ni-angular/issues"
   },
-  "homepage": "https://github.com/jone30rw/ni-angular/tree/master/projects/ni-datetime-picker",
+  "homepage": "https://github.com/jone30rw/ni-angular/tree/master/projects/ni-datetime-pipe",
   "keywords": [
     "angular",
-    "angular-8",
-    "datepicker",
-    "date-picker",
-    "datetime-picker",
-    "timepicker",
-    "monthpicker",
-    "angular-datepicker",
-    "angular-datetimepicker",
-    "ng-datepicker",
-    "ng-datetimepicker",
+    "datepipe",
+    "date-pipe",
+    "angular-datepipe",
+    "ng-datepipe",
     "persian",
     "farsi",
     "jalali",
-    "afghanistan",
     "afghani",
     "gregorian",
     "multi-locale"

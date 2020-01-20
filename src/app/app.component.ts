@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { NiDatetimeLocale, NiJalaliDatetime } from 'ni-datetime';
+import { NiDatetimeLocale, NiJalaliDatetime, Locales } from 'ni-datetime';
+import { NiDatetimePipeService } from 'ni-datetime-pipe';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent implements OnInit {
   defaultDate = new Date();
   monthPicker = false;
   datePicker = true;
-  timePicker = false;
+  timePicker = true;
   inline = true;
   enableLocaleSwitch = false;
   locale = 'fa_AF';
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
   placeholder = 'date/time';
   titleFormat = 'YYYY';
   monthHeaderFormat = 'MMMM';
-  numberOfMonths = 3;
+  numberOfMonths = 1;
   disabledDates = [];
   disabledDatesStr = '2020-01-02 00:00:00,2020-01-03 00:00:00';
   disableWeekends = false;
@@ -41,12 +42,24 @@ export class AppComponent implements OnInit {
     monthsName: ['January', 'February', 'March', 'April', 'May', 'June',
       'd', 'August', 'September', 'October', 'November', 'December'],
     monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    ampm: ['am', 'pm'],
-    AMPM: ['AM', 'PM']
+    ampm: ['**', '__'],
+    AMPM: [':)', ':(']
   };
+
+  value2 = new Date();
+
+  constructor(private pipeService: NiDatetimePipeService) {
+    this.localeChanged(null);
+
+    setInterval(() => this.value2 = new Date(), 1000);
+  }
 
   ngOnInit() {
     this.updateDisabledDates();
+  }
+
+  localeChanged($event: any) {
+    this.pipeService.locale = Locales[this.locale];
   }
 
   newDate() {

@@ -3,5 +3,6 @@
  */
 export {
     NiDatetime, Ymd, Hms, NiDatetimeLocale, Locales,
-    NiGregorianDatetime, NiJalaliDatetime
+    NiGregorianDatetime, NiJalaliDatetime,
+    formatDate, padNumber
 } from './lib/ni-datetime';

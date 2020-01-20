@@ -24,6 +24,9 @@
       ],
       "ni-datetime": [
         "dist/ni-datetime"
+      ],
+      "ni-datetime-pipe": [
+        "dist/ni-datetime-pipe"
       ]
     }
   },

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } from './ni-datetime-picker';
-import { Ymd, NiDatetime, NiDatetimeLocale, Locales } from 'ni-datetime';
+import { Ymd, NiDatetime, NiDatetimeLocale, Locales, formatDate, padNumber } from 'ni-datetime';
 
 @Component({
   selector: 'ni-datetime-picker',
@@ -152,7 +152,7 @@ export class NiDatetimePickerComponent implements OnInit {
       const formatted = [],
         calendar = this.calendar.clone(),
         perform = (date: Date) =>
-          formatted.push(this._format(calendar.use(date), format));
+          formatted.push(formatDate(calendar.use(date), this.locale, format));
 
       if (Array.isArray(value)) {
         value.forEach(perform);
@@ -691,7 +691,7 @@ export class NiDatetimePickerComponent implements OnInit {
 
     return {
       value: new Date(ndate.__date),
-      title: this._format(title, this.monthHeaderFormat),
+      title: formatDate(title, this.locale, this.monthHeaderFormat),
       year: cyear,
       month: cmonth,
       date: 1,
@@ -783,51 +783,7 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  _format(calendar: NiDatetime, format: string) {
-    const formats = {
-      YYYY: () => this._pad(calendar.year, 4),
-      YY: () => this._pad(calendar.year, 4).substring(2),
-      MMMM: () => this.locale.monthsName[calendar.month - 1],
-      MMM: () => this.locale.monthsNameShort[calendar.month - 1],
-      MM: () => this._pad(calendar.month, 2),
-      M: () => calendar.month,
-      DD: () => this._pad(calendar.date, 2),
-      D: () => calendar.date,
-      WWWW: () => this.locale.daysName[calendar.weekDay],
-      WWW: () => this.locale.daysNameShort[calendar.weekDay],
-      WW: () => this.locale.daysNameMini[calendar.weekDay],
-      HH: () => this._pad(calendar.hours, 2),
-      hh: () => this._pad(calendar.hours12, 2),
-      H: () => calendar.hours,
-      h: () => calendar.hours12,
-      mm: () => this._pad(calendar.minutes, 2),
-      m: () => calendar.minutes,
-      ss: () => this._pad(calendar.seconds, 2),
-      s: () => calendar.seconds,
-      A: () => this.locale.AMPM[calendar.hours > 12 ? 1 : 0],
-      a: () => this.locale.ampm[calendar.hours > 12 ? 1 : 0],
-      z: () => calendar.__date.toString().substring(25, 33),
-      iso: () => `${formats.YYYY()}-${formats.MM()}-${formats.DD()}${calendar.__date.toISOString().substring(10)}`
-    };
-
-    const placeholders = {};
-    let counter = 0;
-
-    Object.keys(formats).sort((a, b) => b.length - a.length).forEach(key => {
-      for (let i = format.indexOf(key); i >= 0; i = format.indexOf(key)) {
-        const placeholder = `$[[${counter++}]]`;
-        placeholders[placeholder] = formats[key]();
-        format = format.replace(key, placeholder);
-      }
-    });
-
-    Object.keys(placeholders).forEach(pholder =>
-      format = format.replace(pholder, placeholders[pholder]));
-
-    return format;
-  }
-
-  _pad(num: any, limit: number): string {
-    return '0'.repeat(limit - num.toString().length) + num;
+  _pad(num: number, length: number) {
+    return padNumber(num, length);
   }
 }

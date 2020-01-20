@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { FormsModule } from '@angular/forms';
 
 import { NiDatetimePickerModule } from 'ni-datetime-picker';
+import { NiDatetimePipeModule } from 'ni-datetime-pipe';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { NiDatetimePickerModule } from 'ni-datetime-picker';
     BrowserModule,
     FormsModule,
     AppRoutingModule,
+    NiDatetimePipeModule,
     NiDatetimePickerModule,
   ],
   providers: [],

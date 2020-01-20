@@ -167,30 +167,38 @@ export class YourComponent implements OnInit {
     ```
 
 ## Formats
-- 'YYYY', 4 digit year
-- 'YY', 2 digit year
-- 'MMMM', long name of month 
-- 'MMM', short name of month 
-- 'MM', 2 digit month number
-- 'M', month number
-- 'DD', 2 digit date number
-- 'D', date number
-- 'WWWW', long name of week's day
-- 'WWW', short name of week's day
-- 'WW', mini name of week's day
-- 'HH', 2 digit hour (24h format)
-- 'hh', 2 digit hour (12h format)
-- 'H', hour (24h format)
-- 'h', hour (12h format)
-- 'mm', 2 digit minute
-- 'm', minute
-- 'ss', 2 digit second
-- 's', second
-- 'A', upper case AM/PM
-- 'a', lower case am/pm
-- 'z', time zone (eg: GMT-0500)
-- 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
-
+- `'YYYY', 4 digit year`
+- `'YY', 2 digit year`
+- `'MMMM', long name of month `
+- `'MMM', short name of month `
+- `'MM', 2 digit month number`
+- `'M', month number`
+- `'DD', 2 digit date number`
+- `'D', date number`
+- `'WWWW', long name of week's day`
+- `'WWW', short name of week's day`
+- `'WW', mini name of week's day`
+- `'HH', 2 digit hour (24h format)`
+- `'hh', 2 digit hour (12h format)`
+- `'H', hour (24h format)`
+- `'h', hour (12h format)`
+- `'mm', 2 digit minute`
+- `'m', minute`
+- `'ss', 2 digit second`
+- `'s', second`
+- `'A', upper case AM/PM`
+- `'a', lower case am/pm`
+- `'z', time zone (eg: GMT-0500)`
+- `'iso', iso format (eg: 2020-01-17T08:57:58.144Z)`
+- `'mediumDate': 'WWW DD MMM, YYYY'`
+- `'mediumTime': 'hh:mm a'`
+- `'shortDate': 'YY/M/D'`
+- `'shortTime': 'h:m a'`
+- `'longDate': 'WWWW DD MMMM YYYY'`
+- `'longTime': 'hh:mm:ss A'`
+- `'medium': 'mediumDate mediumTime'`
+- `'short': 'shortDate shortTime'`
+- `'long': 'longDate longTime'`
 
 ## Credits:
 - Uses [Jalali JavaScript](https://github.com/jalaali/jalaali-js) for Jalali conversion.

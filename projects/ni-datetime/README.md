@@ -6,12 +6,54 @@ Converter class for Jalali/Farsi/Persian to Gregorian and wise versa.
 ## Installation
     npm i ni-datetime
 
+## Example
+```typescript
+const jalali = new NiJalaliDatetime(new Date());
+
+console.log(jalali.__date); // internal date object
+console.log(jalali.ymd);    // eg: {year:1390, month:1, date:12}
+jalali.ymd = {year: 1360, month: 9, date: 12}
+
+console.log(jalali.__date); // internal date object is changed
+
+console.log(jalali.use(new Date()).ymd); // set to now and get ymd 
+
+console.log(formatDate(jalali, Locales.fa_AF, "WWWW DD MMMM YYYY")); // eg: شنبه 9 قوس 1390
+
+// -----------------------------------------
+
+const gregorian = new NiGregorianDatetime(new Date());
+
+console.log(gregorian.__date); // internal date object
+console.log(gregorian.ymd);    // eg: {year:1980, month:1, date:12}
+gregorian.ymd = {year: 2020, month: 9, date: 12}
+
+console.log(gregorian.__date); // internal date object is changed
+
+console.log(gregorian.use(new Date()).ymd); // set to now and get ymd
+
+console.log(formatDate(gregorian, Locales.en_US, "WWWW DD MMMM YYYY")); // eg: Monday 20 January 2020
+```
+
 ## API
 ```typescript 
 // wrapper for jalali date
 export class NiJalaliDatetime    extends NiDatetime { }
 // wrapper for gregorian date
 export class NiGregorianDatetime extends NiDatetime { }
+
+// use to format a NiDatetime object
+export function formatDate(calendar: NiDatetime, 
+                           locale: NiDatetimeLocale, 
+                           format: string)          { }
+
+// list of available locales
+export const Locales = {
+    fa_AF: NiDatetimeLocale,
+    fa_IR: NiDatetimeLocale,
+    en_US: NiDatetimeLocale
+};
+
 
 // base case
 export class NiDatetime {
@@ -63,30 +105,39 @@ export class Hms {
 }
 ```
 
-## Example
-
-```typescript
-const jalali = new NiJalaliDatetime(new Date());
-
-console.log(jalali.__date); // internal date object
-console.log(jalali.ymd);    // eg: {year:1390, month:1, date:12}
-jalali.ymd = {year: 1360, month: 9, date: 12}
-
-console.log(jalali.__date); // internal date object is changed
-
-console.log(jalali.use(new Date()).ymd); // set to now and get ymd 
-// -----------------------------------------
-
-const gregorian = new NiGregorianDatetime(new Date());
-
-console.log(gregorian.__date); // internal date object
-console.log(gregorian.ymd);    // eg: {year:1980, month:1, date:12}
-gregorian.ymd = {year: 2020, month: 9, date: 12}
-
-console.log(gregorian.__date); // internal date object is changed
-
-console.log(gregorian.use(new Date()).ymd); // set to now and get ymd
-```
+## Available Formats
+- `'YYYY', 4 digit year`
+- `'YY', 2 digit year`
+- `'MMMM', long name of month `
+- `'MMM', short name of month `
+- `'MM', 2 digit month number`
+- `'M', month number`
+- `'DD', 2 digit date number`
+- `'D', date number`
+- `'WWWW', long name of week's day`
+- `'WWW', short name of week's day`
+- `'WW', mini name of week's day`
+- `'HH', 2 digit hour (24h format)`
+- `'hh', 2 digit hour (12h format)`
+- `'H', hour (24h format)`
+- `'h', hour (12h format)`
+- `'mm', 2 digit minute`
+- `'m', minute`
+- `'ss', 2 digit second`
+- `'s', second`
+- `'A', upper case AM/PM`
+- `'a', lower case am/pm`
+- `'z', time zone (eg: GMT-0500)`
+- `'iso', iso format (eg: 2020-01-17T08:57:58.144Z)`
+- `'mediumDate': 'WWW DD MMM, YYYY'`
+- `'mediumTime': 'hh:mm a'`
+- `'shortDate': 'YY/M/D'`
+- `'shortTime': 'h:m a'`
+- `'longDate': 'WWWW DD MMMM YYYY'`
+- `'longTime': 'hh:mm:ss A'`
+- `'medium': 'mediumDate mediumTime'`
+- `'short': 'shortDate shortTime'`
+- `'long': 'longDate longTime'`
 
 ## Credits:
 - Uses [Jalali JavaScript](https://github.com/jalaali/jalaali-js) for Jalali conversion.

@@ -169,6 +169,74 @@ export class NiGregorianDatetime extends NiDatetime {
     }
 }
 
+export const padNumber = (num: any, limit: number): string => {
+    return '0'.repeat(limit - num.toString().length) + num;
+};
+
+export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, format: string) => {
+    // ---------- formats ----------
+    const f = {
+        mediumDate: () => `${f.WWW()} ${f.DD()} ${f.MMM()}, ${f.YYYY()}`,
+        mediumTime: () => `${f.hh()}:${f.mm()} ${f.a()}`,
+        shortDate: () => `${f.YY()}/${f.M()}/${f.D()}`,
+        shortTime: () => `${f.h()}:${f.m()} ${f.a()}`,
+        longDate: () => `${f.WWWW()} ${f.DD()} ${f.MMMM()}, ${f.YYYY()}`,
+        longTime: () => `${f.hh()}:${f.mm()}:${f.ss()} ${f.A()}`,
+        medium: () => `${f.mediumDate()}, ${f.mediumTime()}`,
+        short: () => `${f.shortDate()} ${f.shortTime()}`,
+        long: () => `${f.longDate()} ${f.longTime()}`,
+        iso: () => `${f.YYYY()}-${f.MM()}-${f.DD()}${calendar.__date.toISOString().substring(10)}`,
+
+        YYYY: () => padNumber(calendar.year, 4),
+        MMMM: () => locale.monthsName[calendar.month - 1],
+        YY: () => padNumber(calendar.year, 4).substring(2),
+        MMM: () => locale.monthsNameShort[calendar.month - 1],
+        MM: () => padNumber(calendar.month, 2),
+        M: () => calendar.month,
+        DD: () => padNumber(calendar.date, 2),
+        D: () => calendar.date,
+        WWWW: () => locale.daysName[calendar.weekDay],
+        WWW: () => locale.daysNameShort[calendar.weekDay],
+        WW: () => locale.daysNameMini[calendar.weekDay],
+        HH: () => padNumber(calendar.hours, 2),
+        hh: () => padNumber(calendar.hours12, 2),
+        H: () => calendar.hours,
+        h: () => calendar.hours12,
+        mm: () => padNumber(calendar.minutes, 2),
+        m: () => calendar.minutes,
+        ss: () => padNumber(calendar.seconds, 2),
+        s: () => calendar.seconds,
+        A: () => locale.AMPM[calendar.hours > 12 ? 1 : 0],
+        a: () => locale.ampm[calendar.hours > 12 ? 1 : 0],
+        z: () => calendar.__date.toString().substring(25, 33),
+    };
+
+    // one format may generate a value that can be misinterpreted by another format
+    // use placeholers to hide each format output until concatenated at the end
+    const placeholders = {};
+    let counter = 0;
+
+    // --- IMPORTANT NOTE ---
+    // f.keys should be checked in order
+    // so the longer format strings be evaulated first
+    // ----------------------
+
+    // .sort((a, b) => b.length - a.length)
+    Object.keys(f).forEach(key => {
+        while (format.indexOf(key) >= 0) {
+            const placeholder = `$[[${counter++}]]`; // generate a placeholder
+            placeholders[placeholder] = f[key](); // format and memorize for placeholder
+            format = format.replace(key, placeholder); // replace key with placeholder
+        }
+    });
+
+    // replace placeholders with values
+    Object.keys(placeholders).forEach(pholder =>
+        format = format.replace(pholder, placeholders[pholder]));
+
+    return format;
+};
+
 /**
  * Default NiDate Locales
  */

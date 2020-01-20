@@ -1,204 +1,207 @@
-<div style="display: flex;">
-    <div style="flex-grow: 1">
-        <div class="field">
-            <div class="title">value</div>
-            <div class="value">
-                <button (click)="value = newDate()">{{ value }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">defaultDate</div>
-            <div class="value">{{ defaultDate }}</div>
-        </div>
-
-        <div class="field">
-            <div class="title">monthPicker</div>
-            <div class="value">
-                <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">datePicker</div>
-            <div class="value">
-                <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">timePicker</div>
-            <div class="value">
-                <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">inline</div>
-            <div class="value">
-                <button (click)="inline = !inline">{{ inline }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">enableLocaleSwitch</div>
-            <div class="value">
-                <button
-                    (click)="enableLocaleSwitch = !enableLocaleSwitch">{{ enableLocaleSwitch }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">locale</div>
-            <div class="value">
-                <select name="locale" ngDefaultControl [(ngModel)]="locale">
-                    <option [ngValue]="'fa_AF'">fa_AF</option>
-                    <option [ngValue]="'fa_IR'">fa_IR</option>
-                    <option [ngValue]="'en_US'">en_US</option>
-                    <option [ngValue]="customLocale">MyCustomOne</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">inputFormat</div>
-            <div class="value">
-                <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">placeholder</div>
-            <div class="value">
-                <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
-                    [disabled]="inline">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">titleFormat</div>
-            <div class="value">
-                <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">monthHeaderFormat</div>
-            <div class="value">
-                <input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">numberOfMonths</div>
-            <div class="value">
-                <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">disableWeekends</div>
-            <div class="value">
-                <button (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">disabledDates</div>
-            <div class="value">
-                <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
-                    [(ngModel)]="disabledDatesStr">
-                </textarea>
-                <br />
-                <button (click)="updateDisabledDates()">update</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">showWeekNums</div>
-            <div class="value">
-                <button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">selectionMode</div>
-            <div class="value">
-                <select name="selectionMode" ngDefaultControl [(ngModel)]="selectionMode">
-                    <option [ngValue]="'single'">single</option>
-                    <option [ngValue]="'multiple'">multiple</option>
-                    <option [ngValue]="'range'">range</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="field">
-            <div class="title">selectedSeparator</div>
-            <div class="value">
-                <input name="selectedSeparator" ngDefaultControl [(ngModel)]="selectedSeparator">
-            </div>
-        </div>
-    </div>
-
-    <div style="flex-grow: 1">
-        <pre>
-            # Formats
-            - 'YYYY', 4 digit year
-            - 'YY', 2 digit year
-            - 'MMMM', long name of month 
-            - 'MMM', short name of month 
-            - 'MM', 2 digit month number
-            - 'M', month number
-            - 'DD', 2 digit date number
-            - 'D', date number
-            - 'WWWW', long name of week's day
-            - 'WWW', short name of week's day
-            - 'WW', mini name of week's day
-            - 'HH', 2 digit hour (24h format)
-            - 'hh', 2 digit hour (12h format)
-            - 'H', hour (24h format)
-            - 'h', hour (12h format)
-            - 'mm', 2 digit minute
-            - 'm', minute
-            - 'ss', 2 digit second
-            - 's', second
-            - 'A', upper case AM/PM
-            - 'a', lower case am/pm
-            - 'z', time zone (eg: GMT-0500)
-            - 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
-        </pre>
-    </div>
+<strong>ni-datetime-pipe: </strong>
+<div style="padding: 20px 0px 20px 20px;">
+    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A" }}
+    <br/>
+    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":"en_US" }}
+    <br/>
+    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":customLocale }}
 </div>
 
 <hr />
 
-<div style="text-align: center;">
-    <ni-datetime-picker 
-        [(value)]="value" 
-        [selectionMode]="selectionMode"
-        [selectedSeparator]="selectedSeparator" 
-        [disabledDates]="disabledDates"
-        [disableWeekends]="disableWeekends" 
-        [showWeekNums]="showWeekNums"
-        [defaultDate]="defaultDate" 
-        [monthPicker]="monthPicker" 
-        [datePicker]="datePicker"
-        [timePicker]="timePicker" 
-        [inline]="inline" 
-        [enableLocaleSwitch]="enableLocaleSwitch"
-        [locale]="locale" 
-        [inputFormat]="inputFormat" 
-        [placeholder]="placeholder"
-        [titleFormat]="titleFormat" 
-        [monthHeaderFormat]="monthHeaderFormat"
-        [numberOfMonths]="numberOfMonths" 
-        
-        (showed)="event($event, 'showed')"
-        (hidded)="event($event, 'hidded')" 
-        (focused)="event($event, 'focused')"
-        (blurred)="event($event, 'blurred')" 
-        (valueChanged)="event($event, 'valueChanged')"
-        (viewUpdated)="event($event, 'viewUpdated')"
-        (localeChanged)="event($event, 'localeChanged')">
-    </ni-datetime-picker>
+<strong>ni-datetime-picker: </strong>
+<div style="padding: 20px 0px 0px 20px;">
+    <div style="display: flex;">
+        <div style="flex-grow: 1">
+            <div class="field">
+                <div class="title">value</div>
+                <div class="value">
+                    <button (click)="value = newDate()">{{ value }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">defaultDate</div>
+                <div class="value">{{ defaultDate }}</div>
+            </div>
+
+            <div class="field">
+                <div class="title">monthPicker</div>
+                <div class="value">
+                    <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">datePicker</div>
+                <div class="value">
+                    <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">timePicker</div>
+                <div class="value">
+                    <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">inline</div>
+                <div class="value">
+                    <button (click)="inline = !inline">{{ inline }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">enableLocaleSwitch</div>
+                <div class="value">
+                    <button
+                        (click)="enableLocaleSwitch = !enableLocaleSwitch">{{ enableLocaleSwitch }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">locale</div>
+                <div class="value">
+                    <select name="locale" ngDefaultControl [(ngModel)]="locale"
+                        (change)="localeChanged($event)">
+                        <option [ngValue]="'fa_AF'">fa_AF</option>
+                        <option [ngValue]="'fa_IR'">fa_IR</option>
+                        <option [ngValue]="'en_US'">en_US</option>
+                        <option [ngValue]="customLocale">MyCustomOne</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">inputFormat</div>
+                <div class="value">
+                    <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">placeholder</div>
+                <div class="value">
+                    <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
+                        [disabled]="inline">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">titleFormat</div>
+                <div class="value">
+                    <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">monthHeaderFormat</div>
+                <div class="value">
+                    <input name="monthHeaderFormat" ngDefaultControl
+                        [(ngModel)]="monthHeaderFormat">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">numberOfMonths</div>
+                <div class="value">
+                    <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">disableWeekends</div>
+                <div class="value">
+                    <button
+                        (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">disabledDates</div>
+                <div class="value">
+                    <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
+                        [(ngModel)]="disabledDatesStr">
+                    </textarea>
+                    <br />
+                    <button (click)="updateDisabledDates()">update</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">showWeekNums</div>
+                <div class="value">
+                    <button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">selectionMode</div>
+                <div class="value">
+                    <select name="selectionMode" ngDefaultControl [(ngModel)]="selectionMode">
+                        <option [ngValue]="'single'">single</option>
+                        <option [ngValue]="'multiple'">multiple</option>
+                        <option [ngValue]="'range'">range</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">selectedSeparator</div>
+                <div class="value">
+                    <input name="selectedSeparator" ngDefaultControl
+                        [(ngModel)]="selectedSeparator">
+                </div>
+            </div>
+        </div>
+
+        <div style="flex-grow: 1">
+            <pre>
+                # Formats
+                - 'YYYY', 4 digit year
+                - 'YY', 2 digit year
+                - 'MMMM', long name of month 
+                - 'MMM', short name of month 
+                - 'MM', 2 digit month number
+                - 'M', month number
+                - 'DD', 2 digit date number
+                - 'D', date number
+                - 'WWWW', long name of week's day
+                - 'WWW', short name of week's day
+                - 'WW', mini name of week's day
+                - 'HH', 2 digit hour (24h format)
+                - 'hh', 2 digit hour (12h format)
+                - 'H', hour (24h format)
+                - 'h', hour (12h format)
+                - 'mm', 2 digit minute
+                - 'm', minute
+                - 'ss', 2 digit second
+                - 's', second
+                - 'A', upper case AM/PM
+                - 'a', lower case am/pm
+                - 'z', time zone (eg: GMT-0500)
+                - 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+            </pre>
+        </div>
+    </div>
+
+    <hr />
+
+    <div style="text-align: center;">
+        <ni-datetime-picker [(value)]="value" [selectionMode]="selectionMode"
+            [selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
+            [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
+            [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
+            [timePicker]="timePicker" [inline]="inline" [enableLocaleSwitch]="enableLocaleSwitch"
+            [locale]="locale" [inputFormat]="inputFormat" [placeholder]="placeholder"
+            [titleFormat]="titleFormat" [monthHeaderFormat]="monthHeaderFormat"
+            [numberOfMonths]="numberOfMonths" (showed)="event($event, 'showed')"
+            (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
+            (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+            (viewUpdated)="event($event, 'viewUpdated')"
+            (localeChanged)="event($event, 'localeChanged')">
+        </ni-datetime-picker>
+    </div>
 </div>

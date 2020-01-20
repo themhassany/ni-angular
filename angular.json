@@ -203,6 +203,46 @@
           }
         }
       }
+    },
+    "ni-datetime-pipe": {
+      "projectType": "library",
+      "root": "projects/ni-datetime-pipe",
+      "sourceRoot": "projects/ni-datetime-pipe/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ni-datetime-pipe/tsconfig.lib.json",
+            "project": "projects/ni-datetime-pipe/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ni-datetime-pipe/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ni-datetime-pipe/src/test.ts",
+            "tsConfig": "projects/ni-datetime-pipe/tsconfig.spec.json",
+            "karmaConfig": "projects/ni-datetime-pipe/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ni-datetime-pipe/tsconfig.lib.json",
+              "projects/ni-datetime-pipe/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }},
   "defaultProject": "ni-angular"
 }
