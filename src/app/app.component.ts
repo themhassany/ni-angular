@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NiDatetimeLocale, NiJalaliDatetime } from 'projects/ni-datetime-picker/src/public-api';
+import { NiDatetimeLocale, NiJalaliDatetime } from 'ni-datetime';
 
 @Component({
   selector: 'app-root',

@@ -1,5 +1,5 @@
 # ni-datetime-picker
-Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.
+Angular8 month|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.
 
 ## Installation
     npm i ni-datetime-picker
@@ -190,3 +190,7 @@ export class YourComponent implements OnInit {
 - 'a', lower case am/pm
 - 'z', time zone (eg: GMT-0500)
 - 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+
+
+## Credits:
+- Uses [Jalali JavaScript](https://github.com/jalaali/jalaali-js) for Jalali conversion.

@@ -31,3 +31,8 @@ export interface ValueChange {
   viewDate?: ViewDate;
   viewDateFormatted?: string;
 }
+
+export interface LocaleChangeEvent {
+  previous: string;
+  locale: string;
+}

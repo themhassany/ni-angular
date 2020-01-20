@@ -20,7 +20,14 @@ export abstract class NiDatetime {
 
     __date: Date;
 
-    use(date: Date): NiDatetime { this.__date = new Date(date); return this; }
+    constructor(date?: Date) {
+        this.use(date);
+    }
+
+    use(date: Date): NiDatetime {
+        this.__date = date ? new Date(date) : date;
+        return this;
+    }
 
     abstract get year(): number;
     abstract get month(): number;
@@ -30,7 +37,7 @@ export abstract class NiDatetime {
     abstract get weekDay(): number;
 
     set ymd(ymd: Ymd) { }
-    get ymd() { return this.__ymd(); }
+    get ymd(): Ymd { return this.__ymd(); }
     __ymd() { return { year: this.year, month: this.month, date: this.date }; }
 
     get hours12(): number { return this.hours > 12 ? this.hours % 12 : this.hours; }
@@ -50,18 +57,13 @@ export abstract class NiDatetime {
         this.use(this.__date);
     }
 
-    get am() { return this.hours < 12; }
+    get am(): boolean { return this.hours < 12; }
     set am(toggle: boolean) { this.hours = this.hours12 + (toggle ? 0 : 12); }
 
-    get pm() { return !this.am; }
+    get pm(): boolean { return !this.am; }
     set pm(toggle: boolean) { this.hours = this.hours12 + (toggle ? 12 : 0); }
 
     abstract clone(): NiDatetime;
-}
-
-export interface LocaleChangeEvent {
-    previous: string;
-    locale: string;
 }
 
 export interface NiDatetimeLocale {

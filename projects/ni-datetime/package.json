@@ -1,0 +1,33 @@
+{
+  "name": "ni-datetime",
+  "description": "Converter class for Jalali/Farsi/Persian to Gregorian and wise versa.",
+  "version": "0.0.1",
+  "license": "Apache 2.0",
+  "author": "Mohammad Hassany",
+  "repository": {
+    "url": "https://github.com/jone30rw/ni-angular.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jone30rw/ni-angular/issues"
+  },
+  "homepage": "https://github.com/jone30rw/ni-angular/tree/master/projects/ni-datetime",
+  "keywords": [
+    "angular",
+    "angular-8",
+    "datetime",
+    "angular-datetime",
+    "ng-datetime",
+    "persian",
+    "farsi",
+    "jalali",
+    "afghanistan",
+    "afghani",
+    "gregorian",
+    "multi-locale"
+  ],
+  "peerDependencies": {
+    "@angular/common": "^9.0.0-rc.9",
+    "@angular/core": "^9.0.0-rc.9",
+    "tslib": "^1.10.0"
+  }
+}

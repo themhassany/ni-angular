@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Ymd, NiDatetime, NiDatetimeLocale, LocaleChangeEvent, Locales } from './ni-datetime';
-import { ValueChange, ViewDate, ViewMonth, ViewUpdateEvent } from './ni-datetime-picker';
+import { Ymd, NiDatetime, NiDatetimeLocale, Locales } from 'ni-datetime';
+import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } from './ni-datetime-picker';
 
 @Component({
   selector: 'ni-datetime-picker',

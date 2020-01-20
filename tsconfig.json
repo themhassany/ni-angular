@@ -21,6 +21,9 @@
     "paths": {
       "ni-datetime-picker": [
         "dist/ni-datetime-picker"
+      ],
+      "ni-datetime": [
+        "dist/ni-datetime"
       ]
     }
   },
