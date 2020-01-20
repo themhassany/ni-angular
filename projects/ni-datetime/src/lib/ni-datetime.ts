@@ -89,6 +89,10 @@ export class NiJalaliDatetime extends NiDatetime {
 
     __jdate = { jy: null, jm: null, jd: null };
 
+    constructor(date?: Date) {
+        super(date);
+    }
+
     use(date: Date): NiDatetime {
         this.__jdate = date ? toJalaali(date) : { jy: null, jm: null, jd: null };
         return super.use(date);
@@ -136,6 +140,10 @@ export class NiJalaliDatetime extends NiDatetime {
  * Gregorian Implmentation of NiDate
  */
 export class NiGregorianDatetime extends NiDatetime {
+
+    constructor(date?: Date) {
+        super(date);
+    }
 
     get year(): number { return this.__date.getFullYear(); }
     get month(): number { return this.__date.getMonth() + 1; }
