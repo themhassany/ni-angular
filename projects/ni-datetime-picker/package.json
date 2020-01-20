@@ -1,7 +1,7 @@
 {
   "name": "ni-datetime-picker",
   "description": "Angular8 mont|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.",
-  "version": "0.0.12",
+  "version": "0.0.17",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
@@ -34,7 +34,9 @@
   "peerDependencies": {
     "@angular/common": "^9.0.0-rc.9",
     "@angular/core": "^9.0.0-rc.9",
-    "tslib": "^1.10.0",
-    "ni-datetime": "^0.0.1"
+    "tslib": "^1.10.0"
+  },
+  "dependencies": {
+    "ni-datetime": "^0.0.3"
   }
 }

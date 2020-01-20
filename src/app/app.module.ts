@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NiDatetimePickerModule } from 'projects/ni-datetime-picker/src/public-api';
 import { FormsModule } from '@angular/forms';
+
+import { NiDatetimePickerModule } from 'ni-datetime-picker';
 
 @NgModule({
   declarations: [

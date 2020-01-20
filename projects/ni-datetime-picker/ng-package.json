@@ -6,5 +6,8 @@
     "umdModuleIds": {
       "ni-datetime": "ni-datetime"
     }
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "ni-datetime"
+  ]
 }

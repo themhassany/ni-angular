@@ -6,3 +6,4 @@ export {
     NiDatetimeLocale, Locales,
     NiGregorianDatetime, NiJalaliDatetime,
 } from './lib/ni-datetime';
+export { NiDatetimeModule } from './lib/ni-datetime.module';
