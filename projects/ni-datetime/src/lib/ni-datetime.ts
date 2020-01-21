@@ -171,9 +171,9 @@ export class NiGregorianDatetime extends NiDatetime {
 
 export const padNumber = (num: any, limit: number): string => {
     return '0'.repeat(limit - num.toString().length) + num;
-};
+}
 
-export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, format: string) => {
+export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, format: string): string => {
     // ---------- formats ----------
     const f = {
         mediumDate: () => `${f.WWW()} ${f.DD()} ${f.MMM()}, ${f.YYYY()}`,
@@ -235,7 +235,7 @@ export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, forma
         format = format.replace(pholder, placeholders[pholder]));
 
     return format;
-};
+}
 
 /**
  * Default NiDate Locales

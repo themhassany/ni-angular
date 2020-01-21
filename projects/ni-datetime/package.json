@@ -1,7 +1,7 @@
 {
   "name": "ni-datetime",
   "description": "Converter class for Jalali/Farsi/Persian/Khorshidi to Gregorian and wise versa.",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
@@ -22,8 +22,5 @@
     "multi-locale"
   ],
   "peerDependencies": {
-    "@angular/common": "^9.0.0-rc.9",
-    "@angular/core": "^9.0.0-rc.9",
-    "tslib": "^1.10.0"
   }
 }
