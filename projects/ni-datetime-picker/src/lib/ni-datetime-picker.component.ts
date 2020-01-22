@@ -112,7 +112,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__datePicker;
   }
 
-  __timePicker = true;
+  __timePicker = false;
   @Input()
   set timePicker(value: boolean) {
     this.__timePicker = value;
@@ -123,7 +123,7 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__timePicker;
   }
 
-  __inline = true;
+  __inline = false;
   @Input()
   set inline(value: boolean) {
     this.__inline = value;
