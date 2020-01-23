@@ -9,17 +9,17 @@ import { NiDatetimePipeService } from 'ni-datetime-pipe';
 })
 export class AppComponent implements OnInit {
 
-  value = new Date();
-  defaultDate = new Date();
+  value; //  = new Date();
+  defaultDate; // = new Date();
   monthPicker = false;
   datePicker = true;
   timePicker = false;
   inline = false;
   showLocaleSwitch = true;
-  locale = 'fa_AF';
+  locale = 'en_US';
   inputFormat = 'YYYY-MM-DD';
   placeholder = 'date/time';
-  titleFormat = '';
+  titleFormat = 'YYYY MMMM';
   monthHeaderFormat = 'MMMM';
   numberOfMonths = 1;
   disabledDates = [];
@@ -34,9 +34,9 @@ export class AppComponent implements OnInit {
   showClearBtn = true;
   clearBtnText = '';
   todayBtnSet = 'andValue';
-  showYearNavigator = true;
+  showYearNavigator = false;
   yearNavigatorRange = '1370,1410';
-  showMonthNavigator = true;
+  showMonthNavigator = false;
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',

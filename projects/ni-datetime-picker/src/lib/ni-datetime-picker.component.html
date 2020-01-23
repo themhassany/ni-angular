@@ -7,7 +7,8 @@
     </div>
     <div #modal *ngIf="openDialog" [ngClass]="{
             'ni-dialog-modal': true,
-            'ni-dialog-picker-inline': inline
+            'ni-dialog-picker-inline': inline,
+            'ni-dialog-with-append-to': !!appendTo
         }" [dir]="locale.dir" (click)="_overlayClicked($event)">
         <!-- (click)="$event.stopPropagation();" on 'ni-dialog' stop the click event from reaching modal -->
         <div #dialog class="ni-dialog ni-dialog-open-animation" [ngStyle]="{width: dialogWidth}"
@@ -18,8 +19,7 @@
                     ⌃
                 </div>
 
-                <div *ngIf="showYearNavigator || showMonthNavigator; else spring"
-                    class="ni-dialog-navigators">
+                <div *ngIf="showYearNavigator || showMonthNavigator" class="ni-dialog-navigators">
                     <select *ngIf="showYearNavigator" [(ngModel)]="_navYear">
                         <option *ngFor="let year of yearNavValues" [ngValue]="year">
                             {{ year }}
@@ -32,13 +32,15 @@
                         </option>
                     </select>
                 </div>
-                <ng-template #spring>
-                    <div style="flex-grow: 1"></div>
-                </ng-template>
 
                 <div *ngIf="titleFormat" class="ni-dialog-title">
                     {{ _title }}
                 </div>
+
+                <div *ngIf="!(showYearNavigator || showMonthNavigator || titleFormat)"
+                    style="flex-grow: 1">
+                </div>
+
                 <div *ngIf="datePicker || monthPicker" class="ni-dialog-nav-btn ni-forward"
                     (click)="_navToNextView()">
                     ⌃

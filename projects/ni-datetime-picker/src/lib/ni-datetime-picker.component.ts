@@ -45,8 +45,11 @@ export class NiDatetimePickerComponent implements OnInit {
     } else if (value) {
       return [value];
     } else {
-      return value; // null
+      return value; // is null
     }
+  }
+  _dateArray(value: any) {
+    return this.isSingleSelection ? (value ? [value] : []) : (Array.isArray(value) ? value : []);
   }
   @Output() valueChange = new EventEmitter<any>();
   @Output() valueChanged = new EventEmitter<ValueChange | ValueChange[]>();
@@ -321,7 +324,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this._setValue(this.value, false);
 
     // for range, truncate to min and max
-    if (this.isRangeSelection && this.value.length > 2) {
+    if (this.isRangeSelection && this.value && this.value.length > 2) {
       this.__value = [
         Math.min.apply(null, this.value),
         Math.max.apply(null, this.value)
@@ -372,13 +375,14 @@ export class NiDatetimePickerComponent implements OnInit {
     }
 
     const appendToBound = this.appendTo.getBoundingClientRect(),
+      dialog = this.dialog.nativeElement,
       pickerBound = this.picker.nativeElement.getBoundingClientRect(),
-      rtlOffset = this.locale.dir === 'rtl' ? this.dialog.nativeElement.offsetWidth - pickerBound.width : 0;
+      rtlOffset = this.locale.dir === 'rtl' ? dialog.offsetWidth - pickerBound.width : 0;
 
-    this.dialog.nativeElement.style.top = `${pickerBound.top - appendToBound.top + pickerBound.height}px`;
-    this.dialog.nativeElement.style.left = `${pickerBound.left - appendToBound.left - rtlOffset}px`;
+    dialog.style.top = `${pickerBound.top - appendToBound.top + pickerBound.height}px`;
+    dialog.style.left = `${pickerBound.left - appendToBound.left - rtlOffset}px`;
 
-    this.dialog.nativeElement.classList.add("ni-dialog-visible");
+    dialog.classList.add("ni-dialog-visible");
   }
   __attachDialog() {
     if (this.__dialogDetached) {
@@ -386,12 +390,15 @@ export class NiDatetimePickerComponent implements OnInit {
       this.__dialogDetached = false;
     }
 
-    this.dialog.nativeElement.style.top = "";
-    this.dialog.nativeElement.style.left = "";
-    this.dialog.nativeElement.classList.add("ni-dialog-visible");
+    const dialog = this.dialog.nativeElement;
+    dialog.style.top = "";
+    dialog.style.left = "";
+    dialog.classList.add("ni-dialog-visible");
   }
   __manageOverlay() {
-    if (this.inline) {
+    if (!this.appendTo) {
+      // ignore; no appendTo is specified
+    } else if (this.inline) {
       // inline - openDialog => attach if detached | later
       if (this.openDialog) {
         setTimeout(() => this.__attachDialog(), 0);
@@ -597,16 +604,16 @@ export class NiDatetimePickerComponent implements OnInit {
 
   __viewDateStateHelper() {
     const calendar = this.calendar.clone(),
-      value = Array.isArray(this.value) ? this.value : [this.value],
-      values = value.map(date => calendar.use(date).ymd)
+      values = this._dateArray(this.value),
+      valarr = values.map(date => calendar.use(date).ymd)
         .sort((a, b) => a.year - b.year || a.month - b.month || a.date - b.date);
 
     return {
       today: this._today,
       calendar: (calendar),
-      selected: this.isRangeSelection && value.length === 2
-        ? (vdate: ViewDate) => this.__isYmdInRange(vdate, values[0], values[1])
-        : (vdate: ViewDate) => values.filter(each => this.__isYmdInRange(vdate, each)).length > 0
+      selected: this.isRangeSelection && values.length === 2
+        ? (date: ViewDate) => this.__isYmdInRange(date, valarr[0], valarr[1])
+        : (date: ViewDate) => valarr.filter(value => this.__isYmdInRange(date, value)).length > 0
     };
   }
 
@@ -885,7 +892,7 @@ export class NiDatetimePickerComponent implements OnInit {
     const prevCalendar = this.calendar;
     this.calendar = this.__locale.new();
     if (prevCalendar) {
-      prevCalendar.use(this.calendar.__date);
+      this.calendar.use(prevCalendar.__date);
     }
 
     this._updateInputfield();

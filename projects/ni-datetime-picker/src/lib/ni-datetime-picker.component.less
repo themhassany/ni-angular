@@ -13,7 +13,6 @@
     z-index: 1;
 
     .ni-input {
-      flex-grow: 1;
       z-index: 101;
       padding-left: 0.25rem;
       padding-right: 0.25rem;
@@ -39,7 +38,6 @@
 .ni-dialog-modal {
   user-select: none;
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
-
   position: relative;
   left: 0;
   top: 0;
@@ -324,7 +322,7 @@
   }
 }
 
-.ni-dialog-modal:not(.ni-dialog-picker-inline) {
+.ni-dialog-modal.ni-dialog-with-append-to:not(.ni-dialog-picker-inline) {
   position: absolute;
   left: 0;
   top: 0;
@@ -373,6 +371,7 @@
   }
 }
 
+.ni-dialog-modal:not(.ni-dialog-with-append-to) .ni-dialog,
 .ni-dialog-visible {
   opacity: 1 !important;
 }
