@@ -80,6 +80,8 @@ export interface NiDatetimeLocale {
     monthsNameShort: string[];
     ampm: string[];
     AMPM: string[];
+    today: string;
+    clear: string;
 }
 
 /**
@@ -254,8 +256,10 @@ export const Locales = {
         monthsName: ['حمل', 'ثور', 'جوزا', 'سرطان', 'اسد', 'سنبله', 'میزان', 'عقرب', 'قوس', 'جدی', 'دلو', 'حوت'],
         monthsNameShort: ['حم', 'ثو', 'جو', 'سر', 'اس', 'سن', 'می', 'عق', 'قو', 'جد', 'دل', 'حو'],
         ampm: ['ق.ظ', 'ب.ظ'],
-        AMPM: ['قبل از ظهر', 'بعد از ظهر']
-    } as NiDatetimeLocale,
+        AMPM: ['قبل از ظهر', 'بعد از ظهر'],
+        today: 'امروز',
+        clear: 'پاک'
+    },
     fa_IR: {
         name: 'fa_IR',
         new: () => new NiJalaliDatetime(),
@@ -270,8 +274,10 @@ export const Locales = {
             'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
         monthsNameShort: ['فر', 'ار', 'خر', 'تی', 'مر', 'شه', 'مه', 'آب', 'آذ', 'دی', 'به', 'اس'],
         ampm: ['ق.ظ', 'ب.ظ'],
-        AMPM: ['قبل از ظهر', 'بعد از ظهر']
-    } as NiDatetimeLocale,
+        AMPM: ['قبل از ظهر', 'بعد از ظهر'],
+        today: 'امروز',
+        clear: 'پاک'
+    },
     en_US: {
         name: 'en_US',
         new: () => new NiGregorianDatetime(),
@@ -286,6 +292,8 @@ export const Locales = {
             'July', 'August', 'September', 'October', 'November', 'December'],
         monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         ampm: ['am', 'pm'],
-        AMPM: ['AM', 'PM']
-    } as NiDatetimeLocale
+        AMPM: ['AM', 'PM'],
+        today: 'Today',
+        clear: 'Clear'
+    }
 };

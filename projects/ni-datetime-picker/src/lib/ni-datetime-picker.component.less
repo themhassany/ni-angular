@@ -1,11 +1,11 @@
 ::ng-deep ni-datetime-picker {
-  display: inline-block;
+  display: flex;
 }
 
 .ni-datetime-picker {
-  font-family: "Open Sans", "Helvetica Neue", sans-serif;
-  width: 100%;
+  position: relative;
   user-select: none;
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
 
   .ni-inputs {
     display: flex;
@@ -15,62 +15,43 @@
     .ni-input {
       flex-grow: 1;
       z-index: 101;
-    }
-
-    .ni-picker-btn,
-    .ni-clear-btn {
-      padding: 0.125rem 0.35rem;
-      font-size: 0.75rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 101;
-    }
-
-    .ni-picker-btn:hover {
-      background-color: rgba(211, 211, 211, 1);
-    }
-
-    .ni-picker-btn {
-      height: 1rem;
-      padding: 0.25rem 0.35rem;
-      background-color: rgba(211, 211, 211, 0.5);
-      content: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDYwIDYwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2MCA2MDsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTJweCIgaGVpZ2h0PSI1MTJweCI+CjxnPgoJPHBhdGggZD0iTTU3LDRoLTdWMWMwLTAuNTUzLTAuNDQ3LTEtMS0xaC03Yy0wLjU1MywwLTEsMC40NDctMSwxdjNIMTlWMWMwLTAuNTUzLTAuNDQ3LTEtMS0xaC03Yy0wLjU1MywwLTEsMC40NDctMSwxdjNIMyAgIEMyLjQ0Nyw0LDIsNC40NDcsMiw1djExdjQzYzAsMC41NTMsMC40NDcsMSwxLDFoNTRjMC41NTMsMCwxLTAuNDQ3LDEtMVYxNlY1QzU4LDQuNDQ3LDU3LjU1Myw0LDU3LDR6IE00MywyaDV2M3YzaC01VjVWMnogTTEyLDJoNSAgIHYzdjNoLTVWNVYyeiBNNCw2aDZ2M2MwLDAuNTUzLDAuNDQ3LDEsMSwxaDdjMC41NTMsMCwxLTAuNDQ3LDEtMVY2aDIydjNjMCwwLjU1MywwLjQ0NywxLDEsMWg3YzAuNTUzLDAsMS0wLjQ0NywxLTFWNmg2djlINFY2eiAgICBNNCw1OFYxN2g1MnY0MUg0eiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTM4LDIzaC03aC0yaC03aC0yaC05djl2MnY3djJ2OWg5aDJoN2gyaDdoMmg5di05di0ydi03di0ydi05aC05SDM4eiBNMzEsMjVoN3Y3aC03VjI1eiBNMzgsNDFoLTd2LTdoN1Y0MXogTTIyLDM0aDd2N2gtNyAgIFYzNHogTTIyLDI1aDd2N2gtN1YyNXogTTEzLDI1aDd2N2gtN1YyNXogTTEzLDM0aDd2N2gtN1YzNHogTTIwLDUwaC03di03aDdWNTB6IE0yOSw1MGgtN3YtN2g3VjUweiBNMzgsNTBoLTd2LTdoN1Y1MHogTTQ3LDUwaC03ICAgdi03aDdWNTB6IE00Nyw0MWgtN3YtN2g3VjQxeiBNNDcsMjV2N2gtN3YtN0g0N3oiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
-    }
-
-    .ni-clear-btn:hover {
-      background-color: red;
-    }
-
-    .ni-clear-btn {
-      background-color: #e74c3c;
-      color: white;
-      height: 1rem;
-      padding: 0.25rem 0.35rem;
+      padding-left: 0.25rem;
+      padding-right: 0.25rem;
     }
   }
 
-  .ni-dialog-container {
-    position: relative;
+  .ni-picker-btn {
+    cursor: pointer;
+    font-family: serif;
+    width: 1rem;
+    height: 1rem;
+    padding: 0.25rem 0.35rem;
+    background-color: rgba(211, 211, 211, 0.5);
+    content: url(data:image/svg+xml;utf8;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTkuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgdmlld0JveD0iMCAwIDYwIDYwIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA2MCA2MDsiIHhtbDpzcGFjZT0icHJlc2VydmUiIHdpZHRoPSI1MTJweCIgaGVpZ2h0PSI1MTJweCI+CjxnPgoJPHBhdGggZD0iTTU3LDRoLTdWMWMwLTAuNTUzLTAuNDQ3LTEtMS0xaC03Yy0wLjU1MywwLTEsMC40NDctMSwxdjNIMTlWMWMwLTAuNTUzLTAuNDQ3LTEtMS0xaC03Yy0wLjU1MywwLTEsMC40NDctMSwxdjNIMyAgIEMyLjQ0Nyw0LDIsNC40NDcsMiw1djExdjQzYzAsMC41NTMsMC40NDcsMSwxLDFoNTRjMC41NTMsMCwxLTAuNDQ3LDEtMVYxNlY1QzU4LDQuNDQ3LDU3LjU1Myw0LDU3LDR6IE00MywyaDV2M3YzaC01VjVWMnogTTEyLDJoNSAgIHYzdjNoLTVWNVYyeiBNNCw2aDZ2M2MwLDAuNTUzLDAuNDQ3LDEsMSwxaDdjMC41NTMsMCwxLTAuNDQ3LDEtMVY2aDIydjNjMCwwLjU1MywwLjQ0NywxLDEsMWg3YzAuNTUzLDAsMS0wLjQ0NywxLTFWNmg2djlINFY2eiAgICBNNCw1OFYxN2g1MnY0MUg0eiIgZmlsbD0iIzAwMDAwMCIvPgoJPHBhdGggZD0iTTM4LDIzaC03aC0yaC03aC0yaC05djl2MnY3djJ2OWg5aDJoN2gyaDdoMmg5di05di0ydi03di0ydi05aC05SDM4eiBNMzEsMjVoN3Y3aC03VjI1eiBNMzgsNDFoLTd2LTdoN1Y0MXogTTIyLDM0aDd2N2gtNyAgIFYzNHogTTIyLDI1aDd2N2gtN1YyNXogTTEzLDI1aDd2N2gtN1YyNXogTTEzLDM0aDd2N2gtN1YzNHogTTIwLDUwaC03di03aDdWNTB6IE0yOSw1MGgtN3YtN2g3VjUweiBNMzgsNTBoLTd2LTdoN1Y1MHogTTQ3LDUwaC03ICAgdi03aDdWNTB6IE00Nyw0MWgtN3YtN2g3VjQxeiBNNDcsMjV2N2gtN3YtN0g0N3oiIGZpbGw9IiMwMDAwMDAiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
+    z-index: 101;
   }
 
-  .ni-dialog-overlay {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
+  .ni-picker-btn:hover {
+    background-color: rgba(211, 211, 211, 1);
   }
+}
+
+.ni-dialog-modal {
+  user-select: none;
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+
+  position: relative;
+  left: 0;
+  top: 0;
 
   .ni-dialog {
     display: flex;
     flex-direction: column;
     background-color: white;
-    position: absolute;
-    top: 0;
-    z-index: 999;
     border: 1px solid #c8c8c8;
     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    opacity: 0;
+    transition: opacity 0.25s ease-out;
   }
 
   .ni-dialog-header {
@@ -89,6 +70,17 @@
   .ni-dialog-title:hover,
   .ni-dialog-nav-btn:hover {
     color: #007ad9;
+  }
+
+  .ni-dialog-navigators {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+
+    > select {
+      margin: 0 0.125rem;
+    }
   }
 
   .ni-dialog-nav-btn {
@@ -120,14 +112,13 @@
   .ni-month-title {
     text-align: center;
     font-size: 12px;
-    // padding: 0.125rem 0.5rem 0.5rem;
+    padding-bottom: 0.25rem;
     font-weight: bold;
     cursor: pointer;
   }
 
   .ni-month-weekdays {
     display: flex;
-    padding-top: 0.5rem;
   }
 
   .ni-month-weekday,
@@ -167,6 +158,7 @@
 
   .ni-month-date {
     width: 14.2857142857%;
+    flex-grow: 1;
     text-align: center;
     font-size: 11px;
     cursor: default;
@@ -219,6 +211,7 @@
 
   .ni-month-date-today {
     color: #2980b9;
+    background-color: #2980b926;
   }
 
   .ni-month-weekend {
@@ -269,18 +262,25 @@
     transform: rotate(180deg);
   }
 
+  .ni-footer {
+    display: flex;
+    align-items: center;
+    border-top: solid 1px rgba(211, 211, 211, 0.5);
+    padding: 0.5rem;
+  }
+
   .ni-locale-switches {
     text-align: center;
-    border-top: solid 1px rgba(211, 211, 211, 0.5);
-    padding: 0.5rem 0;
   }
 
   .ni-locale-switch {
     display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    padding: 0.125rem 0.5rem;
+    width: 1.75rem;
+    height: 1.25rem;
+    vertical-align: bottom;
+    padding: 0.125rem 0.25rem;
     cursor: pointer;
+    box-sizing: border-box;
   }
 
   .ni-locale-icon {
@@ -290,24 +290,58 @@
   }
 
   .ni-locale-switch-selected {
-    background-color: rgba(211, 211, 211, 0.5);
+    background-color: rgba(0, 0, 0, 0.0625);
+  }
+
+  .ni-button-bar {
+    flex-grow: 1;
+  }
+
+  .ni-button-bar > span {
+    display: inline-block;
+    font-size: 0.75rem;
+    height: 1.25rem;
+    padding: 0.2rem 0.75rem;
+    background-color: rgba(0, 0, 0, 0.0625);
+    margin: 0 0.0625rem;
+    vertical-align: bottom;
+    box-sizing: border-box;
+  }
+
+  .ni-button-bar > span:hover {
+    background-color: rgba(0, 0, 0, 0.125);
+  }
+
+  .ni-button-bar > span:active {
+    background-color: rgba(0, 0, 0, 0.25);
   }
 }
 
-.ni-datetime-picker.ni-inline .ni-dialog {
-  position: relative;
-  z-index: inherit;
+.ni-dialog-modal.ni-dialog-picker-inline {
+  .ni-dialog {
+    position: relative;
+    z-index: inherit;
+  }
 }
 
-::ng-deep .ni-datetime-picker[dir="ltr"] .ni-dialog {
+.ni-dialog-modal:not(.ni-dialog-picker-inline) {
+  position: absolute;
   left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  .ni-dialog {
+    position: absolute;
+    z-index: 999;
+  }
+}
+
+::ng-deep .ni-dialog-modal[dir="ltr"] .ni-dialog {
   .ni-month-weeknums {
     border-right: solid 1px rgba(211, 211, 211, 0.5);
   }
 
-  // .ni-month:not(:first-child) {
-  //   border-left: solid 1px rgba(211, 211, 211, 0.25);
-  // }
   .ni-dialog-nav-btn.ni-backward {
     transform: rotate(-90deg);
   }
@@ -315,19 +349,17 @@
   .ni-dialog-nav-btn.ni-forward {
     transform: rotate(90deg);
   }
+
+  .ni-button-bar {
+    text-align: right;
+  }
 }
 
-::ng-deep .ni-datetime-picker[dir="rtl"] .ni-dialog {
-  left: inherit;
-  right: 0;
-
+::ng-deep .ni-dialog-modal[dir="rtl"] .ni-dialog {
   .ni-month-weeknums {
     border-left: solid 1px rgba(211, 211, 211, 0.5);
   }
 
-  // .ni-month:not(:first-child) {
-  //   border-right: solid 1px rgba(211, 211, 211, 0.25);
-  // }
   .ni-dialog-nav-btn.ni-backward {
     transform: rotate(90deg);
   }
@@ -335,6 +367,14 @@
   .ni-dialog-nav-btn.ni-forward {
     transform: rotate(-90deg);
   }
+
+  .ni-button-bar {
+    text-align: left;
+  }
+}
+
+.ni-dialog-visible {
+  opacity: 1 !important;
 }
 
 // Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

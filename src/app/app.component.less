@@ -8,13 +8,13 @@
   .value {
     flex-grow: 1;
   }
-
-  input,
-  textarea {
-    width: 20rem;
-  }
 }
 
-::ng-deep ni-datetime-picker input {
-  width: 20rem;
+::ng-deep ni-datetime-picker {
+  input {
+    width: 10rem;
+  }
+  .ni-dialog-overlay {
+    background-color: red;
+  }
 }

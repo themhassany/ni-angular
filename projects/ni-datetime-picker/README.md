@@ -51,19 +51,28 @@ export class YourComponent implements OnInit {
     datePicker = true;
     timePicker = false;
     inline = false;
-    enableLocaleSwitch = false;
-    locale = 'en_US';
+    showLocaleSwitch = true;
+    locale = 'fa_AF';
     inputFormat = 'YYYY-MM-DD';
     placeholder = 'date/time';
-    titleFormat = 'YYYY';
+    titleFormat = '';
     monthHeaderFormat = 'MMMM';
-    numberOfMonths = 3;
+    numberOfMonths = 1;
     disabledDates = [];
     disabledDatesStr = '2020-01-02 00:00:00,2020-01-03 00:00:00';
     disableWeekends = false;
     showWeekNums = false;
     selectionMode = 'range';
     selectedSeparator = ', ';
+    showPickerIcon = true;
+    showTodayBtn = true;
+    todayBtnText = '';
+    showClearBtn = true;
+    clearBtnText = '';
+    todayBtnSet = 'andValue';
+    showYearNavigator = true;
+    yearNavigatorRange = '1370,1410';
+    showMonthNavigator = true;
 
     customLocale: NiDatetimeLocale = {
         name: 'Custom',
@@ -76,10 +85,12 @@ export class YourComponent implements OnInit {
         daysNameShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
         daysNameMini: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
         monthsName: ['January', 'February', 'March', 'April', 'May', 'June',
-            'd', 'August', 'September', 'October', 'November', 'December'],
+        'd', 'August', 'September', 'October', 'November', 'December'],
         monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        ampm: ['am', 'pm'],
-        AMPM: ['AM', 'PM']
+        ampm: ['**', '__'],
+        AMPM: [':)', ':('],
+        today: 'امروز',
+        clear: 'پاک'
     };
 
     // ...
@@ -88,25 +99,35 @@ export class YourComponent implements OnInit {
 
 - your.component.html
 ```html
-<ni-datetime-picker 
-    [(value)]="value" 
+<ni-datetime-picker
+    [appendTo]="parent"
+    [(value)]="value"
     [selectionMode]="selectionMode"
-    [selectedSeparator]="selectedSeparator" 
+    [selectedSeparator]="selectedSeparator"
     [disabledDates]="disabledDates"
-    [disableWeekends]="disableWeekends" 
+    [disableWeekends]="disableWeekends"
     [showWeekNums]="showWeekNums"
-    [defaultDate]="defaultDate" 
-    [monthPicker]="monthPicker" 
+    [showPickerIcon]="showPickerIcon"
+    [showTodayBtn]="showTodayBtn"
+    [todayBtnText]="todayBtnText"
+    [showClearBtn]="showClearBtn"
+    [clearBtnText]="clearBtnText"
+    [todayBtnSet]="todayBtnSet"
+    [defaultDate]="defaultDate"
+    [monthPicker]="monthPicker"
     [datePicker]="datePicker"
-    [timePicker]="timePicker" 
-    [inline]="inline" 
-    [enableLocaleSwitch]="enableLocaleSwitch"
-    [locale]="locale" 
-    [inputFormat]="inputFormat" 
+    [timePicker]="timePicker"
+    [inline]="inline"
+    [showLocaleSwitch]="showLocaleSwitch"
+    [locale]="locale"
+    [inputFormat]="inputFormat"
     [placeholder]="placeholder"
-    [titleFormat]="titleFormat" 
+    [titleFormat]="titleFormat"
     [monthHeaderFormat]="monthHeaderFormat"
-    [numberOfMonths]="numberOfMonths" 
+    [numberOfMonths]="numberOfMonths"
+    [showYearNavigator]="showYearNavigator"
+    [yearNavigatorRange]="yearNavigatorRange"
+    [showMonthNavigator]="showMonthNavigator" 
     
     (showed)="event($event, 'showed')"
     (hidded)="event($event, 'hidded')" 
@@ -123,12 +144,12 @@ export class YourComponent implements OnInit {
 - **[(value)]**: a date|date[] specifies the selected value(s). the value will be a single date if selectionMode is 'single', an array if selectionModel is 'multiple', and an array of 1 (start) or 2 (start and end) dates will be emitted for 'range' selectionMode.
 - **[defaultDate]**: value to be used when 'value' is null to prepare the datepicker view. current time will be used by default.
 - **[(locale)]**: by default 'fa_AF'. availables are: fa_AF, fa_IR, en_US. provide a NiDatetimeLocale for custom locale.
-- **[enableLocaleSwitch]**: show/hide the locale switcher. note: your custom calendarLocale will be ignored during in switching.
-- **inputFormat**: datepicker input format. check the formatting for more information.
-- **placeholder**: datepicker input placeholder. 
-- **titleFormat**: datepicker dialog title format. check the formatting for more information. 
+- **[showLocaleSwitch]**: show/hide the locale switcher. note: your custom calendarLocale will be ignored during in switching.
+- **[inputFormat]**: datepicker input format. check the formatting for more information.
+- **[placeholder]**: datepicker input placeholder. 
+- **[titleFormat]**: datepicker dialog title format. check the formatting for more information. 
 - **[numberOfMonths]**: ranging from [1-12] specifies the number of visible month in datepicker view
-- **monthHeaderFormat**: if numberOfMonths > 1, this specifies the format for each month header. check the formatting for m re information.
+- **[monthHeaderFormat]**: if numberOfMonths > 1, this specifies the format for each month header. check the formatting for m re information.
 - **[monthPicker]**: is a month picker 
 - **[datePicker]**: is a date picker. it is overrided if monthPicker is true. 
 - **[timePicker]**: is a time picker.
@@ -136,8 +157,17 @@ export class YourComponent implements OnInit {
 - **[disableWeekends]**: weekends should be disabled 
 - **[disabledDates]**: an array of Date object specifying the disabled dates 
 - **[showWeekNums]**: show the week nums  
-- **[selectionMode]**: a string specifying the selection mode. 'single' by default. one of 'single', 'multiple', 'range'.
+- **[selectionMode]**: a string specifying the selection mode. 'single' by default. possible values: 'single', 'multiple', 'range'.
 - **[selectedSeparator]**: a string specifying selected values separator. by default ', ' is used for 'multiple' and ' - ' is used for range selection.
+- **[showPickerIcon]**: show the picker icon. by default false.
+- **[showTodayBtn]**: show today button. by default false.
+- **[todayBtnText]**: today btutton text. by default uses NiDatetimeLocale.___.today.
+- **[showClearBtn]**: show clear button. by default false.
+- **[clearBtnText]**: clean button text. by default uses NiDatetimeLocale.___.clear.
+- **[todayBtnSet]**: whether the today button update 'onlyView', or view 'andValue'. 'andValue'by default. possible values: 'onlyView', 'andValue', ''.
+- **[showYearNavigator]**: show year navigator, by default false.
+- **[yearNavigatorRange]**: year navigator range 'start,end', or 'year1,year2,year3...'. by default ''.
+- **[showMonthNavigator]**: show month navigator, by default false.
 
 - **(showed)**: trigger when a show event is happened. {} is passed as the emit value. 
 - **(hidded)**: trigger when a hide event is happened. {} is passed as the emit value. 

@@ -1,25 +1,42 @@
-<div [dir]="locale.dir" [ngClass]="{ 
-        'ni-datetime-picker': true, 
-        'ni-inline': inline
-    }">
+<div #picker [dir]="locale.dir" class="ni-datetime-picker">
     <div class="ni-inputs">
         <input *ngIf="!inline" [value]="_inputFormatted" [placeholder]="placeholder" readonly
             class="ni-input" (focus)="_inputFocused($event)" (blur)="_inputBlured($event)">
-        <div class="ni-picker-btn" (click)="_pickerClicked($event)">
-        </div>
-        <div *ngIf="value" class="ni-clear-btn" (click)="_clearClicked($event)">
-            ╳
+        <div *ngIf="showPickerIcon" class="ni-picker-btn" (click)="_pickerClicked($event)">
         </div>
     </div>
-    <div *ngIf="openDialog" class="ni-dialog-container">
-        <div *ngIf="!inline" class="ni-dialog-overlay" (click)="_overlayClicked($event)"></div>
-        <div class="ni-dialog" [ngStyle]="{width: dialogWidth}">
+    <div #modal *ngIf="openDialog" [ngClass]="{
+            'ni-dialog-modal': true,
+            'ni-dialog-picker-inline': inline
+        }" [dir]="locale.dir" (click)="_overlayClicked($event)">
+        <!-- (click)="$event.stopPropagation();" on 'ni-dialog' stop the click event from reaching modal -->
+        <div #dialog class="ni-dialog ni-dialog-open-animation" [ngStyle]="{width: dialogWidth}"
+            (click)="$event.stopPropagation();">
             <div class="ni-dialog-header">
                 <div *ngIf="datePicker || monthPicker" class="ni-dialog-nav-btn ni-backward"
                     (click)="_navToPreviousView()">
                     ⌃
                 </div>
-                <div class="ni-dialog-title" (click)="_headerClicked($event)">
+
+                <div *ngIf="showYearNavigator || showMonthNavigator; else spring"
+                    class="ni-dialog-navigators">
+                    <select *ngIf="showYearNavigator" [(ngModel)]="_navYear">
+                        <option *ngFor="let year of yearNavValues" [ngValue]="year">
+                            {{ year }}
+                        </option>
+                    </select>
+                    <select *ngIf="showMonthNavigator" [(ngModel)]="_navMonth">
+                        <option *ngFor="let month of monthNavigatorValues; let monthIndex = index;"
+                            [ngValue]="monthIndex + 1">
+                            {{ month }}
+                        </option>
+                    </select>
+                </div>
+                <ng-template #spring>
+                    <div style="flex-grow: 1"></div>
+                </ng-template>
+
+                <div *ngIf="titleFormat" class="ni-dialog-title">
                     {{ _title }}
                 </div>
                 <div *ngIf="datePicker || monthPicker" class="ni-dialog-nav-btn ni-forward"
@@ -134,27 +151,40 @@
                     </div>
                 </div>
 
-                <div *ngIf="enableLocaleSwitch" class="ni-locale-switches" dir="ltr">
-                    <div [ngClass]="{ 
+                <div *ngIf="showLocaleSwitch || showTodayBtn || showClearBtn" class="ni-footer">
+                    <div *ngIf="showLocaleSwitch" class="ni-locale-switches">
+                        <div [ngClass]="{ 
                             'ni-locale-switch': true, 
                             'ni-locale-switch-selected': locale.name === 'en_US', 
                             'ni-locale-en_US': true
                         }" (click)="_updateLocale('en_US')">
-                        <span class="ni-locale-icon ni-en_US"></span>
-                    </div>
-                    <div [ngClass]="{ 
+                            <span class="ni-locale-icon ni-en_US"></span>
+                        </div>
+                        <div [ngClass]="{ 
                             'ni-locale-switch': true, 
                             'ni-locale-switch-selected': locale.name === 'fa_IR', 
                             'ni-locale-fa_IR': true
                         }" (click)="_updateLocale('fa_IR')">
-                        <span class="ni-locale-icon ni-fa_IR"></span>
-                    </div>
-                    <div [ngClass]="{ 
+                            <span class="ni-locale-icon ni-fa_IR"></span>
+                        </div>
+                        <div [ngClass]="{ 
                             'ni-locale-switch': true, 
                             'ni-locale-switch-selected': locale.name === 'fa_AF', 
                             'ni-locale-fa_AF': true
                         }" (click)="_updateLocale('fa_AF')">
-                        <span class="ni-locale-icon ni-fa_AF"></span>
+                            <span class="ni-locale-icon ni-fa_AF"></span>
+                        </div>
+                    </div>
+
+                    <div *ngIf="showTodayBtn || showClearBtn" class="ni-button-bar">
+                        <span *ngIf="showTodayBtn" class="ni-today-btn"
+                            (click)="_todayClicked($event)">
+                            {{ todayBtnText || locale.today }}
+                        </span>
+                        <span *ngIf="showClearBtn" class="ni-clear-btn"
+                            (click)="_clearClicked($event)">
+                            {{ clearBtnText || locale.clear }}
+                        </span>
                     </div>
                 </div>
             </div>

@@ -5,18 +5,18 @@ Angular Pipe for [NiDatetime](https://github.com/jone30rw/ni-angular/tree/master
     npm i ni-datetime-pipe
 
 ```typescript
-// ...
-import { NiDatetimePipeModule } from 'ni-datetime-pipe';
+import { NiDatetimePipeModule } from 'ni-datetime-pipe'; // <= import
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    // ...
-    NiDatetimePipeModule,
+    NiDatetimePipeModule, // <= register
   ],
-  providers: [],
+  providers: [
+    NiDatetimePipeService // <= add provider
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

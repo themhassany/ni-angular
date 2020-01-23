@@ -13,13 +13,13 @@ export class AppComponent implements OnInit {
   defaultDate = new Date();
   monthPicker = false;
   datePicker = true;
-  timePicker = true;
-  inline = true;
-  enableLocaleSwitch = false;
+  timePicker = false;
+  inline = false;
+  showLocaleSwitch = true;
   locale = 'fa_AF';
   inputFormat = 'YYYY-MM-DD';
   placeholder = 'date/time';
-  titleFormat = 'YYYY';
+  titleFormat = '';
   monthHeaderFormat = 'MMMM';
   numberOfMonths = 1;
   disabledDates = [];
@@ -28,6 +28,15 @@ export class AppComponent implements OnInit {
   showWeekNums = false;
   selectionMode = 'range';
   selectedSeparator = ', ';
+  showPickerIcon = true;
+  showTodayBtn = true;
+  todayBtnText = '';
+  showClearBtn = true;
+  clearBtnText = '';
+  todayBtnSet = 'andValue';
+  showYearNavigator = true;
+  yearNavigatorRange = '1370,1410';
+  showMonthNavigator = true;
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',
@@ -43,7 +52,9 @@ export class AppComponent implements OnInit {
       'd', 'August', 'September', 'October', 'November', 'December'],
     monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     ampm: ['**', '__'],
-    AMPM: [':)', ':(']
+    AMPM: [':)', ':('],
+    today: 'امروز',
+    clear: 'پاک'
   };
 
   value2 = new Date();

@@ -1,9 +1,9 @@
 <strong>ni-datetime-pipe: </strong>
 <div style="padding: 20px 0px 20px 20px;">
     {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A" }}
-    <br/>
+    <br />
     {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":"en_US" }}
-    <br/>
+    <br />
     {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":customLocale }}
 </div>
 
@@ -12,7 +12,7 @@
 <strong>ni-datetime-picker: </strong>
 <div style="padding: 20px 0px 0px 20px;">
     <div style="display: flex;">
-        <div style="flex-grow: 1">
+        <div style="width: 50%;">
             <div class="field">
                 <div class="title">value</div>
                 <div class="value">
@@ -54,10 +54,10 @@
             </div>
 
             <div class="field">
-                <div class="title">enableLocaleSwitch</div>
+                <div class="title">showLocaleSwitch</div>
                 <div class="value">
                     <button
-                        (click)="enableLocaleSwitch = !enableLocaleSwitch">{{ enableLocaleSwitch }}</button>
+                        (click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
                 </div>
             </div>
 
@@ -123,7 +123,7 @@
                 <div class="title">disabledDates</div>
                 <div class="value">
                     <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
-                        [(ngModel)]="disabledDatesStr">
+                        [(ngModel)]="disabledDatesStr" cols="80">
                     </textarea>
                     <br />
                     <button (click)="updateDisabledDates()">update</button>
@@ -155,53 +155,111 @@
                         [(ngModel)]="selectedSeparator">
                 </div>
             </div>
+
+            <div class="field">
+                <div class="title">showPickerIcon</div>
+                <div class="value">
+                    <button (click)="showPickerIcon = !showPickerIcon">{{ showPickerIcon }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">clearBtnText/showClearBtn</div>
+                <div class="value">
+                    <input name="clearBtnText" ngDefaultControl [(ngModel)]="clearBtnText">
+                    <button (click)="showClearBtn = !showClearBtn">{{ showClearBtn }}</button>
+                </div>
+            </div>
+            <div class="field">
+                <div class="title">todayBtnText/showTodayBtn</div>
+                <div class="value">
+                    <input name="todayBtnText" ngDefaultControl [(ngModel)]="todayBtnText">
+                    <button (click)="showTodayBtn = !showTodayBtn">{{ showTodayBtn }}</button>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">todayBtnSet</div>
+                <div class="value">
+                    <select name="todayBtnSet" ngDefaultControl [(ngModel)]="todayBtnSet">
+                        <option [ngValue]="'onlyView'">onlyView</option>
+                        <option [ngValue]="'andValue'">andValue</option>
+                        <option [ngValue]="''">None</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">
+                    showYearNavigator (start,end)
+                </div>
+                <div class="value">
+                    <input name="yearNavigatorRange" ngDefaultControl
+                        [(ngModel)]="yearNavigatorRange">
+                    <button
+                        (click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp; --&gt; (end-start &lt;= 100)
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="title">showMonthNavigator</div>
+                <div class="value">
+                    <button
+                        (click)="showMonthNavigator = !showMonthNavigator">{{ showMonthNavigator }}</button>
+                </div>
+            </div>
         </div>
 
-        <div style="flex-grow: 1">
-            <pre>
-                # Formats
-                - 'YYYY', 4 digit year
-                - 'YY', 2 digit year
-                - 'MMMM', long name of month 
-                - 'MMM', short name of month 
-                - 'MM', 2 digit month number
-                - 'M', month number
-                - 'DD', 2 digit date number
-                - 'D', date number
-                - 'WWWW', long name of week's day
-                - 'WWW', short name of week's day
-                - 'WW', mini name of week's day
-                - 'HH', 2 digit hour (24h format)
-                - 'hh', 2 digit hour (12h format)
-                - 'H', hour (24h format)
-                - 'h', hour (12h format)
-                - 'mm', 2 digit minute
-                - 'm', minute
-                - 'ss', 2 digit second
-                - 's', second
-                - 'A', upper case AM/PM
-                - 'a', lower case am/pm
-                - 'z', time zone (eg: GMT-0500)
-                - 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
-            </pre>
+        <div #parent
+            style="position: relative; padding: 2rem; width: 50%; background-color: rgba(0, 0, 0, 0.0625);">
+            <ni-datetime-picker [appendTo]="parent" [(value)]="value"
+                [selectionMode]="selectionMode" [selectedSeparator]="selectedSeparator"
+                [disabledDates]="disabledDates" [disableWeekends]="disableWeekends"
+                [showWeekNums]="showWeekNums" [showPickerIcon]="showPickerIcon"
+                [showTodayBtn]="showTodayBtn" [todayBtnText]="todayBtnText"
+                [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText"
+                [todayBtnSet]="todayBtnSet" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
+                [datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
+                [showLocaleSwitch]="showLocaleSwitch" [locale]="locale" [inputFormat]="inputFormat"
+                [placeholder]="placeholder" [titleFormat]="titleFormat"
+                [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
+                [showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
+                [showMonthNavigator]="showMonthNavigator" (showed)="event($event, 'showed')"
+                (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
+                (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+                (viewUpdated)="event($event, 'viewUpdated')"
+                (localeChanged)="event($event, 'localeChanged')">
+            </ni-datetime-picker>
         </div>
     </div>
 
     <hr />
 
-    <div style="text-align: center;">
-        <ni-datetime-picker [(value)]="value" [selectionMode]="selectionMode"
-            [selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
-            [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
-            [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
-            [timePicker]="timePicker" [inline]="inline" [enableLocaleSwitch]="enableLocaleSwitch"
-            [locale]="locale" [inputFormat]="inputFormat" [placeholder]="placeholder"
-            [titleFormat]="titleFormat" [monthHeaderFormat]="monthHeaderFormat"
-            [numberOfMonths]="numberOfMonths" (showed)="event($event, 'showed')"
-            (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
-            (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
-            (viewUpdated)="event($event, 'viewUpdated')"
-            (localeChanged)="event($event, 'localeChanged')">
-        </ni-datetime-picker>
-    </div>
+    <pre>
+# Formats
+- 'YYYY', 4 digit year
+- 'YY', 2 digit year
+- 'MMMM', long name of month 
+- 'MMM', short name of month 
+- 'MM', 2 digit month number
+- 'M', month number
+- 'DD', 2 digit date number
+- 'D', date number
+- 'WWWW', long name of week's day
+- 'WWW', short name of week's day
+- 'WW', mini name of week's day
+- 'HH', 2 digit hour (24h format)
+- 'hh', 2 digit hour (12h format)
+- 'H', hour (24h format)
+- 'h', hour (12h format)
+- 'mm', 2 digit minute
+- 'm', minute
+- 'ss', 2 digit second
+- 's', second
+- 'A', upper case AM/PM
+- 'a', lower case am/pm
+- 'z', time zone (eg: GMT-0500)
+- 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+    </pre>
 </div>

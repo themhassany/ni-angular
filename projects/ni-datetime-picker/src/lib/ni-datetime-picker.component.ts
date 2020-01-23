@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewContainerRef } from '@angular/core';
 import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } from './ni-datetime-picker';
 import { Ymd, NiDatetime, NiDatetimeLocale, Locales, formatDate, padNumber } from 'ni-datetime';
 
@@ -23,15 +23,23 @@ export class NiDatetimePickerComponent implements OnInit {
     this._setValue(value, false);
 
     if (this.calendar) {
-      this.__updateViewDatesStates();
+      this.calendar.use(this._firstDateValue(this.value));
+      this.__updateView();
     }
   }
   get value(): any {
     return this.__value;
   }
+  _firstDateValue(value: any) {
+    if (Array.isArray(value)) {
+      return value.length ? value[0] : null;
+    } else {
+      return value;
+    }
+  }
   _dateORarray(value: any) {
     if (this.isSingleSelection) {
-      return Array.isArray(value) && value.length ? value[0] : value;
+      return this._firstDateValue(value);
     } else if (Array.isArray(value)) {
       return value;
     } else if (value) {
@@ -127,16 +135,18 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input()
   set inline(value: boolean) {
     this.__inline = value;
+    this.__computeUiElementsWidth();
     if (this.__inline) {
       this.openDialog = true;
+    } else {
+      this.__manageOverlay();
     }
-    this.__computeUiElementsWidth();
   }
   get inline() {
     return this.__inline;
   }
 
-  @Input() enableLocaleSwitch = false;
+  @Input() showLocaleSwitch = false;
   __locale: NiDatetimeLocale = Locales.fa_AF;
   @Output() localeChange = new EventEmitter<string>();
   @Input()
@@ -205,6 +215,11 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__monthHeaderFormat;
   }
 
+  @ViewChild('picker') picker: any;
+  @ViewChild('modal') modal: any;
+  @ViewChild('dialog') dialog: any;
+  @Input() appendTo: any;
+
   @Output() showed = new EventEmitter<any>();
   @Output() hidded = new EventEmitter<any>();
   @Output() focused = new EventEmitter<any>();
@@ -220,6 +235,7 @@ export class NiDatetimePickerComponent implements OnInit {
   set numberOfMonths(value: number) {
     this.__numberOfMonths = value;
     this.__computeUiElementsWidth();
+    this.__manageOverlay();
     this.__updateView(true);
   }
   get numberOfMonths(): number {
@@ -326,13 +342,19 @@ export class NiDatetimePickerComponent implements OnInit {
 
   __openDialog = false;
   set openDialog(value: boolean) {
+    const prev = this.__openDialog;
+
     this.__openDialog = value;
 
     if (value) {
       this.__updateView();
     }
 
-    if (value) {
+    this.__manageOverlay();
+
+    if (prev === value) {
+      // ignore same value
+    } else if (value) {
       this.showed.emit({});
     } else {
       this.hidded.emit({});
@@ -342,6 +364,105 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__openDialog;
   }
 
+  __dialogDetached = false;
+  __detachDialog() {
+    if (!this.__dialogDetached) {
+      this.appendTo.appendChild(this.modal.nativeElement);
+      this.__dialogDetached = true;
+    }
+
+    const appendToBound = this.appendTo.getBoundingClientRect(),
+      pickerBound = this.picker.nativeElement.getBoundingClientRect(),
+      rtlOffset = this.locale.dir === 'rtl' ? this.dialog.nativeElement.offsetWidth - pickerBound.width : 0;
+
+    this.dialog.nativeElement.style.top = `${pickerBound.top - appendToBound.top + pickerBound.height}px`;
+    this.dialog.nativeElement.style.left = `${pickerBound.left - appendToBound.left - rtlOffset}px`;
+
+    this.dialog.nativeElement.classList.add("ni-dialog-visible");
+  }
+  __attachDialog() {
+    if (this.__dialogDetached) {
+      this.picker.nativeElement.appendChild(this.modal.nativeElement);
+      this.__dialogDetached = false;
+    }
+
+    this.dialog.nativeElement.style.top = "";
+    this.dialog.nativeElement.style.left = "";
+    this.dialog.nativeElement.classList.add("ni-dialog-visible");
+  }
+  __manageOverlay() {
+    if (this.inline) {
+      // inline - openDialog => attach if detached | later
+      if (this.openDialog) {
+        setTimeout(() => this.__attachDialog(), 0);
+      }
+      // inline - closeDialog => attach if detached | now
+      else {
+        this.__attachDialog();
+      }
+    } else {
+      // normal - openDialog => detached if not detached | later
+      if (this.openDialog) {
+        setTimeout(() => this.__detachDialog(), 0);
+      }
+      // normal - closeDialog => attach if detached | now
+      else if (this.dialog) {
+        this.__attachDialog();
+        // immediately remove dialog visiblility class
+        this.dialog.nativeElement.classList.remove("ni-dialog-visible");
+      }
+    }
+  }
+
+  @Input() showPickerIcon = false;
+  @Input() showClearBtn = false;
+  @Input() clearBtnText = null;
+  @Input() showTodayBtn = false;
+  @Input() todayBtnText = null;
+  @Input() todayBtnSet = "andValue"; // onlyView, andValue
+
+  @Input() showYearNavigator = false;
+  @Input() yearNavigatorRange = '';
+  __yearNavRange = '';
+  __yearNavValues = [];
+  get yearNavValues() {
+    if (this.__yearNavRange !== this.yearNavigatorRange) {
+      const range = this.yearNavigatorRange.split(',').map(each => each.trim()).filter(each => each.length);
+      if (range.length === 2) {
+        // calculate the range
+        const values = [];
+        for (let start = parseInt(range[0]), end = parseInt(range[1]); start <= end; start++) {
+          values.push(start);
+        }
+
+        this.__yearNavValues = values;
+      } else if (range.length) {
+        // use the values as the range
+        this.__yearNavValues = range.map(each => parseInt(each.trim()));
+      }
+    }
+
+    return this.__yearNavValues;
+  }
+  @Input() showMonthNavigator = false;
+  get monthNavigatorValues() {
+    return (this.locale as NiDatetimeLocale).monthsName;
+  }
+
+  get _navYear(): number { return this.calendar.year; }
+  set _navYear(year: number) { this.__navYmChanged(year, null); }
+
+  get _navMonth(): number { return this.calendar.month; }
+  set _navMonth(month: number) { this.__navYmChanged(null, month); }
+
+  __navYmChanged(year: number, month: number) {
+    const ymd = this.calendar.ymd;
+    if (year) { ymd.year = (year); }
+    if (month) { ymd.month = (month); }
+    this.calendar.ymd = ymd;
+    this.__updateView();
+  }
+
   _title = '';
   __viewMonthsMin: Date;
   __viewMonthsMax: Date;
@@ -349,16 +470,7 @@ export class NiDatetimePickerComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-    // in case value is set before component ready
-    // re-set the value to trigger appropriate events
-    // this.locale = this.locale;
-    // this.xyz = this.xyz;
-    // this.numberOfMonths = this.numberOfMonths;
-
-    // open the dialog if inline
-    // this.openDialog = this.inline;
-  }
+  ngOnInit() { }
 
   __copy(dates: any): any {
     if (!dates) { return dates; }
@@ -417,9 +529,15 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  _headerClicked($event: any) {
-    this.calendar.ymd = this._today;
-    this.__updateView();
+  _todayClicked($event: any) {
+    if (this.todayBtnSet === 'onlyView') {
+      this.calendar.ymd = this._today;
+      this.__updateView();
+    } else if (this.todayBtnSet === 'andValue') {
+      const today = this._today as any;
+      today.disabled = false;
+      this._selectMonthDate(this._today);
+    }
   }
 
   _monthDateClicked(viewDate: ViewDate) {
@@ -594,7 +712,7 @@ export class NiDatetimePickerComponent implements OnInit {
 
       this._viewMonths = viewMonths;
 
-      if (emit) {
+      if (emit && this.openDialog) {
         this.viewUpdated.emit({
           viewMinDate: new Date(this.__viewMonthsMin),
           viewMaxDate: new Date(this.__viewMonthsMax)
@@ -734,7 +852,9 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   _overlayClicked($event: any) {
-    this.openDialog = false;
+    if (!this.inline) {
+      this.openDialog = false;
+    }
   }
 
   _pickerClicked($event: any) {
@@ -769,6 +889,8 @@ export class NiDatetimePickerComponent implements OnInit {
     }
 
     this._updateInputfield();
+
+    this.__manageOverlay();
 
     this.__updateView(true);
 

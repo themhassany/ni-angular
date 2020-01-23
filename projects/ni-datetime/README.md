@@ -103,6 +103,62 @@ export class Hms {
     seconds : number;
     isPM    : boolean;
 }
+
+export const Locales = {
+    fa_AF: {
+        name: 'fa_AF',
+        new: () => new NiJalaliDatetime(),
+        week: '#',
+        dir: 'rtl',
+        firstday: 6,
+        weekends: [5],
+        daysName: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+        daysNameShort: ['یک', 'دو', 'سه ', 'چهار', 'پنج', 'جمعه', 'شنبه'],
+        daysNameMini: ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+        monthsName: ['حمل', 'ثور', 'جوزا', 'سرطان', 'اسد', 'سنبله', 'میزان', 'عقرب', 'قوس', 'جدی', 'دلو', 'حوت'],
+        monthsNameShort: ['حم', 'ثو', 'جو', 'سر', 'اس', 'سن', 'می', 'عق', 'قو', 'جد', 'دل', 'حو'],
+        ampm: ['ق.ظ', 'ب.ظ'],
+        AMPM: ['قبل از ظهر', 'بعد از ظهر'],
+        today: 'امروز',
+        clear: 'پاک'
+    },
+    fa_IR: {
+        name: 'fa_IR',
+        new: () => new NiJalaliDatetime(),
+        week: '#',
+        dir: 'rtl',
+        firstday: 6,
+        weekends: [5],
+        daysName: ['یکشنبه', 'دوشنبه', 'سه شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+        daysNameShort: ['یک', 'دو', 'سه ', 'چهار', 'پنج', 'جمعه', 'شنبه'],
+        daysNameMini: ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+        monthsName: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور',
+            'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+        monthsNameShort: ['فر', 'ار', 'خر', 'تی', 'مر', 'شه', 'مه', 'آب', 'آذ', 'دی', 'به', 'اس'],
+        ampm: ['ق.ظ', 'ب.ظ'],
+        AMPM: ['قبل از ظهر', 'بعد از ظهر'],
+        today: 'امروز',
+        clear: 'پاک'
+    },
+    en_US: {
+        name: 'en_US',
+        new: () => new NiGregorianDatetime(),
+        week: 'Wk',
+        dir: 'ltr',
+        firstday: 1,
+        weekends: [6, 0],
+        daysName: ['Sunday', 'Monday', 'Tuesday', 'Wedsday', 'Thursday', 'Friday', 'Saturday'],
+        daysNameShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        daysNameMini: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        monthsName: ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'],
+        monthsNameShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        ampm: ['am', 'pm'],
+        AMPM: ['AM', 'PM'],
+        today: 'Today',
+        clear: 'Clear'
+    }
+};
 ```
 
 ## Available Formats

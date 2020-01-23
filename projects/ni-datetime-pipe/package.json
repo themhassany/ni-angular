@@ -25,9 +25,9 @@
     "multi-locale"
   ],
   "peerDependencies": {
-    "ni-datetime": "^0.0.12"
+    "ni-datetime": "^0.0.13"
   },
   "dependencies": {
-    "ni-datetime": "^0.0.12"
+    "ni-datetime": "^0.0.13"
   }
 }
