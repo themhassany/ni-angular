@@ -20,6 +20,10 @@ export class NiDatetimePickerComponent implements OnInit {
   __value: any; // Date|Date[]
   @Input()
   set value(value: any) {
+    if ((typeof value) === "string") {
+      try { value = new Date(value); } catch (exp) { }
+    }
+
     this._setValue(value, false);
 
     if (this.calendar) {

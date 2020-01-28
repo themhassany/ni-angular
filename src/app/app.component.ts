@@ -9,7 +9,7 @@ import { NiDatetimePipeService } from 'ni-datetime-pipe';
 })
 export class AppComponent implements OnInit {
 
-  value; //  = new Date();
+  value: any = '2010-10-10'; //  = new Date();
   defaultDate; // = new Date();
   monthPicker = false;
   datePicker = true;
