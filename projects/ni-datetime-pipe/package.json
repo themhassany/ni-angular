@@ -1,7 +1,7 @@
 {
   "name": "ni-datetime-pipe",
   "description": "",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
@@ -25,9 +25,9 @@
     "multi-locale"
   ],
   "peerDependencies": {
-    "ni-datetime": "^0.0.13"
+    "ni-datetime": "^0.0.15"
   },
   "dependencies": {
-    "ni-datetime": "^0.0.13"
+    "ni-datetime": "^0.0.15"
   }
 }

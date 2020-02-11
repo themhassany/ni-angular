@@ -153,6 +153,14 @@ export class NiDatetimePickerComponent implements OnInit {
     return this.__inline;
   }
 
+  __locales: string[] = Object.keys(Locales);
+  @Input() set locales(locales: string[]) {
+    this.__locales = locales.filter(each => each in Locales);
+  }
+  get locales(): string[] {
+    return this.__locales;
+  }
+
   @Input() showLocaleSwitch = false;
   __locale: NiDatetimeLocale = Locales.fa_AF;
   @Output() localeChange = new EventEmitter<string>();
@@ -183,7 +191,7 @@ export class NiDatetimePickerComponent implements OnInit {
     }
   }
 
-  @Input() viewDateLocales = [];
+  @Input() monthDateLocales = [];
 
   __inputFormat = 'YYYY-MM-DD HH:mm AP';
   @Input()
@@ -481,7 +489,7 @@ export class NiDatetimePickerComponent implements OnInit {
   __viewMonthsMax: Date;
   _viewMonths: ViewMonth[] = [];
 
-  @ViewChild("monthDateDefaultTemplate") monthDateDefaultTemplate: TemplateRef<ElementRef>;
+  @ViewChild("monthDateDefaultTemplate", { static: true }) monthDateDefaultTemplate: TemplateRef<ElementRef>;
   @Input() monthDateTemplate: TemplateRef<ElementRef>;
   get _mdateTemplate() { return this.monthDateTemplate || this.monthDateDefaultTemplate; }
 
@@ -826,16 +834,19 @@ export class NiDatetimePickerComponent implements OnInit {
     const title = ndate.clone();
     title.ymd = { year: cyear, month: cmonth, date: 1 };
 
-    if (this.viewDateLocales) {
-      this.viewDateLocales.forEach(vdlocale => {
-        if (vdlocale in Locales) {
-          const vdcalendar = Locales[vdlocale].new();
-          const current = ndate.clone();
+    if (this.monthDateLocales) {
+      const current = ndate.clone();
 
-          mdates.forEach((date: any) => {
-            current.ymd = date; // to get Date()
-            vdcalendar.use(current.__date); // pass Date to get ymd
-            date[vdlocale] = vdcalendar.ymd; // attach vclocale's ymd
+      this.monthDateLocales.forEach(vdlocale => {
+        if (Object.keys(Locales).indexOf(vdlocale) >= 0) {
+          const vdcalendar = Locales[vdlocale].new();
+          mdates.forEach((ymd: any) => {
+            current.ymd = ymd;
+            vdcalendar.use(new Date(
+              current.__date.getFullYear(), current.__date.getMonth(), current.__date.getDate(),
+              0, 0, 0
+            ));
+            ymd[vdlocale] = vdcalendar.ymd;
           });
         }
       });

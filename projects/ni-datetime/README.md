@@ -39,6 +39,8 @@ console.log(formatDate(gregorian, Locales.en_US, "WWWW DD MMMM YYYY")); // eg: M
 ```typescript 
 // wrapper for jalali date
 export class NiJalaliDatetime    extends NiDatetime { }
+// wrapper for islamic date
+export class NiIslamicDatetime   extends NiDatetime { }
 // wrapper for gregorian date
 export class NiGregorianDatetime extends NiDatetime { }
 
@@ -49,9 +51,10 @@ export function formatDate(calendar: NiDatetime,
 
 // list of available locales
 export const Locales = {
-    fa_AF: NiDatetimeLocale,
-    fa_IR: NiDatetimeLocale,
-    en_US: NiDatetimeLocale
+    fa_AF: NiJalaliDatetime,
+    fa_IR: NiJalaliDatetime,
+    ar_SA: NiIslamicDatetime,
+    en_US: NiGregorianDatetime
 };
 
 
@@ -139,6 +142,25 @@ export const Locales = {
         AMPM: ['قبل از ظهر', 'بعد از ظهر'],
         today: 'امروز',
         clear: 'پاک'
+    },
+    ar_SA: {
+        name: 'ar_SA',
+        new: () => new NiIslamicDatetime(),
+        week: '#',
+        dir: 'rtl',
+        firstday: 0,
+        weekends: [5, 6],
+        daysName: ['الأحد', 'الإثنين', 'الثُلاثاء', 'الأربعاء', 'الخميس', 'الجُمْعَة', 'السبت'],
+        daysNameShort: ['أحد', 'إثنين', 'ثُلاثاء', 'أربعاء', 'خميس', 'جُمْعَة', 'سبت'],
+        daysNameMini: ['ح', 'ث', 'ثُ', 'ع', 'خ', 'جُ', 'س'],
+        monthsName: ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى',
+            'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذوالقعدة', 'ذوالحجة'],
+        monthsNameShort: ['محرم', 'صفر', 'ربيع ١', 'ربيع ٢', 'جمادى ١',
+            'جمادى ٢', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'],
+        ampm: ['ق.ظ', 'ب.ظ'],
+        AMPM: ['قبل الظهر', 'بعد الظهر'],
+        today: 'اليوم',
+        clear: 'نظيف'
     },
     en_US: {
         name: 'en_US',

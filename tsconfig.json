@@ -27,6 +27,10 @@
       ],
       "ni-datetime-pipe": [
         "dist/ni-datetime-pipe"
+      ],
+      "ni-clock": [
+        "dist/ni-clock/ni-clock",
+        "dist/ni-clock"
       ]
     }
   },

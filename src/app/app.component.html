@@ -56,7 +56,8 @@
 			<div class="field">
 				<div class="title">showLocaleSwitch</div>
 				<div class="value">
-					<button (click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
+					<button
+						(click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
 				</div>
 			</div>
 
@@ -84,7 +85,8 @@
 			<div class="field">
 				<div class="title">placeholder</div>
 				<div class="value">
-					<input name="placeholder" ngDefaultControl [(ngModel)]="placeholder" [disabled]="inline">
+					<input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
+						[disabled]="inline">
 				</div>
 			</div>
 
@@ -98,7 +100,8 @@
 			<div class="field">
 				<div class="title">monthHeaderFormat</div>
 				<div class="value">
-					<input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
+					<input name="monthHeaderFormat" ngDefaultControl
+						[(ngModel)]="monthHeaderFormat">
 				</div>
 			</div>
 
@@ -112,7 +115,8 @@
 			<div class="field">
 				<div class="title">disableWeekends</div>
 				<div class="value">
-					<button (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
+					<button
+						(click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
 				</div>
 			</div>
 
@@ -148,7 +152,8 @@
 			<div class="field">
 				<div class="title">selectedSeparator</div>
 				<div class="value">
-					<input name="selectedSeparator" ngDefaultControl [(ngModel)]="selectedSeparator">
+					<input name="selectedSeparator" ngDefaultControl
+						[(ngModel)]="selectedSeparator">
 				</div>
 			</div>
 
@@ -190,8 +195,10 @@
 					showYearNavigator (start,end)
 				</div>
 				<div class="value">
-					<input name="yearNavigatorRange" ngDefaultControl [(ngModel)]="yearNavigatorRange">
-					<button (click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
+					<input name="yearNavigatorRange" ngDefaultControl
+						[(ngModel)]="yearNavigatorRange">
+					<button
+						(click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
 					&nbsp;&nbsp;&nbsp;&nbsp; --&gt; (end-start &lt;= 100)
 				</div>
 			</div>
@@ -205,74 +212,69 @@
 			</div>
 		</div>
 
-		<div #parent
-			style="position: relative; padding: 2rem; width: 50%; background-color: rgba(0, 0, 0, 0.0625);">
-			<ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
-				[selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
-				[disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
-				[showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn"
-				[todayBtnText]="todayBtnText" [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText"
-				[todayBtnSet]="todayBtnSet" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
-				[datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
-				[showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
-				[viewDateLocales]="['en_US', 'ar_SA']" [inputFormat]="inputFormat"
-				[placeholder]="placeholder" [titleFormat]="titleFormat"
-				[monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
-				[showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
-				[showMonthNavigator]="showMonthNavigator" (showed)="event($event, 'showed')"
-				(hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
-				(blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
-				(viewUpdated)="event($event, 'viewUpdated')"
-				(localeChanged)="event($event, 'localeChanged')">
-				<!-- <ng-template #template let-date>
-					<span [ngClass]="{
-							'ni-month-date-default-template': true,
-							'ni-month-date-prev-month': date.prev,
-							'ni-month-date-next-month': date.next,
-							'ni-month-date-disabled': date.disabled,
-							'ni-month-date-selected': date.selected,
-							'ni-month-date-weekend': date.weekend,
-							'ni-month-date-today': date.today
-						}">
-						<div style="text-align: center; font-size: 0.75rem;">
-							{{ date.date }}
-						</div>
-						<div style="display: flex; text-align: center;">
-							<span style="font-size: 0.5rem;">{{ date.en_US.date }}</span>
-							<span style="font-size: 0.5rem;">{{ date.ar_SA.date }}</span>
-						</div>
-					</span>
-				</ng-template> -->
-			</ni-datetime-picker>
-		</div>
+		<pre>
+		# Formats
+		- 'YYYY', 4 digit year
+		- 'YY', 2 digit year
+		- 'MMMM', long name of month 
+		- 'MMM', short name of month 
+		- 'MM', 2 digit month number
+		- 'M', month number
+		- 'DD', 2 digit date number
+		- 'D', date number
+		- 'WWWW', long name of week's day
+		- 'WWW', short name of week's day
+		- 'WW', mini name of week's day
+		- 'HH', 2 digit hour (24h format)
+		- 'hh', 2 digit hour (12h format)
+		- 'H', hour (24h format)
+		- 'h', hour (12h format)
+		- 'mm', 2 digit minute
+		- 'm', minute
+		- 'ss', 2 digit second
+		- 's', second
+		- 'A', upper case AM/PM
+		- 'a', lower case am/pm
+		- 'z', time zone (eg: GMT-0500)
+		- 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+		</pre>
 	</div>
-
 	<hr />
-
-	<pre>
-# Formats
-- 'YYYY', 4 digit year
-- 'YY', 2 digit year
-- 'MMMM', long name of month 
-- 'MMM', short name of month 
-- 'MM', 2 digit month number
-- 'M', month number
-- 'DD', 2 digit date number
-- 'D', date number
-- 'WWWW', long name of week's day
-- 'WWW', short name of week's day
-- 'WW', mini name of week's day
-- 'HH', 2 digit hour (24h format)
-- 'hh', 2 digit hour (12h format)
-- 'H', hour (24h format)
-- 'h', hour (12h format)
-- 'mm', 2 digit minute
-- 'm', minute
-- 'ss', 2 digit second
-- 's', second
-- 'A', upper case AM/PM
-- 'a', lower case am/pm
-- 'z', time zone (eg: GMT-0500)
-- 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
-    </pre>
+	<div #parent
+		style="position: relative; padding: 2rem; background-color: rgba(0, 0, 0, 0.0625);">
+		<ni-clock [time]="value2" [auto]="false"></ni-clock>
+		<ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
+			[selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
+			[disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
+			[showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn"
+			[todayBtnText]="todayBtnText" [showClearBtn]="showClearBtn"
+			[clearBtnText]="clearBtnText" [todayBtnSet]="todayBtnSet" [defaultDate]="defaultDate"
+			[monthPicker]="monthPicker" [datePicker]="datePicker" [timePicker]="timePicker"
+			[inline]="inline" [locales]="['fa_AF','fa_IR','ar_SA','en_US']"
+			[showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
+			[monthDateLocales]="['en_US', 'ar_SA']" [inputFormat]="inputFormat"
+			[placeholder]="placeholder" [titleFormat]="titleFormat"
+			[monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
+			[showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
+			[showMonthNavigator]="showMonthNavigator" (showed)="event($event, 'showed')"
+			(hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
+			(blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+			(viewUpdated)="event($event, 'viewUpdated')"
+			(localeChanged)="event($event, 'localeChanged')" [monthDateTemplate]="template">
+			<ng-template #template let-date>
+				<div style="text-align: center; font-size: 0.75rem;">
+					{{ date.date }}
+				</div>
+				<div style="display: flex; margin: 0 -.25rem;">
+					<div style="text-align: left; font-size: 0.5rem;">
+						{{ date.en_US.date }}
+					</div>
+					<div style="flex-grow: 1;"></div>
+					<div style="text-align: right; font-size: 0.5rem;">
+						{{ number_en2fa[date.ar_SA.date] }}
+					</div>
+				</div>
+			</ng-template>
+		</ni-datetime-picker>
+	</div>
 </div>

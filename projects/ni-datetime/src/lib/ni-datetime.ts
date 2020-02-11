@@ -125,10 +125,7 @@ export class NiIslamicDatetime extends NiDatetime {
     get ymd() { return this.__ymd(); }
     set ymd(ymd: Ymd) {
         const greg = islamic_to_greg({ iy: ymd.year, im: ymd.month, id: ymd.date });
-        this.__date.setFullYear(greg.gy);
-        this.__date.setMonth(greg.gm - 1);
-        this.__date.setDate(greg.gd);
-        this.use(this.__date);
+        this.use(new Date(greg.gy, greg.gm - 1, greg.gd, 0, 0, 0));
     }
 
     clone(): NiDatetime {
