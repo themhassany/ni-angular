@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ViewContainerRef, ElementRef, TemplateRef, ContentChild } from '@angular/core';
 import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } from './ni-datetime-picker';
 import { Ymd, NiDatetime, NiDatetimeLocale, Locales, formatDate, padNumber } from 'ni-datetime';
 
@@ -182,6 +182,8 @@ export class NiDatetimePickerComponent implements OnInit {
       return '';
     }
   }
+
+  @Input() viewDateLocales = [];
 
   __inputFormat = 'YYYY-MM-DD HH:mm AP';
   @Input()
@@ -479,6 +481,10 @@ export class NiDatetimePickerComponent implements OnInit {
   __viewMonthsMax: Date;
   _viewMonths: ViewMonth[] = [];
 
+  @ViewChild("monthDateDefaultTemplate") monthDateDefaultTemplate: TemplateRef<ElementRef>;
+  @Input() monthDateTemplate: TemplateRef<ElementRef>;
+  get _mdateTemplate() { return this.monthDateTemplate || this.monthDateDefaultTemplate; }
+
   constructor() { }
 
   ngOnInit() { }
@@ -561,6 +567,8 @@ export class NiDatetimePickerComponent implements OnInit {
       || viewDate.next) {
       return;
     }
+
+    console.log(viewDate);
 
     if (this.isSingleSelection) {
       this.calendar.ymd = viewDate;
@@ -817,6 +825,21 @@ export class NiDatetimePickerComponent implements OnInit {
 
     const title = ndate.clone();
     title.ymd = { year: cyear, month: cmonth, date: 1 };
+
+    if (this.viewDateLocales) {
+      this.viewDateLocales.forEach(vdlocale => {
+        if (vdlocale in Locales) {
+          const vdcalendar = Locales[vdlocale].new();
+          const current = ndate.clone();
+
+          mdates.forEach((date: any) => {
+            current.ymd = date; // to get Date()
+            vdcalendar.use(current.__date); // pass Date to get ymd
+            date[vdlocale] = vdcalendar.ymd; // attach vclocale's ymd
+          });
+        }
+      });
+    }
 
     return {
       value: new Date(ndate.__date),

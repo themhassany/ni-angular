@@ -14,9 +14,9 @@ export class AppComponent implements OnInit {
   monthPicker = false;
   datePicker = true;
   timePicker = false;
-  inline = false;
+  inline = true;
   showLocaleSwitch = true;
-  locale = 'en_US';
+  locale = 'fa_AF';
   inputFormat = 'YYYY-MM-DD';
   placeholder = 'date/time';
   titleFormat = 'YYYY MMMM';
@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   disabledDatesStr = '2020-01-02 00:00:00,2020-01-03 00:00:00';
   disableWeekends = false;
   showWeekNums = false;
-  selectionMode = 'range';
+  selectionMode = 'single';
   selectedSeparator = ', ';
   showPickerIcon = true;
   showTodayBtn = true;

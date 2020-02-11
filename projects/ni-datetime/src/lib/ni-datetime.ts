@@ -1,4 +1,5 @@
 import { toJalaali, toGregorian, jalaaliMonthLength } from './jalali';
+import { greg_to_islamic, islamic_to_greg, days_in_month } from './islamic';
 
 export class Ymd {
     year: number;
@@ -85,6 +86,61 @@ export interface NiDatetimeLocale {
 }
 
 /**
+ * Islamic Implemendation of NiDate
+ */
+export class NiIslamicDatetime extends NiDatetime {
+
+    __idate = { iy: null, im: null, id: null };
+
+    constructor(date?: Date) {
+        super(date);
+        this.use(date);
+    }
+
+    use(date: Date): NiDatetime {
+        this.__idate = date ? greg_to_islamic(date) : { iy: null, im: null, id: null };
+        return super.use(date);
+    }
+
+    get year(): number { return this.__idate.iy; }
+    get month(): number { return this.__idate.im; }
+    get date(): number { return this.__idate.id; }
+    get daysInMonth(): number {
+        if (this.__idate.iy && this.__idate.im) {
+            return days_in_month(this.__idate.iy, this.__idate.im);
+        } else {
+            return null;
+        }
+    }
+    get weeksFirstday(): number {
+        if (this.__idate.iy && this.__idate.im) {
+            const greg = islamic_to_greg({ iy: this.__idate.iy, im: this.__idate.im, id: 1 });
+            return new Date(greg.gy, greg.gm - 1, greg.gd).getDay();
+        } else {
+            return null;
+        }
+    }
+    get weekDay(): number { return this.__date ? this.__date.getDay() : null; }
+
+    get ymd() { return this.__ymd(); }
+    set ymd(ymd: Ymd) {
+        const greg = islamic_to_greg({ iy: ymd.year, im: ymd.month, id: ymd.date });
+        this.__date.setFullYear(greg.gy);
+        this.__date.setMonth(greg.gm - 1);
+        this.__date.setDate(greg.gd);
+        this.use(this.__date);
+    }
+
+    clone(): NiDatetime {
+        const clone = new NiIslamicDatetime();
+        if (this.__date) {
+            clone.use(new Date(this.__date));
+        }
+        return clone;
+    }
+}
+
+/**
  * Jalali Implmentation of NiDate
  */
 export class NiJalaliDatetime extends NiDatetime {
@@ -93,6 +149,7 @@ export class NiJalaliDatetime extends NiDatetime {
 
     constructor(date?: Date) {
         super(date);
+        this.use(date);
     }
 
     use(date: Date): NiDatetime {
@@ -173,7 +230,7 @@ export class NiGregorianDatetime extends NiDatetime {
 
 export const padNumber = (num: any, limit: number): string => {
     return '0'.repeat(limit - num.toString().length) + num;
-}
+};
 
 export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, format: string): string => {
     // ---------- formats ----------
@@ -237,7 +294,7 @@ export const formatDate = (calendar: NiDatetime, locale: NiDatetimeLocale, forma
         format = format.replace(pholder, placeholders[pholder]));
 
     return format;
-}
+};
 
 /**
  * Default NiDate Locales
@@ -277,6 +334,25 @@ export const Locales = {
         AMPM: ['قبل از ظهر', 'بعد از ظهر'],
         today: 'امروز',
         clear: 'پاک'
+    },
+    ar_SA: {
+        name: 'ar_SA',
+        new: () => new NiIslamicDatetime(),
+        week: '#',
+        dir: 'rtl',
+        firstday: 0,
+        weekends: [5, 6],
+        daysName: ['الأحد', 'الإثنين', 'الثُلاثاء', 'الأربعاء', 'الخميس', 'الجُمْعَة', 'السبت'],
+        daysNameShort: ['أحد', 'إثنين', 'ثُلاثاء', 'أربعاء', 'خميس', 'جُمْعَة', 'سبت'],
+        daysNameMini: ['ح', 'ث', 'ثُ', 'ع', 'خ', 'جُ', 'س'],
+        monthsName: ['محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى',
+            'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذوالقعدة', 'ذوالحجة'],
+        monthsNameShort: ['محرم', 'صفر', 'ربيع ١', 'ربيع ٢', 'جمادى ١',
+            'جمادى ٢', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'],
+        ampm: ['ق.ظ', 'ب.ظ'],
+        AMPM: ['قبل الظهر', 'بعد الظهر'],
+        today: 'اليوم',
+        clear: 'نظيف'
     },
     en_US: {
         name: 'en_US',

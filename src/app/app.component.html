@@ -1,242 +1,255 @@
 <strong>ni-datetime-pipe: </strong>
 <div style="padding: 20px 0px 20px 20px;">
-    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A" }}
-    <br />
-    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":"en_US" }}
-    <br />
-    {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":customLocale }}
+	{{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A" }}
+	<br />
+	{{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":"en_US" }}
+	<br />
+	{{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":customLocale }}
 </div>
 
 <hr />
 
 <strong>ni-datetime-picker: </strong>
 <div style="padding: 20px 0px 0px 20px;">
-    <div style="display: flex;">
-        <div style="width: 50%;">
-            <div class="field">
-                <div class="title">value</div>
-                <div class="value">
-                    <button (click)="value = newDate()">{{ value }}</button>
-                </div>
-            </div>
+	<div style="display: flex;">
+		<div style="width: 50%;">
+			<div class="field">
+				<div class="title">value</div>
+				<div class="value">
+					<button (click)="value = newDate()">{{ value }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">defaultDate</div>
-                <div class="value">{{ defaultDate }}</div>
-            </div>
+			<div class="field">
+				<div class="title">defaultDate</div>
+				<div class="value">{{ defaultDate }}</div>
+			</div>
 
-            <div class="field">
-                <div class="title">monthPicker</div>
-                <div class="value">
-                    <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">monthPicker</div>
+				<div class="value">
+					<button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">datePicker</div>
-                <div class="value">
-                    <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">datePicker</div>
+				<div class="value">
+					<button (click)="datePicker = !datePicker">{{ datePicker }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">timePicker</div>
-                <div class="value">
-                    <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">timePicker</div>
+				<div class="value">
+					<button (click)="timePicker = !timePicker">{{ timePicker }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">inline</div>
-                <div class="value">
-                    <button (click)="inline = !inline">{{ inline }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">inline</div>
+				<div class="value">
+					<button (click)="inline = !inline">{{ inline }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">showLocaleSwitch</div>
-                <div class="value">
-                    <button
-                        (click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">showLocaleSwitch</div>
+				<div class="value">
+					<button (click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">locale</div>
-                <div class="value">
-                    <select name="locale" ngDefaultControl [(ngModel)]="locale"
-                        (change)="localeChanged($event)">
-                        <option [ngValue]="'fa_AF'">fa_AF</option>
-                        <option [ngValue]="'fa_IR'">fa_IR</option>
-                        <option [ngValue]="'en_US'">en_US</option>
-                        <option [ngValue]="customLocale">MyCustomOne</option>
-                    </select>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">locale</div>
+				<div class="value">
+					<select name="locale" ngDefaultControl [(ngModel)]="locale"
+						(change)="localeChanged($event)">
+						<option [ngValue]="'fa_AF'">fa_AF</option>
+						<option [ngValue]="'fa_IR'">fa_IR</option>
+						<option [ngValue]="'ar_SA'">ar_SA</option>
+						<option [ngValue]="'en_US'">en_US</option>
+						<option [ngValue]="customLocale">MyCustomOne</option>
+					</select>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">inputFormat</div>
-                <div class="value">
-                    <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">inputFormat</div>
+				<div class="value">
+					<input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">placeholder</div>
-                <div class="value">
-                    <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder"
-                        [disabled]="inline">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">placeholder</div>
+				<div class="value">
+					<input name="placeholder" ngDefaultControl [(ngModel)]="placeholder" [disabled]="inline">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">titleFormat</div>
-                <div class="value">
-                    <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">titleFormat</div>
+				<div class="value">
+					<input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">monthHeaderFormat</div>
-                <div class="value">
-                    <input name="monthHeaderFormat" ngDefaultControl
-                        [(ngModel)]="monthHeaderFormat">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">monthHeaderFormat</div>
+				<div class="value">
+					<input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">numberOfMonths</div>
-                <div class="value">
-                    <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">numberOfMonths</div>
+				<div class="value">
+					<input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">disableWeekends</div>
-                <div class="value">
-                    <button
-                        (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">disableWeekends</div>
+				<div class="value">
+					<button (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">disabledDates</div>
-                <div class="value">
-                    <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
-                        [(ngModel)]="disabledDatesStr" cols="80">
+			<div class="field">
+				<div class="title">disabledDates</div>
+				<div class="value">
+					<textarea #disabledDatesEl name="disabledDates" ngDefaultControl
+						[(ngModel)]="disabledDatesStr" cols="80">
                     </textarea>
-                    <br />
-                    <button (click)="updateDisabledDates()">update</button>
-                </div>
-            </div>
+					<br />
+					<button (click)="updateDisabledDates()">update</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">showWeekNums</div>
-                <div class="value">
-                    <button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">showWeekNums</div>
+				<div class="value">
+					<button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">selectionMode</div>
-                <div class="value">
-                    <select name="selectionMode" ngDefaultControl [(ngModel)]="selectionMode">
-                        <option [ngValue]="'single'">single</option>
-                        <option [ngValue]="'multiple'">multiple</option>
-                        <option [ngValue]="'range'">range</option>
-                    </select>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">selectionMode</div>
+				<div class="value">
+					<select name="selectionMode" ngDefaultControl [(ngModel)]="selectionMode">
+						<option [ngValue]="'single'">single</option>
+						<option [ngValue]="'multiple'">multiple</option>
+						<option [ngValue]="'range'">range</option>
+					</select>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">selectedSeparator</div>
-                <div class="value">
-                    <input name="selectedSeparator" ngDefaultControl
-                        [(ngModel)]="selectedSeparator">
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">selectedSeparator</div>
+				<div class="value">
+					<input name="selectedSeparator" ngDefaultControl [(ngModel)]="selectedSeparator">
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">showPickerIcon</div>
-                <div class="value">
-                    <button (click)="showPickerIcon = !showPickerIcon">{{ showPickerIcon }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">showPickerIcon</div>
+				<div class="value">
+					<button (click)="showPickerIcon = !showPickerIcon">{{ showPickerIcon }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">clearBtnText/showClearBtn</div>
-                <div class="value">
-                    <input name="clearBtnText" ngDefaultControl [(ngModel)]="clearBtnText">
-                    <button (click)="showClearBtn = !showClearBtn">{{ showClearBtn }}</button>
-                </div>
-            </div>
-            <div class="field">
-                <div class="title">todayBtnText/showTodayBtn</div>
-                <div class="value">
-                    <input name="todayBtnText" ngDefaultControl [(ngModel)]="todayBtnText">
-                    <button (click)="showTodayBtn = !showTodayBtn">{{ showTodayBtn }}</button>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">clearBtnText/showClearBtn</div>
+				<div class="value">
+					<input name="clearBtnText" ngDefaultControl [(ngModel)]="clearBtnText">
+					<button (click)="showClearBtn = !showClearBtn">{{ showClearBtn }}</button>
+				</div>
+			</div>
+			<div class="field">
+				<div class="title">todayBtnText/showTodayBtn</div>
+				<div class="value">
+					<input name="todayBtnText" ngDefaultControl [(ngModel)]="todayBtnText">
+					<button (click)="showTodayBtn = !showTodayBtn">{{ showTodayBtn }}</button>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">todayBtnSet</div>
-                <div class="value">
-                    <select name="todayBtnSet" ngDefaultControl [(ngModel)]="todayBtnSet">
-                        <option [ngValue]="'onlyView'">onlyView</option>
-                        <option [ngValue]="'andValue'">andValue</option>
-                        <option [ngValue]="''">None</option>
-                    </select>
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">todayBtnSet</div>
+				<div class="value">
+					<select name="todayBtnSet" ngDefaultControl [(ngModel)]="todayBtnSet">
+						<option [ngValue]="'onlyView'">onlyView</option>
+						<option [ngValue]="'andValue'">andValue</option>
+						<option [ngValue]="''">None</option>
+					</select>
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">
-                    showYearNavigator (start,end)
-                </div>
-                <div class="value">
-                    <input name="yearNavigatorRange" ngDefaultControl
-                        [(ngModel)]="yearNavigatorRange">
-                    <button
-                        (click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
-                    &nbsp;&nbsp;&nbsp;&nbsp; --&gt; (end-start &lt;= 100)
-                </div>
-            </div>
+			<div class="field">
+				<div class="title">
+					showYearNavigator (start,end)
+				</div>
+				<div class="value">
+					<input name="yearNavigatorRange" ngDefaultControl [(ngModel)]="yearNavigatorRange">
+					<button (click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
+					&nbsp;&nbsp;&nbsp;&nbsp; --&gt; (end-start &lt;= 100)
+				</div>
+			</div>
 
-            <div class="field">
-                <div class="title">showMonthNavigator</div>
-                <div class="value">
-                    <button
-                        (click)="showMonthNavigator = !showMonthNavigator">{{ showMonthNavigator }}</button>
-                </div>
-            </div>
-        </div>
+			<div class="field">
+				<div class="title">showMonthNavigator</div>
+				<div class="value">
+					<button
+						(click)="showMonthNavigator = !showMonthNavigator">{{ showMonthNavigator }}</button>
+				</div>
+			</div>
+		</div>
 
-        <div #parent
-            style="position: relative; padding: 2rem; width: 50%; background-color: rgba(0, 0, 0, 0.0625);">
-            <ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
-                [selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
-                [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
-                [showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn"
-                [todayBtnText]="todayBtnText" [showClearBtn]="showClearBtn"
-                [clearBtnText]="clearBtnText" [todayBtnSet]="todayBtnSet"
-                [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
-                [timePicker]="timePicker" [inline]="inline" [showLocaleSwitch]="showLocaleSwitch"
-                [locale]="locale" [inputFormat]="inputFormat" [placeholder]="placeholder"
-                [titleFormat]="titleFormat" [monthHeaderFormat]="monthHeaderFormat"
-                [numberOfMonths]="numberOfMonths" [showYearNavigator]="showYearNavigator"
-                [yearNavigatorRange]="yearNavigatorRange" [showMonthNavigator]="showMonthNavigator"
-                (showed)="event($event, 'showed')" (hidded)="event($event, 'hidded')"
-                (focused)="event($event, 'focused')" (blurred)="event($event, 'blurred')"
-                (valueChanged)="event($event, 'valueChanged')"
-                (viewUpdated)="event($event, 'viewUpdated')"
-                (localeChanged)="event($event, 'localeChanged')">
-            </ni-datetime-picker>
-        </div>
-    </div>
+		<div #parent
+			style="position: relative; padding: 2rem; width: 50%; background-color: rgba(0, 0, 0, 0.0625);">
+			<ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
+				[selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
+				[disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
+				[showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn"
+				[todayBtnText]="todayBtnText" [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText"
+				[todayBtnSet]="todayBtnSet" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
+				[datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
+				[showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
+				[viewDateLocales]="['en_US', 'ar_SA']" [inputFormat]="inputFormat"
+				[placeholder]="placeholder" [titleFormat]="titleFormat"
+				[monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
+				[showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
+				[showMonthNavigator]="showMonthNavigator" (showed)="event($event, 'showed')"
+				(hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
+				(blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+				(viewUpdated)="event($event, 'viewUpdated')"
+				(localeChanged)="event($event, 'localeChanged')">
+				<!-- <ng-template #template let-date>
+					<span [ngClass]="{
+							'ni-month-date-default-template': true,
+							'ni-month-date-prev-month': date.prev,
+							'ni-month-date-next-month': date.next,
+							'ni-month-date-disabled': date.disabled,
+							'ni-month-date-selected': date.selected,
+							'ni-month-date-weekend': date.weekend,
+							'ni-month-date-today': date.today
+						}">
+						<div style="text-align: center; font-size: 0.75rem;">
+							{{ date.date }}
+						</div>
+						<div style="display: flex; text-align: center;">
+							<span style="font-size: 0.5rem;">{{ date.en_US.date }}</span>
+							<span style="font-size: 0.5rem;">{{ date.ar_SA.date }}</span>
+						</div>
+					</span>
+				</ng-template> -->
+			</ni-datetime-picker>
+		</div>
+	</div>
 
-    <hr />
+	<hr />
 
-    <pre>
+	<pre>
 # Formats
 - 'YYYY', 4 digit year
 - 'YY', 2 digit year
