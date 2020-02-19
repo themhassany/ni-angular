@@ -92,6 +92,9 @@
                 </ng-container>
               </div>
             </div>
+            <ng-container [ngTemplateOutlet]="_mfooterTemplate"
+              [ngTemplateOutletContext]="{$implicit: viewMonth}">
+            </ng-container>
           </div>
         </div>
 
@@ -182,4 +185,8 @@
 <!-- view date default template -->
 <ng-template #monthDateDefaultTemplate let-date>
   {{ date.date }}
+</ng-template>
+
+<!-- view date default template -->
+<ng-template #monthFooterDefaultTemplate let-date>
 </ng-template>

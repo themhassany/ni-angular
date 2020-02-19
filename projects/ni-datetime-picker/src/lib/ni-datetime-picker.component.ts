@@ -493,6 +493,12 @@ export class NiDatetimePickerComponent implements OnInit {
   @Input() monthDateTemplate: TemplateRef<ElementRef>;
   get _mdateTemplate() { return this.monthDateTemplate || this.monthDateDefaultTemplate; }
 
+  @ViewChild("monthFooterDefaultTemplate", { static: true }) monthFooterDefaultTemplate: TemplateRef<ElementRef>;
+  @Input() monthFooterTemplate: TemplateRef<ElementRef>;
+  get _mfooterTemplate() { return this.monthFooterTemplate || this.monthFooterDefaultTemplate; }
+
+  @Input() navByScroll = true;
+
   constructor() { }
 
   ngOnInit() { }
@@ -540,17 +546,23 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   _scrollIncrement($event: any) {
-    $event.preventDefault();
-    // +/-[1-12]
-    return ($event.deltaY < 0 ? -1 : 1) *
-      Math.max(1, Math.min(12, Math.round($event.deltaY / 100)));
+    if (this.navByScroll) {
+      $event.preventDefault();
+      // +/-[1-12]
+      return ($event.deltaY < 0 ? -1 : 1) *
+        Math.max(1, Math.min(12, Math.round($event.deltaY / 100)));
+    } else {
+      return 0;
+    }
   }
 
   _navByScroll(increment: number) {
-    if (increment > 0) {
-      this._navToNextView();
-    } else {
-      this._navToPreviousView();
+    if (this.navByScroll) {
+      if (increment > 0) {
+        this._navToNextView();
+      } else {
+        this._navToPreviousView();
+      }
     }
   }
 
@@ -834,25 +846,10 @@ export class NiDatetimePickerComponent implements OnInit {
     const title = ndate.clone();
     title.ymd = { year: cyear, month: cmonth, date: 1 };
 
-    if (this.monthDateLocales) {
-      const current = ndate.clone();
+    this._attachRequestedLocales(ndate, mdates);
+    const firstlast_days = mdates.filter(d => d.month === cmonth);
 
-      this.monthDateLocales.forEach(vdlocale => {
-        if (Object.keys(Locales).indexOf(vdlocale) >= 0) {
-          const vdcalendar = Locales[vdlocale].new();
-          mdates.forEach((ymd: any) => {
-            current.ymd = ymd;
-            vdcalendar.use(new Date(
-              current.__date.getFullYear(), current.__date.getMonth(), current.__date.getDate(),
-              0, 0, 0
-            ));
-            ymd[vdlocale] = vdcalendar.ymd;
-          });
-        }
-      });
-    }
-
-    return {
+    const month = {
       value: new Date(ndate.__date),
       title: formatDate(title, this.locale, this.monthHeaderFormat),
       year: cyear,
@@ -860,8 +857,36 @@ export class NiDatetimePickerComponent implements OnInit {
       date: 1,
       weeknums: mweeknums,
       weekdays: mweekdays,
-      dates: mdates
+      dates: mdates,
+      firstday: firstlast_days[0],
+      lastday: firstlast_days[firstlast_days.length - 1]
     };
+    this._attachRequestedLocales(ndate, [month, month.firstday, month.lastday]);
+
+    return month;
+  }
+
+  private _attachRequestedLocales(datetime: NiDatetime, dates: ViewDate[]) {
+    if (!this.monthDateLocales) {
+      return;
+    }
+
+    datetime = datetime.clone();
+
+    this.monthDateLocales
+      .filter(vdlocale => Object.keys(Locales).indexOf(vdlocale) >= 0)
+      .forEach(locale => {
+        const calendar = Locales[locale].new();
+        dates.filter(obj => obj).forEach((ymd: any) => {
+          datetime.ymd = ymd;
+          calendar.use(new Date(
+            datetime.__date.getFullYear(),
+            datetime.__date.getMonth(),
+            datetime.__date.getDate(),
+            0, 0, 0));
+          ymd[locale] = calendar.ymd;
+        });
+      });
   }
 
   __getNumberOfWeeksUntil(calendar: NiDatetime, month: number): number {

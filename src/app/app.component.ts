@@ -37,6 +37,7 @@ export class AppComponent implements OnInit {
   showYearNavigator = false;
   yearNavigatorRange = '1370,1410';
   showMonthNavigator = false;
+  navByScroll = true;
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',

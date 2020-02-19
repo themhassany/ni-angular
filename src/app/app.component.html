@@ -210,6 +210,13 @@
 						(click)="showMonthNavigator = !showMonthNavigator">{{ showMonthNavigator }}</button>
 				</div>
 			</div>
+
+			<div class="field">
+				<div class="title">navByScroll</div>
+				<div class="value">
+					<button (click)="navByScroll = !navByScroll">{{ navByScroll }}</button>
+				</div>
+			</div>
 		</div>
 
 		<pre>
@@ -252,15 +259,17 @@
 			[monthPicker]="monthPicker" [datePicker]="datePicker" [timePicker]="timePicker"
 			[inline]="inline" [locales]="['fa_AF','fa_IR','ar_SA','en_US']"
 			[showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
-			[monthDateLocales]="['en_US', 'ar_SA']" [inputFormat]="inputFormat"
+			[monthDateLocales]="['fa_AF', 'en_US', 'ar_SA']" [inputFormat]="inputFormat"
 			[placeholder]="placeholder" [titleFormat]="titleFormat"
 			[monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
 			[showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
-			[showMonthNavigator]="showMonthNavigator" (showed)="event($event, 'showed')"
-			(hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
-			(blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+			[showMonthNavigator]="showMonthNavigator" [navByScroll]="navByScroll"
+			(showed)="event($event, 'showed')" (hidded)="event($event, 'hidded')"
+			(focused)="event($event, 'focused')" (blurred)="event($event, 'blurred')"
+			(valueChanged)="event($event, 'valueChanged')"
 			(viewUpdated)="event($event, 'viewUpdated')"
-			(localeChanged)="event($event, 'localeChanged')" [monthDateTemplate]="template">
+			(localeChanged)="event($event, 'localeChanged')" [monthDateTemplate]="template"
+			[monthFooterTemplate]="template2">
 			<ng-template #template let-date>
 				<div style="text-align: center; font-size: 0.75rem;">
 					{{ date.date }}
@@ -275,6 +284,27 @@
 					</div>
 				</div>
 			</ng-template>
+			<ng-template #template2 let-date>
+				<div style="text-align: center; font-size: 0.8rem;">
+					Month Footer
+					<br />
+					fa_AF:
+					[{{ date.firstday.fa_AF.year }}-{{ date.firstday.fa_AF.month }}-{{ date.firstday.fa_AF.date }}
+					-
+					{{ date.lastday.fa_AF.year }}-{{ date.lastday.fa_AF.month }}-{{ date.lastday.fa_AF.date }}]
+					<br />
+					en_US:
+					[{{ date.firstday.en_US.year }}-{{ date.firstday.en_US.month }}-{{ date.firstday.en_US.date }}
+					-
+					{{ date.lastday.en_US.year }}-{{ date.lastday.en_US.month }}-{{ date.lastday.en_US.date }}]
+					<br />
+					ar_SA:
+					[{{ date.firstday.ar_SA.year }}-{{ date.firstday.ar_SA.month }}-{{ date.firstday.ar_SA.date }}
+					-
+					{{ date.lastday.ar_SA.year }}-{{ date.lastday.ar_SA.month }}-{{ date.lastday.ar_SA.date }}]
+				</div>
+			</ng-template>
+
 		</ni-datetime-picker>
 	</div>
 </div>

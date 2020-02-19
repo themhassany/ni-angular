@@ -166,6 +166,7 @@ export class YourComponent implements OnInit {
   [showYearNavigator]="showYearNavigator"
   [yearNavigatorRange]="yearNavigatorRange"
   [showMonthNavigator]="showMonthNavigator"
+  [navByScroll]="navByScroll"
   (showed)="event($event, 'showed')"
   (hidded)="event($event, 'hidded')"
   (focused)="event($event, 'focused')"
@@ -174,12 +175,19 @@ export class YourComponent implements OnInit {
   (viewUpdated)="event($event, 'viewUpdated')"
   (localeChanged)="event($event, 'localeChanged')"
   [monthDateTemplate]="template"
+  [monthFooterTemplate]="template2"
 >
   <ng-template #template let-date>
     <!-- 
-        date: ViewMonth;
-        also contains date.xx_xx is monthDateLocales Ymd
-        -->
+    date: ViewMonth;
+    also contains date.xx_xx is monthDateLocales Ymd
+    -->
+  </ng-template>
+  <ng-template #template2 let-date>
+    <!-- 
+    date: ViewMonth;
+    also contains date.xx_xx is monthDateLocales Ymd
+    -->
   </ng-template>
 </ni-datetime-picker>
 ```
@@ -214,8 +222,18 @@ export class YourComponent implements OnInit {
 - **[showYearNavigator]**: show year navigator, by default false.
 - **[yearNavigatorRange]**: year navigator range 'start,end', or 'year1,year2,year3...'. by default ''.
 - **[showMonthNavigator]**: show month navigator, by default false.
+- **[navByScroll]**: navigate by scroll, by default true.
 - **[monthDateLocales]**: a list of locale name that should be pass while rendering month date. eg: ['en_US', 'ar_SA']
 - **[monthDateTemplate]**: specifies the ng-template reference to be used for rendering month date.
+  ```html
+  <ng-template #template let-date>
+    <!-- 
+    date: ViewMonth;
+    date also contains Ymd value for spcifies monthDateLocales
+    -->
+  </ng-template>
+  ```
+- **[monthFooterTemplate]**: specifies the ng-template reference to be used for rendering month footer.
   ```html
   <ng-template #template let-date>
     <!-- 
