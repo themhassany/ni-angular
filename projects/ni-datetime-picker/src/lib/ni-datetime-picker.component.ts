@@ -485,9 +485,13 @@ export class NiDatetimePickerComponent implements OnInit {
   }
 
   _title = '';
-  __viewMonthsMin: Date;
-  __viewMonthsMax: Date;
+  _viewMonthsMin: Date;
+  _viewMonthsMax: Date;
   _viewMonths: ViewMonth[] = [];
+
+  @ViewChild("titleDefaultTemplate", { static: true }) titleDefaultTemplate: TemplateRef<ElementRef>;
+  @Input() titleTemplate: TemplateRef<ElementRef>;
+  get _titleTemplate() { return this.titleTemplate || this.titleDefaultTemplate; }
 
   @ViewChild("monthDateDefaultTemplate", { static: true }) monthDateDefaultTemplate: TemplateRef<ElementRef>;
   @Input() monthDateTemplate: TemplateRef<ElementRef>;
@@ -496,6 +500,10 @@ export class NiDatetimePickerComponent implements OnInit {
   @ViewChild("monthFooterDefaultTemplate", { static: true }) monthFooterDefaultTemplate: TemplateRef<ElementRef>;
   @Input() monthFooterTemplate: TemplateRef<ElementRef>;
   get _mfooterTemplate() { return this.monthFooterTemplate || this.monthFooterDefaultTemplate; }
+
+  @ViewChild("monthTitleDefaultTemplate", { static: true }) monthTitleDefaultTemplate: TemplateRef<ElementRef>;
+  @Input() monthTitleTemplate: TemplateRef<ElementRef>;
+  get _mtitleTemplate() { return this.monthTitleTemplate || this.monthTitleDefaultTemplate; }
 
   @Input() navByScroll = true;
 
@@ -697,15 +705,15 @@ export class NiDatetimePickerComponent implements OnInit {
     calendar = calendar.clone();
 
     if (force) {
-      this.__viewMonthsMin = null;
-      this.__viewMonthsMax = null;
+      this._viewMonthsMin = null;
+      this._viewMonthsMax = null;
     }
 
     // update dialog title
     this._updateTitle();
 
-    const vmin = this.__viewMonthsMin,
-      vmax = this.__viewMonthsMax,
+    const vmin = this._viewMonthsMin,
+      vmax = this._viewMonthsMax,
       date = calendar.__date.getTime();
 
     // only if given date is out or current view's range
@@ -726,7 +734,7 @@ export class NiDatetimePickerComponent implements OnInit {
       }
 
       // store view lower bound
-      this.__viewMonthsMin = new Date(calendar.__date);
+      this._viewMonthsMin = new Date(calendar.__date);
 
       const viewMonths = [];
       // generate view dates
@@ -747,14 +755,14 @@ export class NiDatetimePickerComponent implements OnInit {
       // store view upper bound
       // _.date is the 1st of next month
       // so deduct 24 hours from it
-      this.__viewMonthsMax = new Date(calendar.__date.getTime() - (24 * 60 * 60_000));
+      this._viewMonthsMax = new Date(calendar.__date.getTime() - (24 * 60 * 60_000));
 
       this._viewMonths = viewMonths;
 
       if (emit && this.openDialog) {
         this.viewUpdated.emit({
-          viewMinDate: new Date(this.__viewMonthsMin),
-          viewMaxDate: new Date(this.__viewMonthsMax)
+          viewMinDate: new Date(this._viewMonthsMin),
+          viewMaxDate: new Date(this._viewMonthsMax)
         });
       }
     }

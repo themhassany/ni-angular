@@ -34,7 +34,9 @@
         </div>
 
         <div *ngIf="titleFormat" class="ni-dialog-title">
-          {{ _title }}
+          <ng-container [ngTemplateOutlet]="_titleTemplate"
+            [ngTemplateOutletContext]="{$implicit: [_viewMonthsMin, _viewMonthsMax]}">
+          </ng-container>
         </div>
 
         <div *ngIf="!(showYearNavigator || showMonthNavigator || titleFormat)" style="flex-grow: 1">
@@ -55,7 +57,9 @@
             }" [ngStyle]="{ width: monthWidth }">
             <div *ngIf="numberOfMonths > 1" class="ni-month-title"
               (click)="_monthDateClicked(viewMonth)">
-              {{ viewMonth.title }}
+              <ng-container [ngTemplateOutlet]="_mtitleTemplate"
+                [ngTemplateOutletContext]="{$implicit: viewMonth}">
+              </ng-container>
             </div>
             <div *ngIf="datePicker && !monthPicker" class="ni-month-weekdays">
               <span class="ni-month-weeknums-header">
@@ -92,9 +96,11 @@
                 </ng-container>
               </div>
             </div>
-            <ng-container [ngTemplateOutlet]="_mfooterTemplate"
-              [ngTemplateOutletContext]="{$implicit: viewMonth}">
-            </ng-container>
+            <div class="ni-month-footer">
+              <ng-container [ngTemplateOutlet]="_mfooterTemplate"
+                [ngTemplateOutletContext]="{$implicit: viewMonth}">
+              </ng-container>
+            </div>
           </div>
         </div>
 
@@ -183,10 +189,20 @@
 </div>
 
 <!-- view date default template -->
+<ng-template #titleDefaultTemplate>
+  {{ _title }}
+</ng-template>
+
+<!-- view date default template -->
 <ng-template #monthDateDefaultTemplate let-date>
   {{ date.date }}
 </ng-template>
 
 <!-- view date default template -->
 <ng-template #monthFooterDefaultTemplate let-date>
+</ng-template>
+
+<!-- month title default template -->
+<ng-template #monthTitleDefaultTemplate let-date>
+  {{ date.title }}
 </ng-template>

@@ -175,7 +175,9 @@ export class YourComponent implements OnInit {
   (viewUpdated)="event($event, 'viewUpdated')"
   (localeChanged)="event($event, 'localeChanged')"
   [monthDateTemplate]="template"
-  [monthFooterTemplate]="template2"
+  [monthTitleTemplate]="template2"
+  [monthFooterTemplate]="template3"
+  [titleTemplate]="template4"
 >
   <ng-template #template let-date>
     <!-- 
@@ -187,6 +189,18 @@ export class YourComponent implements OnInit {
     <!-- 
     date: ViewMonth;
     also contains date.xx_xx is monthDateLocales Ymd
+    -->
+  </ng-template>
+  <ng-template #template3 let-date>
+    <!-- 
+    date: ViewMonth;
+    also contains date.xx_xx is monthDateLocales Ymd
+    -->
+  </ng-template>
+  <ng-template #template let-viewMinMax>
+    <!-- 
+    viewMinMax[0]: viewMonthsMin;
+    viewMinMax[1]: viewMonthsMax;
     -->
   </ng-template>
 </ni-datetime-picker>
@@ -224,6 +238,15 @@ export class YourComponent implements OnInit {
 - **[showMonthNavigator]**: show month navigator, by default false.
 - **[navByScroll]**: navigate by scroll, by default true.
 - **[monthDateLocales]**: a list of locale name that should be pass while rendering month date. eg: ['en_US', 'ar_SA']
+- **[titleTemplate]**: specifies the ng-template reference to be used for rendering dialog title.
+  ```html
+  <ng-template #template let-viewMinMax>
+    <!-- 
+    viewMinMax[0]: viewMonthsMin;
+    viewMinMax[1]: viewMonthsMax;
+    -->
+  </ng-template>
+  ```
 - **[monthDateTemplate]**: specifies the ng-template reference to be used for rendering month date.
   ```html
   <ng-template #template let-date>
@@ -234,6 +257,15 @@ export class YourComponent implements OnInit {
   </ng-template>
   ```
 - **[monthFooterTemplate]**: specifies the ng-template reference to be used for rendering month footer.
+  ```html
+  <ng-template #template let-date>
+    <!-- 
+    date: ViewMonth;
+    date also contains Ymd value for spcifies monthDateLocales
+    -->
+  </ng-template>
+  ```
+- **[monthTitleTemplate]**: specifies the ng-template reference to be used for rendering month title.
   ```html
   <ng-template #template let-date>
     <!-- 
