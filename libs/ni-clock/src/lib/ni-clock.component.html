@@ -1,0 +1,15 @@
+<!-- source: https://cssanimation.rocks/clocks/ -->
+<div class="clock">
+    <div class="hours-container" [ngStyle]="{ 'transform': zHour }"
+        [ngClass]="{ 'fix-flicker-at-0': hours == 0 }">
+        <div class="hours"></div>
+    </div>
+    <div class="minutes-container" [ngStyle]="{ 'transform': zMinute }"
+        [ngClass]="{ 'fix-flicker-at-0': minutes == 0 }">
+        <div class="minutes"></div>
+    </div>
+    <div class="seconds-container" [ngStyle]="{ 'transform': zSecond }"
+        [ngClass]="{ 'fix-flicker-at-0': seconds == 0 }">
+        <div class="seconds"></div>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+{
+  "npmScope": "ni-angular",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": {
+      "dependencies": "*",
+      "devDependencies": "*"
+    },
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "ni-datetime-xyz-demo": {
+      "tags": []
+    },
+    "ni-datetime-xyz-demo-e2e": {
+      "tags": [],
+      "implicitDependencies": ["ni-datetime-xyz-demo"]
+    },
+    "ni-datetime": {
+      "tags": []
+    },
+    "ni-datetime-picker": {
+      "tags": []
+    },
+    "ni-datetime-pipe": {
+      "tags": []
+    },
+    "ni-clock": {
+      "tags": []
+    }
+  }
+}

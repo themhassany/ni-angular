@@ -1,0 +1,327 @@
+<strong>ni-datetime-pipe: </strong>
+<div style="padding: 20px 0px 20px 20px;">
+  {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A" }}
+  <br />
+  {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":"en_US" }}
+  <br />
+  {{ value2 | ni_date:"WWWW DD MMMM, YYYY HH:mm:ss A":customLocale }}
+</div>
+
+<hr />
+
+<strong>ni-datetime-picker: </strong>
+<div style="padding: 20px 0px 0px 20px;">
+  <div style="display: flex;">
+    <div style="width: 50%;">
+      <div class="field">
+        <div class="title">value</div>
+        <div class="value">
+          <button (click)="value = newDate()">{{ value }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">defaultDate</div>
+        <div class="value">{{ defaultDate }}</div>
+      </div>
+
+      <div class="field">
+        <div class="title">monthPicker</div>
+        <div class="value">
+          <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">datePicker</div>
+        <div class="value">
+          <button (click)="datePicker = !datePicker">{{ datePicker }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">timePicker</div>
+        <div class="value">
+          <button (click)="timePicker = !timePicker">{{ timePicker }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">inline</div>
+        <div class="value">
+          <button (click)="inline = !inline">{{ inline }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">showLocaleSwitch</div>
+        <div class="value">
+          <button (click)="showLocaleSwitch = !showLocaleSwitch">{{ showLocaleSwitch }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">locale</div>
+        <div class="value">
+          <select name="locale" ngDefaultControl [(ngModel)]="locale"
+            (change)="localeChanged($event)">
+            <option [ngValue]="'fa_AF'">fa_AF</option>
+            <option [ngValue]="'fa_IR'">fa_IR</option>
+            <option [ngValue]="'ar_SA'">ar_SA</option>
+            <option [ngValue]="'en_US'">en_US</option>
+            <option [ngValue]="customLocale">MyCustomOne</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">inputFormat</div>
+        <div class="value">
+          <input name="inputFormat" ngDefaultControl [(ngModel)]="inputFormat">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">placeholder</div>
+        <div class="value">
+          <input name="placeholder" ngDefaultControl [(ngModel)]="placeholder" [disabled]="inline">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">titleFormat</div>
+        <div class="value">
+          <input name="titleFormat" ngDefaultControl [(ngModel)]="titleFormat">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">monthHeaderFormat</div>
+        <div class="value">
+          <input name="monthHeaderFormat" ngDefaultControl [(ngModel)]="monthHeaderFormat">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">numberOfMonths</div>
+        <div class="value">
+          <input name="numberOfMonths" ngDefaultControl [(ngModel)]="numberOfMonths">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">disableWeekends</div>
+        <div class="value">
+          <button (click)="disableWeekends = !disableWeekends">{{ disableWeekends }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">disabledDates</div>
+        <div class="value">
+          <textarea #disabledDatesEl name="disabledDates" ngDefaultControl
+            [(ngModel)]="disabledDatesStr" cols="80">
+                    </textarea>
+          <br />
+          <button (click)="updateDisabledDates()">update</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">showWeekNums</div>
+        <div class="value">
+          <button (click)="showWeekNums = !showWeekNums">{{ showWeekNums }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">selectionMode</div>
+        <div class="value">
+          <select name="selectionMode" ngDefaultControl [(ngModel)]="selectionMode">
+            <option [ngValue]="'single'">single</option>
+            <option [ngValue]="'multiple'">multiple</option>
+            <option [ngValue]="'range'">range</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">selectedSeparator</div>
+        <div class="value">
+          <input name="selectedSeparator" ngDefaultControl [(ngModel)]="selectedSeparator">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">showPickerIcon</div>
+        <div class="value">
+          <button (click)="showPickerIcon = !showPickerIcon">{{ showPickerIcon }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">clearBtnText/showClearBtn</div>
+        <div class="value">
+          <input name="clearBtnText" ngDefaultControl [(ngModel)]="clearBtnText">
+          <button (click)="showClearBtn = !showClearBtn">{{ showClearBtn }}</button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="title">todayBtnText/showTodayBtn</div>
+        <div class="value">
+          <input name="todayBtnText" ngDefaultControl [(ngModel)]="todayBtnText">
+          <button (click)="showTodayBtn = !showTodayBtn">{{ showTodayBtn }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">todayBtnSet</div>
+        <div class="value">
+          <select name="todayBtnSet" ngDefaultControl [(ngModel)]="todayBtnSet">
+            <option [ngValue]="'onlyView'">onlyView</option>
+            <option [ngValue]="'andValue'">andValue</option>
+            <option [ngValue]="''">None</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">
+          showYearNavigator (start,end)
+        </div>
+        <div class="value">
+          <input name="yearNavigatorRange" ngDefaultControl [(ngModel)]="yearNavigatorRange">
+          <button (click)="showYearNavigator = !showYearNavigator">{{ showYearNavigator }}</button>
+          &nbsp;&nbsp;&nbsp;&nbsp; --&gt; (end-start &lt;= 100)
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">showMonthNavigator</div>
+        <div class="value">
+          <button
+            (click)="showMonthNavigator = !showMonthNavigator">{{ showMonthNavigator }}</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="title">navByScroll</div>
+        <div class="value">
+          <button (click)="navByScroll = !navByScroll">{{ navByScroll }}</button>
+        </div>
+      </div>
+    </div>
+
+    <pre>
+		# Formats
+		- 'YYYY', 4 digit year
+		- 'YY', 2 digit year
+		- 'MMMM', long name of month 
+		- 'MMM', short name of month 
+		- 'MM', 2 digit month number
+		- 'M', month number
+		- 'DD', 2 digit date number
+		- 'D', date number
+		- 'WWWW', long name of week's day
+		- 'WWW', short name of week's day
+		- 'WW', mini name of week's day
+		- 'HH', 2 digit hour (24h format)
+		- 'hh', 2 digit hour (12h format)
+		- 'H', hour (24h format)
+		- 'h', hour (12h format)
+		- 'mm', 2 digit minute
+		- 'm', minute
+		- 'ss', 2 digit second
+		- 's', second
+		- 'A', upper case AM/PM
+		- 'a', lower case am/pm
+		- 'z', time zone (eg: GMT-0500)
+		- 'iso', iso format (eg: 2020-01-17T08:57:58.144Z)
+		</pre>
+  </div>
+  <hr />
+  <div #parent style="position: relative; padding: 2rem; background-color: rgba(0, 0, 0, 0.0625);">
+    <ni-clock [time]="value2" [auto]="false"></ni-clock>
+    <ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
+      [selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
+      [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
+      [showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn" [todayBtnText]="todayBtnText"
+      [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText" [todayBtnSet]="todayBtnSet"
+      [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
+      [timePicker]="timePicker" [inline]="inline" [locales]="['fa_AF','fa_IR','ar_SA','en_US']"
+      [showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
+      [monthDateLocales]="['fa_AF', 'en_US', 'ar_SA']" [inputFormat]="inputFormat"
+      [placeholder]="placeholder" [titleFormat]="titleFormat"
+      [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
+      [showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
+      [showMonthNavigator]="showMonthNavigator" [navByScroll]="navByScroll"
+      [targetTimezoneUTCOffset]="270" (showed)="event($event, 'showed')"
+      (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
+      (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
+      (viewUpdated)="event($event, 'viewUpdated')" (localeChanged)="event($event, 'localeChanged')"
+      [titleTemplate]="template4" [monthDateTemplate]="template" [monthFooterTemplate]="template2"
+      [monthTitleTemplate]="template3">
+      <ng-template #template4 let-minmax>
+        {{ minmax[0] | ni_date:"MMMM YYYY":"fa_AF" }}
+        <br />
+        <span style="font-size: 0.75rem;">{{ minmax[0] | ni_date:"MMMM YYYY":"ar_SA" }}</span>
+        <br />
+        <span style="font-size: 0.75rem;">{{ minmax[0] | ni_date:"MMMM YYYY":"en_US" }}</span>
+      </ng-template>
+      <ng-template #template let-date>
+        <div style="text-align: center; font-size: 0.75rem;">
+          {{ date.date }}
+        </div>
+        <div style="display: flex; margin: 0 -.25rem;">
+          <div style="text-align: left; font-size: 0.5rem;">
+            {{ date.en_US.date }}
+          </div>
+          <div style="flex-grow: 1;"></div>
+          <div style="text-align: right; font-size: 0.5rem;">
+            {{ number_en2fa[date.ar_SA.date] }}
+          </div>
+        </div>
+      </ng-template>
+      <ng-template #template2 let-date>
+        <div style="text-align: center; font-size: 0.8rem;">
+          Month Footer
+          <br />
+          fa_AF:
+          [{{ date.firstday.fa_AF.year }}-{{ date.firstday.fa_AF.month }}-{{ date.firstday.fa_AF.date }}
+          -
+          {{ date.lastday.fa_AF.year }}-{{ date.lastday.fa_AF.month }}-{{ date.lastday.fa_AF.date }}]
+          <br />
+          en_US:
+          [{{ date.firstday.en_US.year }}-{{ date.firstday.en_US.month }}-{{ date.firstday.en_US.date }}
+          -
+          {{ date.lastday.en_US.year }}-{{ date.lastday.en_US.month }}-{{ date.lastday.en_US.date }}]
+          <br />
+          ar_SA:
+          [{{ date.firstday.ar_SA.year }}-{{ date.firstday.ar_SA.month }}-{{ date.firstday.ar_SA.date }}
+          -
+          {{ date.lastday.ar_SA.year }}-{{ date.lastday.ar_SA.month }}-{{ date.lastday.ar_SA.date }}]
+        </div>
+      </ng-template>
+      <ng-template #template3 let-date>
+        <div style="text-align: center; font-size: 0.8rem;">
+          Month Header
+          <br />
+          fa_AF:
+          [{{ date.firstday.fa_AF.year }}-{{ date.firstday.fa_AF.month }}-{{ date.firstday.fa_AF.date }}
+          -
+          {{ date.lastday.fa_AF.year }}-{{ date.lastday.fa_AF.month }}-{{ date.lastday.fa_AF.date }}]
+          <br />
+          en_US:
+          [{{ date.firstday.en_US.year }}-{{ date.firstday.en_US.month }}-{{ date.firstday.en_US.date }}
+          -
+          {{ date.lastday.en_US.year }}-{{ date.lastday.en_US.month }}-{{ date.lastday.en_US.date }}]
+          <br />
+          ar_SA:
+          [{{ date.firstday.ar_SA.year }}-{{ date.firstday.ar_SA.month }}-{{ date.firstday.ar_SA.date }}
+          -
+          {{ date.lastday.ar_SA.year }}-{{ date.lastday.ar_SA.month }}-{{ date.lastday.ar_SA.date }}]
+        </div>
+      </ng-template>
+    </ni-datetime-picker>
+  </div>
+</div>

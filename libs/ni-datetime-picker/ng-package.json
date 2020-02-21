@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/ni-datetime-picker",
+  "lib": {
+    "entryFile": "src/index.ts",
+    "umdModuleIds": {
+      "ni-datetime": "ni-datetime"
+    }
+  },
+  "whitelistedNonPeerDependencies": [
+    "ni-datetime"
+  ]
+}
