@@ -38,6 +38,7 @@ export class AppComponent implements OnInit {
   yearNavigatorRange = '1370,1410';
   showMonthNavigator = false;
   navByScroll = true;
+  targetTimezoneUTCOffset = "270";
 
   customLocale: NiDatetimeLocale = {
     name: 'Custom',

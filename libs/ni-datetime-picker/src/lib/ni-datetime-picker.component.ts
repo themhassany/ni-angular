@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, TemplateRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { Ymd, NiDatetime, NiDatetimeLocale, Locales, formatDate, padNumber, toTimezone } from 'ni-datetime';
 import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } from './ni-datetime-picker';
 
@@ -7,7 +7,7 @@ import { ValueChange, ViewDate, ViewMonth, LocaleChangeEvent, ViewUpdateEvent } 
   templateUrl: './ni-datetime-picker.component.html',
   styleUrls: ['./ni-datetime-picker.component.less']
 })
-export class NiDatetimePickerComponent implements OnInit {
+export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /*
    * attributes prefix notation
@@ -16,6 +16,7 @@ export class NiDatetimePickerComponent implements OnInit {
    * _  => in component and view, eg: _dateOrarray(...)
    *    => public, eg: value
    */
+  _inited = false;
 
   __value: any; // Date|Date[]
   @Input()
@@ -62,7 +63,7 @@ export class NiDatetimePickerComponent implements OnInit {
     this.__value = this._dateORarray(value);
     this._updateInputfield();
 
-    if (emit && this.calendar) {
+    if (emit && this.calendar && this._inited) {
       this.valueChange.emit(this.__copy(value));
 
       const helpers = this.__viewDateStateHelper();
@@ -378,9 +379,9 @@ export class NiDatetimePickerComponent implements OnInit {
 
     if (prev === value) {
       // ignore same value
-    } else if (value) {
+    } else if (value && this._inited) {
       this.showed.emit({});
-    } else {
+    } else if (this._inited) {
       this.hidded.emit({});
     }
   }
@@ -513,11 +514,18 @@ export class NiDatetimePickerComponent implements OnInit {
   get _mtitleTemplate() { return this.monthTitleTemplate || this.monthTitleDefaultTemplate; }
 
   @Input() navByScroll = true;
-  @Input() targetTimezoneUTCOffset = null;
+  __targetTimezoneUTCOffset = null;
+  @Input() set targetTimezoneUTCOffset(offset: number) {
+    this.__targetTimezoneUTCOffset = offset;
+    this.__updateViewDatesStates();
+  }
+  get targetTimezoneUTCOffset() { return this.__targetTimezoneUTCOffset; }
 
   constructor() { }
 
   ngOnInit() { }
+  ngAfterViewInit() { this._inited = true; }
+  ngOnDestroy() { this._inited = false; }
 
   __copy(dates: any): any {
     if (!dates) { return dates; }
@@ -532,11 +540,15 @@ export class NiDatetimePickerComponent implements OnInit {
 
   _inputFocused($event: any) {
     this.openDialog = true;
-    this.focused.emit({});
+    if (this._inited) {
+      this.focused.emit({});
+    }
   }
 
   _inputBlured($event: any) {
-    this.blurred.emit({});
+    if (this._inited) {
+      this.blurred.emit({});
+    }
   }
 
   _navToPreviousView() {
@@ -772,7 +784,7 @@ export class NiDatetimePickerComponent implements OnInit {
 
       this._viewMonths = viewMonths;
 
-      if (emit && this.openDialog) {
+      if (emit && this.openDialog && this._inited) {
         this.viewUpdated.emit({
           viewMinDate: new Date(this._viewMonthsMin),
           viewMaxDate: new Date(this._viewMonthsMax)
@@ -985,12 +997,12 @@ export class NiDatetimePickerComponent implements OnInit {
 
     this.__updateView(true);
 
-    if (emit) {
+    if (emit && this._inited) {
       // emit locale changed value
       this.localeChange.emit(this.__locale.name);
     }
 
-    if (emit && prevLocale.name !== this.__locale.name) {
+    if (emit && prevLocale.name !== this.__locale.name && this._inited) {
       // emit locale change event
       this.localeChanged.emit({ previous: prevLocale.name, locale: this.__locale.name });
     }

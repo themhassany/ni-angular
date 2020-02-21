@@ -1,5 +1,5 @@
 # NiDatetime
-Converter class for Jalali/Farsi/Persian to Gregorian and wise versa.
+Converter class for Jalali/Farsi/Persian to Gregorian and vise versa.
 
 **Note: Months are started from 1.**
 

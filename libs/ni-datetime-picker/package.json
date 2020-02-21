@@ -1,6 +1,6 @@
 {
   "name": "ni-datetime-picker",
-  "description": "Angular month|date|time picker with Persian (Afghanistan, and Iran), and Gregorian calendar support.",
+  "description": "Angular month|date|time picker with Persian (Afghanistan, and Iran), Islamic, and Gregorian calendar support.",
   "version": "0.0.40",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
@@ -27,9 +27,9 @@
     "multi-locale"
   ],
   "peerDependencies": {
-    "ni-datetime": "^0.0.15"
+    "ni-datetime": "^0.0.16"
   },
   "dependencies": {
-    "ni-datetime": "^0.0.15"
+    "ni-datetime": "^0.0.16"
   }
 }

@@ -25,7 +25,9 @@
               "apps/ni-datetime-xyz-demo/src/favicon.ico",
               "apps/ni-datetime-xyz-demo/src/assets"
             ],
-            "styles": ["apps/ni-datetime-xyz-demo/src/styles.less"],
+            "styles": [
+              "apps/ni-datetime-xyz-demo/src/styles.less"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -83,7 +85,10 @@
               "apps/ni-datetime-xyz-demo/tsconfig.app.json",
               "apps/ni-datetime-xyz-demo/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/ni-datetime-xyz-demo/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/ni-datetime-xyz-demo/**"
+            ]
           }
         },
         "test": {
@@ -118,37 +123,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/ni-datetime-xyz-demo-e2e/tsconfig.e2e.json"],
+            "tsConfig": [
+              "apps/ni-datetime-xyz-demo-e2e/tsconfig.e2e.json"
+            ],
             "exclude": [
               "**/node_modules/**",
               "!apps/ni-datetime-xyz-demo-e2e/**"
             ]
-          }
-        }
-      }
-    },
-    "ni-datetime": {
-      "root": "libs/ni-datetime",
-      "sourceRoot": "libs/ni-datetime/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "libs/ni-datetime/tsconfig.lib.json",
-              "libs/ni-datetime/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ni-datetime/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ni-datetime/jest.config.js",
-            "tsConfig": "libs/ni-datetime/tsconfig.spec.json",
-            "passWithNoTests": true
           }
         }
       }
@@ -178,7 +159,10 @@
               "libs/ni-datetime-picker/tsconfig.lib.json",
               "libs/ni-datetime-picker/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ni-datetime-picker/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ni-datetime-picker/**"
+            ]
           }
         },
         "test": {
@@ -222,7 +206,10 @@
               "libs/ni-datetime-pipe/tsconfig.lib.json",
               "libs/ni-datetime-pipe/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ni-datetime-pipe/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ni-datetime-pipe/**"
+            ]
           }
         },
         "test": {
@@ -266,7 +253,10 @@
               "libs/ni-clock/tsconfig.lib.json",
               "libs/ni-clock/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/ni-clock/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ni-clock/**"
+            ]
           }
         },
         "test": {
@@ -276,6 +266,53 @@
             "tsConfig": "libs/ni-clock/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "libs/ni-clock/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "less"
+        }
+      }
+    },
+    "ni-datetime": {
+      "projectType": "library",
+      "root": "libs/ni-datetime",
+      "sourceRoot": "libs/ni-datetime/src",
+      "prefix": "",
+      "architect": {
+        "build": {
+          "builder": "@nrwl/angular:package",
+          "options": {
+            "tsConfig": "libs/ni-datetime/tsconfig.lib.json",
+            "project": "libs/ni-datetime/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "libs/ni-datetime/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/ni-datetime/tsconfig.lib.json",
+              "libs/ni-datetime/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/ni-datetime/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/ni-datetime/jest.config.js",
+            "tsConfig": "libs/ni-datetime/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/ni-datetime/src/test-setup.ts"
           }
         }
       },

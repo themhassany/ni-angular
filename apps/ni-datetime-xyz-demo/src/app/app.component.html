@@ -210,6 +210,15 @@
           <button (click)="navByScroll = !navByScroll">{{ navByScroll }}</button>
         </div>
       </div>
+
+      <div class="field">
+        <div class="title">targetTimezoneUTCOffset</div>
+        <div class="value">
+          <input #utcOffsetEl name="targetTimezoneUTCOffset" ngDefaultControl
+            [ngModel]="targetTimezoneUTCOffset">
+          <button (click)="targetTimezoneUTCOffset = utcOffsetEl.value">Apply</button>
+        </div>
+      </div>
     </div>
 
     <pre>
@@ -255,7 +264,7 @@
       [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
       [showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
       [showMonthNavigator]="showMonthNavigator" [navByScroll]="navByScroll"
-      [targetTimezoneUTCOffset]="270" (showed)="event($event, 'showed')"
+      [targetTimezoneUTCOffset]="targetTimezoneUTCOffset" (showed)="event($event, 'showed')"
       (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
       (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
       (viewUpdated)="event($event, 'viewUpdated')" (localeChanged)="event($event, 'localeChanged')"
