@@ -1,5 +1,5 @@
 # NiClock
-Angular Clock UI
+Angular Clock Component
 
 ## Installation
     npm i ni-clock
