@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
 import { NiDatetimePipeService } from "./ni-datetime-pipe.service";
 import { NiDatetimeLocale, formatDate, Locales } from "ni-datetime";
 

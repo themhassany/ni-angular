@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { NiDatetimePickerComponent } from './ni-datetime-picker.component';
 
 describe('NiDatetimePickerComponent', () => {
@@ -8,9 +7,8 @@ describe('NiDatetimePickerComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NiDatetimePickerComponent ]
-    })
-    .compileComponents();
+      declarations: [NiDatetimePickerComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

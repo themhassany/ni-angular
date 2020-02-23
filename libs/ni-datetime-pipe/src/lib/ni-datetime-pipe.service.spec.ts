@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { NiDatetimePipeService } from './ni-datetime-pipe.service';
 
 describe('NiDatetimePipeService', () => {

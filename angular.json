@@ -25,9 +25,7 @@
               "apps/ni-datetime-xyz-demo/src/favicon.ico",
               "apps/ni-datetime-xyz-demo/src/assets"
             ],
-            "styles": [
-              "apps/ni-datetime-xyz-demo/src/styles.less"
-            ],
+            "styles": ["apps/ni-datetime-xyz-demo/src/styles.less"],
             "scripts": []
           },
           "configurations": {
@@ -85,10 +83,7 @@
               "apps/ni-datetime-xyz-demo/tsconfig.app.json",
               "apps/ni-datetime-xyz-demo/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/ni-datetime-xyz-demo/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/ni-datetime-xyz-demo/**"]
           }
         },
         "test": {
@@ -123,9 +118,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/ni-datetime-xyz-demo-e2e/tsconfig.e2e.json"
-            ],
+            "tsConfig": ["apps/ni-datetime-xyz-demo-e2e/tsconfig.e2e.json"],
             "exclude": [
               "**/node_modules/**",
               "!apps/ni-datetime-xyz-demo-e2e/**"
@@ -159,10 +152,7 @@
               "libs/ni-datetime-picker/tsconfig.lib.json",
               "libs/ni-datetime-picker/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ni-datetime-picker/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ni-datetime-picker/**"]
           }
         },
         "test": {
@@ -206,10 +196,7 @@
               "libs/ni-datetime-pipe/tsconfig.lib.json",
               "libs/ni-datetime-pipe/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ni-datetime-pipe/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ni-datetime-pipe/**"]
           }
         },
         "test": {
@@ -253,10 +240,7 @@
               "libs/ni-clock/tsconfig.lib.json",
               "libs/ni-clock/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ni-clock/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ni-clock/**"]
           }
         },
         "test": {
@@ -300,10 +284,7 @@
               "libs/ni-datetime/tsconfig.lib.json",
               "libs/ni-datetime/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/ni-datetime/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/ni-datetime/**"]
           }
         },
         "test": {

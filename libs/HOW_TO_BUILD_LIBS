@@ -1,0 +1,6 @@
+due to the nrwl/nx bug, we have to do this to create the libraries:
+------------------------------------------------------------------------------------
+run this command, so that the <LIB_NAME> is generated under /dist folder.
+    ng build <LIB_NAME> --prod
+
+then move it under /dist/libs folder, then run it again.

@@ -27,9 +27,9 @@
     "multi-locale"
   ],
   "peerDependencies": {
-    "ni-datetime": "^0.0.16"
-  },
-  "dependencies": {
-    "ni-datetime": "^0.0.16"
+    "@angular/common": "^9.0.2",
+    "@angular/core": "^9.0.2",
+    "tslib": "^1.10.0",
+    "ni-datetime": "^0.0.17"
   }
 }
