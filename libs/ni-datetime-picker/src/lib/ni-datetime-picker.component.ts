@@ -18,6 +18,13 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
    */
   _inited = false;
 
+  __disabled = false;
+  @Input() set disabled(value: boolean) {
+    if (value && !this.inline) { this.openDialog = false; }
+    this.__disabled = value;
+  }
+  get disabled() { return this.__disabled; }
+
   __value: any; // Date|Date[]
   @Input()
   set value(value: any) {
@@ -514,6 +521,7 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   get _mtitleTemplate() { return this.monthTitleTemplate || this.monthTitleDefaultTemplate; }
 
   @Input() navByScroll = true;
+  @Input() navByTouch = true;
   __targetTimezoneUTCOffset = null;
   @Input() set targetTimezoneUTCOffset(offset: number) {
     this.__targetTimezoneUTCOffset = offset;
@@ -539,6 +547,8 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   _inputFocused($event: any) {
+    if (this.disabled) return;
+
     this.openDialog = true;
     if (this._inited) {
       this.focused.emit({});
@@ -552,6 +562,8 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   _navToPreviousView() {
+    if (this.disabled) return;
+
     const ymd = this.calendar.clone().ymd;
     ymd.month -= this.numberOfMonths;
     if (ymd.month < 1) {
@@ -563,6 +575,8 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   _navToNextView() {
+    if (this.disabled) return;
+
     const ymd = this.calendar.clone().ymd;
     ymd.month += this.numberOfMonths;
     if (ymd.month > 12) {
@@ -584,13 +598,32 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
     }
   }
 
-  _navByScroll(increment: number) {
-    if (this.navByScroll) {
-      if (increment > 0) {
-        this._navToNextView();
-      } else {
-        this._navToPreviousView();
-      }
+  __touchStart = null;
+  __unify(e: any) { return e.changedTouches ? e.changedTouches[0] : e };
+
+  _logTouchStart($event: any) {
+    if (this.navByTouch) {
+      try { $event.preventDefault(); } catch (e) { }
+      this.__touchStart = this.__unify($event).clientX;
+    }
+  }
+  _touchIncrement($event: any) {
+    if (this.navByTouch && this.__touchStart) {
+      try { $event.preventDefault(); } catch (e) { }
+      const increment = Math.sign(this.__unify($event).clientX - this.__touchStart);
+      this.__touchStart = null;
+      return increment;
+    } else {
+      return 0;
+    }
+  }
+
+  _navBy(increment: number) {
+    if (this.disabled) {
+    } else if (increment < 0) {
+      this._navToPreviousView();
+    } else if (increment > 0) {
+      this._navToNextView();
     }
   }
 
@@ -606,6 +639,8 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   _monthDateClicked(viewDate: ViewDate) {
+    if (this.disabled) return;
+
     this._selectMonthDate(viewDate);
   }
 
@@ -615,8 +650,6 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
       || viewDate.next) {
       return;
     }
-
-    console.log(viewDate);
 
     if (this.isSingleSelection) {
       this.calendar.ymd = viewDate;
@@ -961,6 +994,8 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   _pickerClicked($event: any) {
+    if (this.disabled) return;
+
     // toggle open dialog
     this.openDialog = !this.openDialog;
   }

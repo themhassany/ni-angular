@@ -9,11 +9,12 @@ import { NiDatetimePipeService } from 'ni-datetime-pipe';
 })
 export class AppComponent implements OnInit {
 
+  disabled = true;
   value: any = new Date(); // '2020-02-25 00:00:00';
-  defaultDate; // = new Date();
+  defaultDate: Date; // = new Date();
   monthPicker = false;
   datePicker = true;
-  timePicker = false;
+  timePicker = true;
   inline = true;
   showLocaleSwitch = true;
   locale = 'fa_AF';

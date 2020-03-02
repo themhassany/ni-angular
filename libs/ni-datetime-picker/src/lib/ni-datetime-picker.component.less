@@ -248,6 +248,9 @@
     display: block;
     font-size: 1rem;
     padding: 0.25rem 0;
+    height: 1.25rem;
+    border: none;
+    outline: 0;
   }
 
   .ni-timepicker-btn {
@@ -255,6 +258,8 @@
     font-size: 1.25rem;
     height: 1.125rem;
     cursor: pointer;
+    border: none;
+    outline: 0;
   }
 
   .ni-decrement-btn {
@@ -281,6 +286,8 @@
     padding: 0.125rem 0.25rem;
     cursor: pointer;
     box-sizing: border-box;
+    border: none;
+    outline: 0;
   }
 
   .ni-locale-icon {
@@ -297,7 +304,7 @@
     flex-grow: 1;
   }
 
-  .ni-button-bar > span {
+  .ni-button-bar > button {
     display: inline-block;
     font-size: 0.75rem;
     height: 1.25rem;
@@ -306,13 +313,15 @@
     margin: 0 0.0625rem;
     vertical-align: bottom;
     box-sizing: border-box;
+    border: none;
+    outline: 0;
   }
 
-  .ni-button-bar > span:hover {
+  .ni-button-bar > button:hover {
     background-color: rgba(0, 0, 0, 0.125);
   }
 
-  .ni-button-bar > span:active {
+  .ni-button-bar > button:active {
     background-color: rgba(0, 0, 0, 0.25);
   }
 }

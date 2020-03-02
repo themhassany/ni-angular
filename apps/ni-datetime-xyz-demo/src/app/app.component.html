@@ -26,6 +26,13 @@
       </div>
 
       <div class="field">
+        <div class="title">disabled</div>
+        <div class="value">
+          <button (click)="disabled = !disabled">{{ disabled }}</button>
+        </div>
+      </div>
+
+      <div class="field">
         <div class="title">monthPicker</div>
         <div class="value">
           <button (click)="monthPicker = !monthPicker">{{ monthPicker }}</button>
@@ -251,15 +258,15 @@
   <hr />
   <div #parent style="position: relative; padding: 2rem; background-color: rgba(0, 0, 0, 0.0625);">
     <ni-clock [time]="value2" [auto]="false"></ni-clock>
-    <ni-datetime-picker [appendTo]="parent" [(value)]="value" [selectionMode]="selectionMode"
-      [selectedSeparator]="selectedSeparator" [disabledDates]="disabledDates"
-      [disableWeekends]="disableWeekends" [showWeekNums]="showWeekNums"
-      [showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn" [todayBtnText]="todayBtnText"
-      [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText" [todayBtnSet]="todayBtnSet"
-      [defaultDate]="defaultDate" [monthPicker]="monthPicker" [datePicker]="datePicker"
-      [timePicker]="timePicker" [inline]="inline" [locales]="['fa_AF','fa_IR','ar_SA','en_US']"
-      [showLocaleSwitch]="showLocaleSwitch" [locale]="locale"
-      [monthDateLocales]="['fa_AF', 'en_US', 'ar_SA']" [inputFormat]="inputFormat"
+    <ni-datetime-picker [appendTo]="parent" [(value)]="value" [disabled]="disabled"
+      [selectionMode]="selectionMode" [selectedSeparator]="selectedSeparator"
+      [disabledDates]="disabledDates" [disableWeekends]="disableWeekends"
+      [showWeekNums]="showWeekNums" [showPickerIcon]="showPickerIcon" [showTodayBtn]="showTodayBtn"
+      [todayBtnText]="todayBtnText" [showClearBtn]="showClearBtn" [clearBtnText]="clearBtnText"
+      [todayBtnSet]="todayBtnSet" [defaultDate]="defaultDate" [monthPicker]="monthPicker"
+      [datePicker]="datePicker" [timePicker]="timePicker" [inline]="inline"
+      [locales]="['fa_AF','fa_IR','ar_SA','en_US']" [showLocaleSwitch]="showLocaleSwitch"
+      [locale]="locale" [monthDateLocales]="['fa_AF', 'en_US', 'ar_SA']" [inputFormat]="inputFormat"
       [placeholder]="placeholder" [titleFormat]="titleFormat"
       [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
       [showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"

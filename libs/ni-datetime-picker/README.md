@@ -47,6 +47,7 @@ Following example shows all the options avaiable in the component:
 
 ```typescript
 export class YourComponent implements OnInit {
+  disabled = false;
   value = new Date();
   defaultDate = new Date();
   monthPicker = false;
@@ -137,6 +138,7 @@ export class YourComponent implements OnInit {
   [yearNavigatorRange]="yearNavigatorRange"
   [showMonthNavigator]="showMonthNavigator"
   [navByScroll]="navByScroll"
+  [navByTouch]="navByTouch"
   (showed)="event($event, 'showed')"
   (hidded)="event($event, 'hidded')"
   (focused)="event($event, 'focused')"
@@ -180,6 +182,7 @@ export class YourComponent implements OnInit {
 
 - **[(value)]**: a date|date[] specifies the selected value(s). the value will be a single date if selectionMode is 'single', an array if selectionModel is 'multiple', and an array of 1 (start) or 2 (start and end) dates will be emitted for 'range' selectionMode.
 - **[defaultDate]**: value to be used when 'value' is null to prepare the datepicker view. current time will be used by default.
+- **[disabled]**: set true to disable the datepicker.
 - **[(locale)]**: by default 'fa_AF'. availables are: fa_AF, fa_IR, en_US. provide a NiDatetimeLocale for custom locale.
 - **[showLocaleSwitch]**: show/hide the locale switcher. note: your custom calendarLocale will be ignored during in switching.
 - **[targetTimezoneUTCOffset]**: timezone offset in minutes (this is only used in finding the today's date). eg: 270 (+4:30 hours - Afghanistan UTC Offset)
@@ -208,6 +211,7 @@ export class YourComponent implements OnInit {
 - **[yearNavigatorRange]**: year navigator range 'start,end', or 'year1,year2,year3...'. by default ''.
 - **[showMonthNavigator]**: show month navigator, by default false.
 - **[navByScroll]**: navigate by scroll, by default true.
+- **[navByTouch]**: navigate by touch, by default true.
 - **[monthDateLocales]**: a list of locale name that should be pass while rendering month date. eg: ['en_US', 'ar_SA']
 - **[titleTemplate]**: specifies the ng-template reference to be used for rendering dialog title.
   ```html

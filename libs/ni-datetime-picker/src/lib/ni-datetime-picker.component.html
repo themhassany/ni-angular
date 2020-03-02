@@ -1,14 +1,19 @@
-<div #picker [dir]="locale.dir" class="ni-datetime-picker">
+<div #picker [dir]="locale.dir" [ngClass]="{
+    'ni-datetime-picker': true,
+    'ni-disabled': disabled
+  }">
   <div class="ni-inputs">
     <input *ngIf="!inline" [value]="_inputFormatted" [placeholder]="placeholder" readonly
-      class="ni-input" (focus)="_inputFocused($event)" (blur)="_inputBlured($event)">
+      [disabled]="disabled" class="ni-input" (focus)="_inputFocused($event)"
+      (blur)="_inputBlured($event)">
     <div *ngIf="showPickerIcon" class="ni-picker-btn" (click)="_pickerClicked($event)">
     </div>
   </div>
   <div #modal *ngIf="openDialog" [ngClass]="{
       'ni-dialog-modal': true,
       'ni-dialog-picker-inline': inline,
-      'ni-dialog-with-append-to': !!appendTo
+      'ni-dialog-with-append-to': !!appendTo,
+      'ni-disabled': disabled
     }" [dir]="locale.dir" (click)="_overlayClicked($event)">
     <!-- (click)="$event.stopPropagation();" on 'ni-dialog' stop the click event from reaching modal -->
     <div #dialog class="ni-dialog ni-dialog-open-animation" [ngStyle]="{width: dialogWidth}"
@@ -49,7 +54,8 @@
       </div>
       <div class="ni-dialog-content">
         <div *ngIf="monthPicker || datePicker" class="ni-months"
-          (wheel)="_navByScroll(_scrollIncrement($event))">
+          (touchstart)="_logTouchStart($event)" (touchend)="_navBy(_touchIncrement($event))"
+          (wheel)="_navBy(_scrollIncrement($event))">
           <div *ngFor="let viewMonth of _viewMonths" [ngClass]="{
               'ni-month': true,
               'ni-month-picker': monthPicker,
@@ -106,81 +112,83 @@
 
         <div *ngIf="timePicker" class="ni-timepicker">
           <div class="ni-timepicker-times">
-            <span class="ni-timepicker-btn ni-increment-btn"
+            <button class="ni-timepicker-btn ni-increment-btn" [disabled]="disabled"
               (click)="calendar.hours = calendar.hours + 1; _updateTime();">
               ⌃
-            </span>
+            </button>
             <span class="ni-timepicker-time ni-timepicker-hour"
               (wheel)="calendar.hours = calendar.hours + _scrollIncrement($event); _updateTime()">
               {{ _pad(calendar.hours12, 2) }}
             </span>
-            <span class="ni-timepicker-btn ni-decrement-btn"
+            <button class="ni-timepicker-btn ni-decrement-btn" [disabled]="disabled"
               (click)="calendar.hours = calendar.hours - 1; _updateTime();">
               ⌃
-            </span>
+            </button>
           </div>
           <div class="ni-timepicker-times">
-            <span class="ni-timepicker-btn ni-increment-btn"
+            <button class="ni-timepicker-btn ni-increment-btn" [disabled]="disabled"
               (click)="calendar.minutes = calendar.minutes + 1; _updateTime();">
               ⌃
-            </span>
+            </button>
             <span class="ni-timepicker-time ni-timepicker-minute"
               (wheel)="calendar.minutes = calendar.minutes + _scrollIncrement($event); _updateTime()">
               {{ _pad(calendar.minutes, 2) }}
             </span>
-            <span class="ni-timepicker-btn ni-decrement-btn"
+            <button class="ni-timepicker-btn ni-decrement-btn" [disabled]="disabled"
               (click)="calendar.minutes = calendar.minutes - 1; _updateTime();">
               ⌃
-            </span>
+            </button>
           </div>
           <div class="ni-timepicker-times">
-            <span class="ni-timepicker-btn ni-increment-btn"
+            <button class="ni-timepicker-btn ni-increment-btn" [disabled]="disabled"
               (click)="calendar.seconds = calendar.seconds + 1; _updateTime();">
               ⌃
-            </span>
+            </button>
             <span class="ni-timepicker-time ni-timepicker-second"
               (wheel)="calendar.seconds = calendar.seconds + _scrollIncrement($event); _updateTime()">
               {{ _pad(calendar.seconds, 2) }}
             </span>
-            <span class="ni-timepicker-btn ni-decrement-btn"
+            <button class="ni-timepicker-btn ni-decrement-btn" [disabled]="disabled"
               (click)="calendar.seconds = calendar.seconds - 1; _updateTime();">
               ⌃
-            </span>
+            </button>
           </div>
           <div class="ni-timepicker-times">
-            <span class="ni-timepicker-btn ni-increment-btn"
+            <button class="ni-timepicker-btn ni-increment-btn" [disabled]="disabled"
               (click)="calendar.am = !calendar.am; _updateTime();">
               ⌃
-            </span>
+            </button>
             <span class="ni-timepicker-time ni-timepicker-ampm"
-              (wheel)="calendar.am = !calendar.am; _updateTime(); $event.preventDefault();">
+              (wheel)="calendar.am = (disabled ? calendar.am : !calendar.am); _updateTime(); $event.preventDefault();">
               {{ locale.ampm[calendar.am ? 0 : 1] }}
             </span>
-            <span class="ni-timepicker-btn ni-decrement-btn"
+            <button class="ni-timepicker-btn ni-decrement-btn" [disabled]="disabled"
               (click)="calendar.am = !calendar.am; _updateTime();">
               ⌃
-            </span>
+            </button>
           </div>
         </div>
 
         <div *ngIf="showLocaleSwitch || showTodayBtn || showClearBtn" class="ni-footer">
           <div *ngIf="showLocaleSwitch" class="ni-locale-switches">
-            <div *ngFor="let lokale of locales" class="
+            <button *ngFor="let lokale of locales" class="
 								ni-locale-switch 
 								ni-locale-{{ lokale }}
 								{{ locale.name === lokale ? 'ni-locale-switch-selected' : '' }} 
-							" (click)="_updateLocale(lokale)">
+							" (click)="_updateLocale(lokale)" [disabled]="disabled">
               <span class="ni-locale-icon ni-{{ lokale }}"></span>
-            </div>
+            </button>
           </div>
 
           <div *ngIf="showTodayBtn || showClearBtn" class="ni-button-bar">
-            <span *ngIf="showTodayBtn" class="ni-today-btn" (click)="_todayClicked($event)">
+            <button *ngIf="showTodayBtn" [disabled]="disabled" class="ni-today-btn"
+              (click)="_todayClicked($event)">
               {{ todayBtnText || locale.today }}
-            </span>
-            <span *ngIf="showClearBtn" class="ni-clear-btn" (click)="_clearClicked($event)">
+            </button>
+            <button *ngIf="showClearBtn" [disabled]="disabled" class="ni-clear-btn"
+              (click)="_clearClicked($event)">
               {{ clearBtnText || locale.clear }}
-            </span>
+            </button>
           </div>
         </div>
       </div>
