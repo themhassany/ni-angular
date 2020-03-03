@@ -219,6 +219,13 @@
       </div>
 
       <div class="field">
+        <div class="title">navByTouch</div>
+        <div class="value">
+          <button (click)="navByTouch = !navByTouch">{{ navByTouch }}</button>
+        </div>
+      </div>
+
+      <div class="field">
         <div class="title">targetTimezoneUTCOffset</div>
         <div class="value">
           <input #utcOffsetEl name="targetTimezoneUTCOffset" ngDefaultControl
@@ -271,11 +278,12 @@
       [monthHeaderFormat]="monthHeaderFormat" [numberOfMonths]="numberOfMonths"
       [showYearNavigator]="showYearNavigator" [yearNavigatorRange]="yearNavigatorRange"
       [showMonthNavigator]="showMonthNavigator" [navByScroll]="navByScroll"
-      [targetTimezoneUTCOffset]="targetTimezoneUTCOffset" (showed)="event($event, 'showed')"
-      (hidded)="event($event, 'hidded')" (focused)="event($event, 'focused')"
-      (blurred)="event($event, 'blurred')" (valueChanged)="event($event, 'valueChanged')"
-      (viewUpdated)="event($event, 'viewUpdated')" (localeChanged)="event($event, 'localeChanged')"
-      [titleTemplate]="template4" [monthDateTemplate]="template" [monthFooterTemplate]="template2"
+      [navByTouch]="navByTouch" [targetTimezoneUTCOffset]="targetTimezoneUTCOffset"
+      (showed)="event($event, 'showed')" (hidded)="event($event, 'hidded')"
+      (focused)="event($event, 'focused')" (blurred)="event($event, 'blurred')"
+      (valueChanged)="event($event, 'valueChanged')" (viewUpdated)="event($event, 'viewUpdated')"
+      (localeChanged)="event($event, 'localeChanged')" [titleTemplate]="template4"
+      [monthDateTemplate]="template" [monthFooterTemplate]="template2"
       [monthTitleTemplate]="template3">
       <ng-template #template4 let-minmax>
         {{ minmax[0] | ni_date:"MMMM YYYY":"fa_AF" }}

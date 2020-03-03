@@ -610,12 +610,13 @@ export class NiDatetimePickerComponent implements OnInit, AfterViewInit, OnDestr
   _touchIncrement($event: any) {
     if (this.navByTouch && this.__touchStart) {
       try { $event.preventDefault(); } catch (e) { }
-      const increment = Math.sign(this.__unify($event).clientX - this.__touchStart);
+      const increment = this.__unify($event).clientX - this.__touchStart;
       this.__touchStart = null;
-      return increment;
-    } else {
-      return 0;
+      if (increment > 20) /* */ { return +1; }
+      else if (increment < -20) { return -1; }
     }
+
+    return 0;
   }
 
   _navBy(increment: number) {

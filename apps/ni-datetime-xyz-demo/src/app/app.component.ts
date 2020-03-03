@@ -9,7 +9,7 @@ import { NiDatetimePipeService } from 'ni-datetime-pipe';
 })
 export class AppComponent implements OnInit {
 
-  disabled = true;
+  disabled = false;
   value: any = new Date(); // '2020-02-25 00:00:00';
   defaultDate: Date; // = new Date();
   monthPicker = false;
@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
   yearNavigatorRange = '1370,1410';
   showMonthNavigator = false;
   navByScroll = true;
+  navByTouch = true;
   targetTimezoneUTCOffset = "270";
 
   customLocale: NiDatetimeLocale = {
