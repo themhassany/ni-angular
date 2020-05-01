@@ -1,7 +1,7 @@
 {
   "name": "ni-datetime-pipe",
   "description": "",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
@@ -28,6 +28,6 @@
     "@angular/common": "^9.0.2",
     "@angular/core": "^9.0.2",
     "tslib": "^1.10.0",
-    "ni-datetime": "^0.0.17"
+    "ni-datetime": "^0.0.18"
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "ni-datetime",
   "description": "Converter class for Farsi/Persian/Khorshidi, Islamic to Gregorian and vise versa.",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "license": "Apache 2.0",
   "author": "Mohammad Hassany",
   "repository": {
