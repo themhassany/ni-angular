@@ -44,17 +44,38 @@ export abstract class NiDatetime {
     get hours12(): number { return this.hours > 12 ? this.hours % 12 : this.hours; }
     get hours(): number { return this.__date ? this.__date.getHours() : null; }
     set hours(hours: number) {
-        this.__date.setHours(hours);
+        this.__date = new Date(
+            this.__date.getFullYear(),
+            this.__date.getMonth(),
+            this.__date.getDate(),
+            hours,
+            this.__date.getMinutes(),
+            this.__date.getSeconds()
+        );
         this.use(this.__date);
     }
     get minutes(): number { return this.__date ? this.__date.getMinutes() : null; }
     set minutes(minutes: number) {
-        this.__date.setMinutes(minutes);
+        this.__date = new Date(
+            this.__date.getFullYear(),
+            this.__date.getMonth(),
+            this.__date.getDate(),
+            this.__date.getHours(),
+            minutes,
+            this.__date.getSeconds()
+        );
         this.use(this.__date);
     }
     get seconds(): number { return this.__date ? this.__date.getSeconds() : null; }
     set seconds(seconds: number) {
-        this.__date.setSeconds(seconds);
+        this.__date = new Date(
+            this.__date.getFullYear(),
+            this.__date.getMonth(),
+            this.__date.getDate(),
+            this.__date.getHours(),
+            this.__date.getMinutes(),
+            seconds
+        );
         this.use(this.__date);
     }
 
@@ -177,9 +198,14 @@ export class NiJalaliDatetime extends NiDatetime {
     get ymd() { return this.__ymd(); }
     set ymd(ymd: Ymd) {
         const greg = toGregorian(ymd.year, ymd.month, ymd.date);
-        this.__date.setFullYear(greg.gy);
-        this.__date.setMonth(greg.gm - 1);
-        this.__date.setDate(greg.gd);
+        this.__date = new Date(
+            greg.gy,
+            greg.gm - 1,
+            greg.gd,
+            this.__date.getHours(),
+            this.__date.getMinutes(),
+            this.__date.getSeconds()
+        );
         this.use(this.__date);
     }
 
@@ -210,9 +236,14 @@ export class NiGregorianDatetime extends NiDatetime {
 
     get ymd() { return this.__ymd(); }
     set ymd(ymd: Ymd) {
-        this.__date.setFullYear(ymd.year);
-        this.__date.setMonth(ymd.month - 1);
-        this.__date.setDate(ymd.date);
+        this.__date = new Date(
+            ymd.year,
+            ymd.month - 1,
+            ymd.date,
+            this.__date.getHours(),
+            this.__date.getMinutes(),
+            this.__date.getSeconds()
+        );
         this.use(this.__date);
     }
 
